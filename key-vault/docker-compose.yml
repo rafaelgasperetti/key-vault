@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  key-vault:
+    image: ${DOCKER_REGISTRY-}keyvault
+    container_name: key-vault
+    hostname: key-vault
+    build:
+      context: .
+      dockerfile: key-vault/Dockerfile
+    networks:
+        key-vault:
+            ipv4_address: 192.169.0.201
+    depends_on:
+      - key-vault.db
+  key-vault.db:
+    container_name: key-vault.db
+    hostname: key-vault
+    image: mysql
+    ports:
+      - "9090:8080"
+    environment:
+        MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
+    networks:
+        key-vault:
+            ipv4_address: 192.169.0.202
+networks:
+  key-vault:
+    name: key-vault
+    ipam:
+     config:
+       - subnet: 192.169.0.0/24
+         gateway: 192.169.0.1
