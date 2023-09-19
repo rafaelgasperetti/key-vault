@@ -26,7 +26,7 @@ services:
     hostname: key-vault
     image: mysql
     ports:
-      - "9090:8080"
+      - "9090:3306"
     environment:
         MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
     networks:

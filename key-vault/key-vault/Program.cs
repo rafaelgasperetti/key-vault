@@ -2,10 +2,29 @@ using key_vault.Models;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using key_vault.Database.Interfaces;
+using key_vault.Database;
+using key_vault.Initializer;
+using key_vault.Services.Interfaces;
+using key_vault.Services;
+using key_vault.Initializer.Jwt.Interfaces;
+using key_vault.Initializer.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<APIEnvironment>(builder.Configuration.GetSection(nameof(APIEnvironment)));
+var env = Initializer.GetEnvironment(builder.Configuration);
+
+Initializer.Migrate(env);
+
+builder.Services.AddSingleton(env);
+builder.Services.AddScoped<IDatabase, MySqlDb>();
+builder.Services.AddScoped<IEncryption, Encryption>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ISecretService, SecretService>();
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -25,6 +44,27 @@ builder.Services.AddApiVersioning(v =>
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(o =>
+{
+    o.RequireHttpsMetadata = false;
+    o.SaveToken = false;
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidIssuer = env.JWTIssuer,
+        ValidAudience = env.JWTAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(env.Secret))
+    };
+});
 builder.Services.AddAuthorization();
 builder.Services.AddResponseCompression();
 
