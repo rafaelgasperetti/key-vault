@@ -3,6 +3,8 @@ version: '3.9'
 services:
   key-vault:
     image: ${DOCKER_REGISTRY-}keyvault
+    ports:
+      - "57304:443"
     container_name: key-vault
     hostname: key-vault
     build:
@@ -13,6 +15,12 @@ services:
             ipv4_address: 192.169.0.201
     depends_on:
       - key-vault.db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
   key-vault.db:
     container_name: key-vault.db
     hostname: key-vault
