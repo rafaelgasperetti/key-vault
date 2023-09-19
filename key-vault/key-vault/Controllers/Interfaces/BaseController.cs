@@ -6,9 +6,11 @@ namespace key_vault.Controllers.Interfaces
 {
     [Authorize]
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion(API_VERSION)]
     public class BaseController : ControllerBase
     {
+        public const string API_VERSION = "7.4";
+
         protected int? GetAccountId()
         {
             var claim = User.Claims.FirstOrDefault(c => c.Type == nameof(Account.AccountId));
@@ -55,6 +57,16 @@ namespace key_vault.Controllers.Interfaces
             }
 
             return null;
+        }
+
+        public static int GetMajorVersion()
+        {
+            return Convert.ToInt32(API_VERSION.Contains('.') ? API_VERSION.Split(".")[0] : API_VERSION);
+        }
+
+        public static int GetMinorVersion()
+        {
+            return Convert.ToInt32(API_VERSION.Contains('.') ? API_VERSION.Split(".")[1] : API_VERSION);
         }
     }
 }

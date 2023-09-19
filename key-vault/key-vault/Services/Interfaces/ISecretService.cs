@@ -4,9 +4,9 @@ namespace key_vault.Services.Interfaces
 {
     public interface ISecretService
     {
-        public SecretKey Get(int accountId, string name);
+        public SecretResponse Get(int accountId, string name, string? version);
 
-        public SecretKey Create(SecretKey secretKey);
+        public SecretResponse Create(string name, SecretKey secretKey);
 
         public void Delete(int accountId, string name);
     }

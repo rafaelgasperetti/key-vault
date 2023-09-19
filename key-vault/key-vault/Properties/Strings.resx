@@ -188,7 +188,7 @@ FROM	SecretKey
 	(
 		SELECT	AccountId,
 			Name,
-			MAX(Version) AS LastVersion
+			MAX(CreatedAt) AS LastCreatedAt
 		FROM	SecretKey
 		GROUP BY
 			AccountId,
@@ -196,9 +196,14 @@ FROM	SecretKey
 	) LastVersion
 		ON	SecretKey.AccountId = LastVersion.AccountId AND
 			SecretKey.Name = LastVersion.Name AND
-			SecretKey.Version = LastVersion.LastVersion
+			SecretKey.CreatedAt = LastVersion.LastCreatedAt
 WHERE	SecretKey.AccountId = @AccountId AND
 	SecretKey.Name = @Name AND
  	SecretKey.DeletedAt IS NULL</value>
+  </data>
+  <data name="SecretService_GetVersion" xml:space="preserve">
+    <value>SELECT	SecretKey.*
+FROM	SecretKey
+WHERE	AccountId = @AccountId AND Name = @Name AND Version = @Version AND DeletedAt IS NULL</value>
   </data>
 </root>

@@ -12,6 +12,7 @@ using key_vault.Initializer.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using key_vault.Controllers.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +38,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApiVersioning(v =>
 {
-    v.DefaultApiVersion = new ApiVersion(1, 0);
+    v.DefaultApiVersion = new ApiVersion(BaseController.GetMajorVersion(), BaseController.GetMinorVersion());
     v.AssumeDefaultVersionWhenUnspecified = true;
     v.ReportApiVersions = true;
 });

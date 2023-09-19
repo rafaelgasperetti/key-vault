@@ -203,7 +203,7 @@ namespace key_vault.Properties {
         ///	(
         ///		SELECT	AccountId,
         ///			Name,
-        ///			MAX(Version) AS LastVersion
+        ///			MAX(CreatedAt) AS LastCreatedAt
         ///		FROM	SecretKey
         ///		GROUP BY
         ///			AccountId,
@@ -211,7 +211,7 @@ namespace key_vault.Properties {
         ///	) LastVersion
         ///		ON	SecretKey.AccountId = LastVersion.AccountId AND
         ///			SecretKey.Name = LastVersion.Name AND
-        ///			SecretKey.Version = LastVersion.LastVersion
+        ///			SecretKey.CreatedAt = LastVersion.LastCreatedAt
         ///WHERE	SecretKey.AccountId = @AccountId AND
         ///	SecretKey.Name = @Name AND
         /// 	SecretKey.DeletedAt IS NULL.
@@ -219,6 +219,17 @@ namespace key_vault.Properties {
         internal static string SecretService_Get {
             get {
                 return ResourceManager.GetString("SecretService_Get", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT	SecretKey.*
+        ///FROM	SecretKey
+        ///WHERE	AccountId = @AccountId AND Name = @Name AND Version = @Version AND DeletedAt IS NULL.
+        /// </summary>
+        internal static string SecretService_GetVersion {
+            get {
+                return ResourceManager.GetString("SecretService_GetVersion", resourceCulture);
             }
         }
     }

@@ -20,12 +20,11 @@ CREATE TABLE IF NOT EXISTS SecretKey
 	AccountId INT NOT NULL,
 	Name VARCHAR(64) NOT NULL,
 	Description TEXT,
-	Version INT NOT NULL,
+	Version VARCHAR(36) NOT NULL,
 	Value TEXT,
 	CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	DeletedAt DATETIME,
 	PRIMARY KEY(SecretKeyId),
 	CONSTRAINT FK_SecretKey_Account FOREIGN KEY(AccountId) REFERENCES Account(AccountId),
-	UNIQUE KEY UK_SecretKey_AccountId_Name_Version(AccountId, Name, Version),
-	CONSTRAINT CK_SecretKey_Version CHECK(Version > 0)
+	UNIQUE KEY UK_SecretKey_AccountId_Name_Version(AccountId, Name, Version)
 );

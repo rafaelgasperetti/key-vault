@@ -14,8 +14,8 @@ namespace key_vault.Controllers
             Service = service;
         }
 
-        [HttpGet("secrets/{name}")]
-        public SecretKey Get(string name)
+        [HttpGet("secrets/{name}/{version?}")]
+        public SecretResponse Get(string name, string? version)
         {
             int? accountId = GetAccountId();
 
@@ -24,11 +24,11 @@ namespace key_vault.Controllers
                 return null;
             }
 
-            return Service.Get(accountId.Value, name);
+            return Service.Get(accountId.Value, name, version);
         }
 
-        [HttpPost("secrets")]
-        public SecretKey Create([FromBody] SecretKey secretKey)
+        [HttpPut("secrets/{name}")]
+        public SecretResponse Create(string name, [FromBody] SecretKey secretKey)
         {
             int? accountId = GetAccountId();
 
@@ -38,7 +38,7 @@ namespace key_vault.Controllers
             }
 
             secretKey.AccountId = accountId.Value;
-            return Service.Create(secretKey);
+            return Service.Create(name, secretKey);
         }
 
         [HttpDelete("secrets/{name}")]

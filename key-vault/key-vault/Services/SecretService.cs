@@ -12,25 +12,56 @@ namespace key_vault.Services
         private readonly IDatabase Database;
         private readonly IAccountService AccountService;
         private readonly IEncryption Encryption;
+        private readonly IHttpContextAccessor HttpContext;
 
-        public SecretService(APIEnvironment env, IDatabase db, IAccountService accountService, IEncryption encryption)
+        public SecretService(APIEnvironment env, IDatabase db, IAccountService accountService, IEncryption encryption, IHttpContextAccessor httpContext)
         {
             Environment = env;
             Database = db;
             AccountService = accountService;
             Encryption = encryption;
+            HttpContext = httpContext;
         }
 
-        public SecretKey Get(int accountId, string name)
+        private SecretResponse GenerateSecretResponse(SecretKey secretKey)
+        {
+            if (secretKey == null)
+            {
+                return null;
+            }
+
+            var request = HttpContext.HttpContext.Request;
+            string id = $"{request.Scheme}://{request.Host}/secrets/{secretKey.Name}/{secretKey.Version}";
+
+            return new SecretResponse()
+            {
+                value = secretKey.Value,
+                id = new Uri(id),
+                attributes = new SecretAttributes()
+                {
+                    enabled = secretKey.DeletedAt == null,
+                    created = secretKey.CreatedAt.Value.Ticks / TimeSpan.TicksPerMillisecond,
+                    updated = secretKey.CreatedAt.Value.Ticks / TimeSpan.TicksPerMillisecond,
+                    recoveryLevel = "Recoverable+Purgeable"
+                }
+            };
+        }
+
+        public SecretResponse Get(int accountId, string name, string? version)
         {
             if (AccountService.Get(accountId) == null)
             {
                 return null;
             }
 
-            using var cmd = Database.CreateComand(Strings.SecretService_Get);
+            using var cmd = Database.CreateComand(string.IsNullOrEmpty(version) ? Strings.SecretService_Get : Strings.SecretService_GetVersion);
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), accountId));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), name));
+
+            if (!string.IsNullOrEmpty(version))
+            {
+                cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Version), version));
+            }
             
             using var reader = cmd.ExecuteReader();
             if (!reader.Read())
@@ -45,36 +76,30 @@ namespace key_vault.Services
                 value = Encryption.Decrypt(value);
             }
 
-            return new SecretKey()
+            var secretKey = new SecretKey()
             {
                 SecretKeyId = reader.GetInt32(0),
                 AccountId = reader.GetInt32(1),
                 Name = reader.GetString(2),
                 Description = reader.IsDBNull(3) ? null : reader.GetString(3),
-                Version = reader.GetInt32(4),
+                Version = reader.GetGuid(4),
                 Value = value,
                 CreatedAt = reader.GetDateTime(6),
                 DeletedAt = reader.IsDBNull(7) ? null : reader.GetDateTime(7)
             };
+
+            return GenerateSecretResponse(secretKey);
         }
 
-        public SecretKey Create(SecretKey secretKey)
+        public SecretResponse Create(string name, SecretKey secretKey)
         {
             if (AccountService.Get(secretKey.AccountId) == null)
             {
                 return null;
             }
 
-            var dbSecretKey = Get(secretKey.AccountId, secretKey.Name);
-
-            if (dbSecretKey == null)
-            {
-                secretKey.Version = 1;
-            }
-            else
-            {
-                secretKey.Version = dbSecretKey.Version + 1;
-            }
+            secretKey.Name = name;
+            secretKey.Version = Guid.NewGuid();
 
             if (!string.IsNullOrEmpty(secretKey.Value) && Environment.EncryptValues)
             {
@@ -90,13 +115,7 @@ namespace key_vault.Services
 
             cmd.ExecuteNonQuery();
 
-            dbSecretKey = Get(secretKey.AccountId, secretKey.Name);
-
-            secretKey.SecretKeyId = dbSecretKey.SecretKeyId;
-            secretKey.CreatedAt = dbSecretKey.CreatedAt;
-            secretKey.Value = dbSecretKey.Value;
-
-            return secretKey;
+            return Get(secretKey.AccountId, secretKey.Name, null);
         }
 
         public void Delete(int accountId, string name)
