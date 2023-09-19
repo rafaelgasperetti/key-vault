@@ -121,22 +121,29 @@
     <value>INSERT INTO Account
 (
 	Name,
-	APIKey
+	TenantId,
+	ClientId,
+	ClientSecret
 )
 VALUES
 (
 	@Name,
-	@APIKey
+	@TenantId,
+	@ClientId,
+	@ClientSecret
 )</value>
   </data>
   <data name="AccountService_Delete" xml:space="preserve">
     <value>UPDATE Account SET DeletedAt = CURRENT_TIMESTAMP WHERE AccountId = @AccountId AND DeletedAt IS NULL</value>
   </data>
-  <data name="AccountService_Get" xml:space="preserve">
-    <value>SELECT * FROM Account WHERE AccountId = @AccountId AND APIKey = @APIKey AND DeletedAt IS NULL</value>
+  <data name="AccountService_DeleteAccountSecrets" xml:space="preserve">
+    <value>UPDATE SecretKey SET DeletedAt = CURRENT_TIMESTAMP WHERE AccountId = @AccountId AND DeletedAt IS NULL</value>
   </data>
-  <data name="AccountService_GetById" xml:space="preserve">
+  <data name="AccountService_Get" xml:space="preserve">
     <value>SELECT * FROM Account WHERE AccountId = @AccountId AND DeletedAt IS NULL</value>
+  </data>
+  <data name="AccountService_UpdateClientSecret" xml:space="preserve">
+    <value>UPDATE Account SET ClientSecret = @ClientSecret WHERE AccountId = @AccountId</value>
   </data>
   <data name="ConnectionString" xml:space="preserve">
     <value>Server={0};Port={1};User ID={2};Password={3};{4}</value>
@@ -158,6 +165,7 @@ VALUES
 (
 	AccountId,
 	Name,
+	Description,
 	Version,
 	Value
 )
@@ -165,6 +173,7 @@ VALUES
 (
 	@AccountId,
 	@Name,
+	@Description,
 	@Version,
 	@Value
 )</value>
@@ -191,8 +200,5 @@ FROM	SecretKey
 WHERE	SecretKey.AccountId = @AccountId AND
 	SecretKey.Name = @Name AND
  	SecretKey.DeletedAt IS NULL</value>
-  </data>
-  <data name="SecretService_GetLastVersion" xml:space="preserve">
-    <value>SELECT MAX(Version) FROM SecretKey WHERE AccountId = @AccountId AND Name = @Name AND DeletedAt IS NULL</value>
   </data>
 </root>

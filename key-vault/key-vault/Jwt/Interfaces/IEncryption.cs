@@ -2,7 +2,7 @@
 {
     public interface IEncryption
 	{
-		public string GenerateToken(int accountId, Guid apiKey);
+		public string GenerateToken(int accountId, Guid tenantId, Guid clientId);
 
         public string Encrypt(string value);
 

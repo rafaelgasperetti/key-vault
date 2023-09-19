@@ -64,12 +64,16 @@ namespace key_vault.Properties {
         ///   Looks up a localized string similar to INSERT INTO Account
         ///(
         ///	Name,
-        ///	APIKey
+        ///	TenantId,
+        ///	ClientId,
+        ///	ClientSecret
         ///)
         ///VALUES
         ///(
         ///	@Name,
-        ///	@APIKey
+        ///	@TenantId,
+        ///	@ClientId,
+        ///	@ClientSecret
         ///).
         /// </summary>
         internal static string AccountService_Create {
@@ -88,7 +92,16 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM Account WHERE AccountId = @AccountId AND APIKey = @APIKey AND DeletedAt IS NULL.
+        ///   Looks up a localized string similar to UPDATE SecretKey SET DeletedAt = CURRENT_TIMESTAMP WHERE AccountId = @AccountId AND DeletedAt IS NULL.
+        /// </summary>
+        internal static string AccountService_DeleteAccountSecrets {
+            get {
+                return ResourceManager.GetString("AccountService_DeleteAccountSecrets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM Account WHERE AccountId = @AccountId AND DeletedAt IS NULL.
         /// </summary>
         internal static string AccountService_Get {
             get {
@@ -97,11 +110,11 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM Account WHERE AccountId = @AccountId AND DeletedAt IS NULL.
+        ///   Looks up a localized string similar to UPDATE Account SET ClientSecret = @ClientSecret WHERE AccountId = @AccountId.
         /// </summary>
-        internal static string AccountService_GetById {
+        internal static string AccountService_UpdateClientSecret {
             get {
-                return ResourceManager.GetString("AccountService_GetById", resourceCulture);
+                return ResourceManager.GetString("AccountService_UpdateClientSecret", resourceCulture);
             }
         }
         
@@ -155,6 +168,7 @@ namespace key_vault.Properties {
         ///(
         ///	AccountId,
         ///	Name,
+        ///	Description,
         ///	Version,
         ///	Value
         ///)
@@ -162,6 +176,7 @@ namespace key_vault.Properties {
         ///(
         ///	@AccountId,
         ///	@Name,
+        ///	@Description,
         ///	@Version,
         ///	@Value
         ///).
@@ -204,15 +219,6 @@ namespace key_vault.Properties {
         internal static string SecretService_Get {
             get {
                 return ResourceManager.GetString("SecretService_Get", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT MAX(Version) FROM SecretKey WHERE AccountId = @AccountId AND Name = @Name AND DeletedAt IS NULL.
-        /// </summary>
-        internal static string SecretService_GetLastVersion {
-            get {
-                return ResourceManager.GetString("SecretService_GetLastVersion", resourceCulture);
             }
         }
     }

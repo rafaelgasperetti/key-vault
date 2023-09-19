@@ -10,6 +10,7 @@ namespace key_vault.Database
     {
         private readonly APIEnvironment Environment;
         private MySqlConnection Connection;
+        private DbTransaction Transaction;
 
         public MySqlDb(APIEnvironment env)
         {
@@ -71,6 +72,16 @@ namespace key_vault.Database
             Connection = null;
 
             GC.SuppressFinalize(this);
+        }
+
+        public void BeginTransaction()
+        {
+            Transaction ??= Connection.BeginTransaction();
+        }
+
+        public void Commit()
+        {
+            Transaction?.Commit();
         }
     }
 }

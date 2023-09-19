@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace key_vault.Controllers
 {
-    [Route("api/v{version:apiVersion}/account")]
     public class AccountController : BaseController
     {
         private readonly IAccountService Service;
@@ -16,21 +15,27 @@ namespace key_vault.Controllers
             Service = service;
         }
 
-        [AllowAnonymous]
-        [HttpGet("get/{accountId}/{apiKey}")]
-        public Account Get(int accountId, string apiKey)
+        [HttpGet("accounts")]
+        public Account Get()
         {
-            return Service.Get(accountId, apiKey);
+            int? accountId = GetAccountId();
+
+            if (accountId == null)
+            {
+                return null;
+            }
+
+            return Service.Get(accountId.Value);
         }
 
         [AllowAnonymous]
-        [HttpPost("create")]
+        [HttpPost("accounts")]
         public Account Create([FromBody] Account account)
         {
             return Service.Create(account);
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("accounts")]
         public void Delete()
         {
             int? accountId = GetAccountId();

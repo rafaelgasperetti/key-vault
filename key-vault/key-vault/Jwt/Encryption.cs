@@ -17,7 +17,7 @@ namespace key_vault.Initializer.Jwt
             Environment = env;
 		}
 
-        public string GenerateToken(int accountId, Guid apiKey)
+        public string GenerateToken(int accountId, Guid tenantId, Guid clientId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(Environment.Secret);
@@ -26,9 +26,10 @@ namespace key_vault.Initializer.Jwt
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(nameof(Account.AccountId), accountId.ToString()),
-                    new Claim(nameof(Account.APIKey), apiKey.ToString())
+                    new Claim(nameof(Account.TenantId), tenantId.ToString()),
+                    new Claim(nameof(Account.ClientId), clientId.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                //Expires = DateTime.UtcNow.AddHours(2),
                 Issuer = Environment.JWTIssuer,
                 Audience = Environment.JWTAudience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -45,12 +46,6 @@ namespace key_vault.Initializer.Jwt
             var hashMethod = HashAlgorithmName.SHA384;
             return Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(password), emptySalt, iterations, hashMethod, desiredKeyLength);
         }
-
-        private byte[] IV =
-        {
-            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-            0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16
-        };
 
         public string Encrypt(string value)
         {

@@ -17,11 +17,10 @@ namespace key_vault.Services
             Encryption = encryption;
         }
 
-        public Account Get(int accountId, string apiKey)
+        public Account Get(int accountId)
         {
             using var cmd = Database.CreateComand(Strings.AccountService_Get);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), accountId));
-            cmd.Parameters.Add(Database.GetParameter(nameof(Account.APIKey), apiKey));
 
             using var reader = cmd.ExecuteReader();
             if (!reader.Read())
@@ -33,47 +32,41 @@ namespace key_vault.Services
             {
                 AccountId = reader.GetInt32(0),
                 Name = reader.GetString(1),
-                APIKey = reader.GetGuid(2),
-                CreatedAt = reader.GetDateTime(3),
-                DeletedAt = reader.IsDBNull(4) ? null : reader.GetDateTime(4),
-                Token = Encryption.GenerateToken(accountId, reader.GetGuid(2))
-            };
-        }
-
-        public Account GetByAccountId(int accountId)
-        {
-            using var cmd = Database.CreateComand(Strings.AccountService_GetById);
-            cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), accountId));
-
-            using var reader = cmd.ExecuteReader();
-            if (!reader.Read())
-            {
-                return null;
-            }
-
-            return new Account()
-            {
-                AccountId = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                APIKey = reader.GetGuid(2),
-                CreatedAt = reader.GetDateTime(3),
-                DeletedAt = reader.IsDBNull(4) ? null : reader.GetDateTime(4),
-                Token = Encryption.GenerateToken(accountId, reader.GetGuid(2))
+                TenantId = reader.GetGuid(2),
+                ClientId = reader.GetGuid(3),
+                ClientSecret = reader.IsDBNull(4) ? null : reader.GetString(4),
+                CreatedAt = reader.GetDateTime(5),
+                DeletedAt = reader.IsDBNull(6) ? null : reader.GetDateTime(6)
             };
         }
 
         public Account Create(Account account)
         {
-            account.APIKey = Guid.NewGuid();
+            account.TenantId = Guid.NewGuid();
+            account.ClientId = Guid.NewGuid();
+            account.ClientSecret = Guid.NewGuid().ToString();
+
+            Database.BeginTransaction();
 
             using var cmd = Database.CreateComand(Strings.AccountService_Create);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.Name), account.Name));
-            cmd.Parameters.Add(Database.GetParameter(nameof(Account.APIKey), account.APIKey));
+            cmd.Parameters.Add(Database.GetParameter(nameof(Account.TenantId), account.TenantId));
+            cmd.Parameters.Add(Database.GetParameter(nameof(Account.ClientId), account.ClientId));
+            cmd.Parameters.Add(Database.GetParameter(nameof(Account.ClientSecret), account.ClientSecret));
 
             cmd.ExecuteNonQuery();
             var id = (int) Database.GetLastId();
+            string clientSecret = Encryption.GenerateToken(id, account.TenantId.Value, account.ClientId.Value);
 
-            account = GetByAccountId(id);
+            cmd.CommandText = Strings.AccountService_UpdateClientSecret;
+            cmd.Parameters.Clear();
+            cmd.Parameters.Add(Database.GetParameter(nameof(Account.ClientSecret), clientSecret));
+            cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), id));
+            cmd.ExecuteNonQuery();
+
+            Database.Commit();
+
+            account = Get(id);
             return account;
         }
 
@@ -81,7 +74,9 @@ namespace key_vault.Services
         {
             using var cmd = Database.CreateComand(Strings.AccountService_Delete);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), accountId));
+            cmd.ExecuteNonQuery();
 
+            cmd.CommandText = Strings.AccountService_DeleteAccountSecrets;
             cmd.ExecuteNonQuery();
         }
     }

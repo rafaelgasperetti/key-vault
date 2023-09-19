@@ -4,9 +4,7 @@ namespace key_vault.Services.Interfaces
 {
     public interface IAccountService
     {
-        public Account Get(int accountId, string apiKey);
-
-        public Account GetByAccountId(int accountId);
+        public Account Get(int accountId);
 
         public Account Create(Account account);
 

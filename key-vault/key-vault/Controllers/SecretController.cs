@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace key_vault.Controllers
 {
-    [Route("api/v{version:apiVersion}/secret")]
     public class SecretController : BaseController
     {
         private readonly ISecretService Service;
@@ -15,7 +14,7 @@ namespace key_vault.Controllers
             Service = service;
         }
 
-        [HttpGet("get/{name}")]
+        [HttpGet("secrets/{name}")]
         public SecretKey Get(string name)
         {
             int? accountId = GetAccountId();
@@ -28,7 +27,7 @@ namespace key_vault.Controllers
             return Service.Get(accountId.Value, name);
         }
 
-        [HttpPost("create")]
+        [HttpPost("secrets")]
         public SecretKey Create([FromBody] SecretKey secretKey)
         {
             int? accountId = GetAccountId();
@@ -42,7 +41,7 @@ namespace key_vault.Controllers
             return Service.Create(secretKey);
         }
 
-        [HttpDelete("delete/{name}")]
+        [HttpDelete("secrets/{name}")]
         public void Delete(string name)
         {
             int? accountId = GetAccountId();

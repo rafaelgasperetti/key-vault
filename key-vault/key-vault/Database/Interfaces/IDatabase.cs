@@ -1,5 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using System.Data.Common;
+﻿using System.Data.Common;
 
 namespace key_vault.Database.Interfaces
 {
@@ -14,5 +13,9 @@ namespace key_vault.Database.Interfaces
         public DbParameter GetParameter(string name, object value);
 
         public int? GetLastId();
+
+        public void BeginTransaction();
+
+        public void Commit();
     }
 }

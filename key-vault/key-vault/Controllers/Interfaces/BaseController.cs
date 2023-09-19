@@ -11,23 +11,47 @@ namespace key_vault.Controllers.Interfaces
     {
         protected int? GetAccountId()
         {
-            var accountIdClaim = User.Claims.FirstOrDefault(c => c.Type == nameof(Account.AccountId));
+            var claim = User.Claims.FirstOrDefault(c => c.Type == nameof(Account.AccountId));
 
-            if (accountIdClaim != null && !string.IsNullOrEmpty(accountIdClaim.Value))
+            if (claim != null && !string.IsNullOrEmpty(claim.Value))
             {
-                return int.Parse(accountIdClaim.Value);
+                return int.Parse(claim.Value);
             }
 
             return null;
         }
 
-        protected Guid? GetAPIKey()
+        protected Guid? GetTenantId()
         {
-            var apiKeyClaim = User.Claims.FirstOrDefault(c => c.Type == nameof(Account.APIKey));
+            var claim = User.Claims.FirstOrDefault(c => c.Type == nameof(Account.TenantId));
 
-            if (apiKeyClaim != null && !string.IsNullOrEmpty(apiKeyClaim.Value))
+            if (claim != null && !string.IsNullOrEmpty(claim.Value))
             {
-                return Guid.Parse(apiKeyClaim.Value);
+                return Guid.Parse(claim.Value);
+            }
+
+            return null;
+        }
+
+        protected Guid? GetClientId()
+        {
+            var claim = User.Claims.FirstOrDefault(c => c.Type == nameof(Account.ClientId));
+
+            if (claim != null && !string.IsNullOrEmpty(claim.Value))
+            {
+                return Guid.Parse(claim.Value);
+            }
+
+            return null;
+        }
+
+        protected string? GetClientSecret()
+        {
+            var claim = User.Claims.FirstOrDefault(c => c.Type == nameof(Account.ClientSecret));
+
+            if (claim != null && !string.IsNullOrEmpty(claim.Value))
+            {
+                return claim.Value;
             }
 
             return null;

@@ -23,7 +23,7 @@ namespace key_vault.Services
 
         public SecretKey Get(int accountId, string name)
         {
-            if (AccountService.GetByAccountId(accountId) == null)
+            if (AccountService.Get(accountId) == null)
             {
                 return null;
             }
@@ -38,9 +38,9 @@ namespace key_vault.Services
                 return null;
             }
 
-            string value = reader.GetString(4);
+            string value = reader.IsDBNull(5) ? null : reader.GetString(5);
 
-            if (Environment.EncryptValues)
+            if (!string.IsNullOrEmpty(value) && Environment.EncryptValues)
             {
                 value = Encryption.Decrypt(value);
             }
@@ -50,16 +50,17 @@ namespace key_vault.Services
                 SecretKeyId = reader.GetInt32(0),
                 AccountId = reader.GetInt32(1),
                 Name = reader.GetString(2),
-                Version = reader.GetInt32(3),
+                Description = reader.IsDBNull(3) ? null : reader.GetString(3),
+                Version = reader.GetInt32(4),
                 Value = value,
-                CreatedAt = reader.GetDateTime(5),
-                DeletedAt = reader.IsDBNull(6) ? null : reader.GetDateTime(6)
+                CreatedAt = reader.GetDateTime(6),
+                DeletedAt = reader.IsDBNull(7) ? null : reader.GetDateTime(7)
             };
         }
 
         public SecretKey Create(SecretKey secretKey)
         {
-            if (AccountService.GetByAccountId(secretKey.AccountId) == null)
+            if (AccountService.Get(secretKey.AccountId) == null)
             {
                 return null;
             }
@@ -75,7 +76,7 @@ namespace key_vault.Services
                 secretKey.Version = dbSecretKey.Version + 1;
             }
 
-            if (Environment.EncryptValues)
+            if (!string.IsNullOrEmpty(secretKey.Value) && Environment.EncryptValues)
             {
                 secretKey.Value = Encryption.Encrypt(secretKey.Value);
             }
@@ -83,6 +84,7 @@ namespace key_vault.Services
             using var cmd = Database.CreateComand(Strings.SecretService_Create);
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), secretKey.AccountId));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), secretKey.Name));
+            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Description), (object) secretKey.Description ?? DBNull.Value));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Version), secretKey.Version));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Value), (object) secretKey.Value ?? DBNull.Value));
 
@@ -92,13 +94,14 @@ namespace key_vault.Services
 
             secretKey.SecretKeyId = dbSecretKey.SecretKeyId;
             secretKey.CreatedAt = dbSecretKey.CreatedAt;
+            secretKey.Value = dbSecretKey.Value;
 
             return secretKey;
         }
 
         public void Delete(int accountId, string name)
         {
-            if (AccountService.GetByAccountId(accountId) == null)
+            if (AccountService.Get(accountId) == null)
             {
                 return;
             }
