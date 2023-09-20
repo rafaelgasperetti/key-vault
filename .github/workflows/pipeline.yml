@@ -24,8 +24,8 @@ jobs:
       run: |
         ls ${{env.working-directory}} -R
       working-directory: ${{env.working-directory}}
-    - name: Restore dependencies ${{env.working-directory}}/key-vault/key-vault.sln
-      run: dotnet restore
+    - name: Restore dependencies
+      run: dotnet restore  ${{env.working-directory}}/key-vault/key-vault.sln
     - name: Build
       run: dotnet build ${{env.working-directory}}/key-vault/key-vault.sln --no-restore 
     - name: Test
