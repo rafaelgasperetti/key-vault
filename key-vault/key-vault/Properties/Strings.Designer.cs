@@ -221,7 +221,7 @@ namespace key_vault.Properties {
         ///	(
         ///		SELECT	AccountId,
         ///			Name,
-        ///			MAX(Id) AS LastId
+        ///			MAX(SecretKeyId) AS LastId
         ///		FROM	SecretKey
         ///		GROUP BY
         ///			AccountId,
@@ -229,7 +229,7 @@ namespace key_vault.Properties {
         ///	) LastVersion
         ///		ON	SecretKey.AccountId = LastVersion.AccountId AND
         ///			SecretKey.Name = LastVersion.Name AND
-        ///			SecretKey.Id = LastVersion.LastId
+        ///			SecretKey.SecretKeyId = LastVersion.LastId
         ///WHERE	SecretKey.AccountId = @AccountId AND
         ///	SecretKey.Name = @Name AND
         /// 	SecretKey.DeletedAt IS NULL.

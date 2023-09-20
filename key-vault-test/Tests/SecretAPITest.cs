@@ -17,7 +17,7 @@ namespace key_vault_test.Tests
         public SecretAPITest()
         {
             Account = ConfigureAccount().Result;
-            Vault = new Vault.Vault(Strings.KeyVaultAPIUrl, Account.ClientSecret);
+            Vault = new Vault.Vault(Strings.KeyVaultAPIUrl, Account.ClientSecret!);
         }
 
         private async Task<Account> ConfigureAccount()
@@ -40,7 +40,7 @@ namespace key_vault_test.Tests
             Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
             
             var responseStr = await rawResponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Account>(responseStr);
+            return JsonConvert.DeserializeObject<Account>(responseStr)!;
         }
 
         private async Task DeleteAccount()
