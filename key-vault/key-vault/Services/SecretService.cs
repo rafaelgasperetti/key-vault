@@ -4,6 +4,7 @@ using key_vault.Models;
 using key_vault.Properties;
 using key_vault.Services.Interfaces;
 using key_vault.Helpers;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace key_vault.Services
 {
@@ -131,14 +132,14 @@ namespace key_vault.Services
         public async Task<SecretResponse> Delete(int? accountId, string name)
         {
             await AccountService.Get(accountId);
-            await Get(accountId, name, null);
+            var dbSecret = await Get(accountId, name, null);
 
             using var cmd = Database.CreateComand(Strings.SecretService_Delete);
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), accountId));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), name));
 
             await cmd.ExecuteNonQueryAsync();
-            return GenerateSecretResponse(null);
+            return dbSecret;
         }
     }
 }

@@ -29,10 +29,10 @@ namespace key_vault.Controllers
         }
 
         [HttpDelete("secrets/{name}")]
-        public async Task Delete(string name)
+        public async Task<SecretResponse> Delete(string name)
         {
             int? accountId = GetAccountId();
-            await Service.Delete(accountId.Value, name);
+            return await Service.Delete(accountId.Value, name);
         }
     }
 }
