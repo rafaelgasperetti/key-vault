@@ -24,9 +24,9 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-    - name: Restore dependencies key-vault/key-vault.sln
+    - name: Restore dependencies ${{env.working-directory}}/key-vault/key-vault.sln
       run: dotnet restore
     - name: Build
-      run: dotnet build key-vault/key-vault.sln --no-restore 
+      run: dotnet build ${{env.working-directory}}/key-vault/key-vault.sln --no-restore 
     - name: Test
-      run: dotnet test key-vault/key-vault.sln --no-build --verbosity normal
+      run: dotnet test ${{env.working-directory}}/key-vault/key-vault.sln --no-build --verbosity normal
