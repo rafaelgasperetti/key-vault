@@ -22,7 +22,7 @@ jobs:
         dotnet-version: 7.0.x
     - name: root directory
       run: |
-        ls /usr/share/dotnet -R
+        ls ${{env.working-directory}} -R
       working-directory: ${{env.working-directory}}
     - name: Restore dependencies ${{env.working-directory}}/key-vault/key-vault.sln
       run: dotnet restore
