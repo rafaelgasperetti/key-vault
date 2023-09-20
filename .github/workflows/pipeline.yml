@@ -27,4 +27,4 @@ jobs:
     - name: Build
       run: dotnet build ${{env.working-directory}}/key-vault/key-vault.sln --no-restore 
     - name: Test
-      run: dotnet test ${{env.working-directory}}/key-vault-test/key-vault-test.csproj --no-build --verbosity normal
+      run: dotnet test ${{env.working-directory}}/key-vault/key-vault.sln --no-build --verbosity normal
