@@ -14,6 +14,8 @@ namespace key_vault.Database.Interfaces
 
         public Task<int?> GetLastId();
 
+        public bool HasTransaction();
+
         public Task BeginTransaction();
 
         public Task Commit();

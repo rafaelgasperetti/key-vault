@@ -3,7 +3,6 @@ using key_vault.Models;
 using key_vault.Properties;
 using MySql.Data.MySqlClient;
 using System.Data.Common;
-using System.Threading;
 
 namespace key_vault.Database
 {
@@ -93,6 +92,11 @@ namespace key_vault.Database
             GC.SuppressFinalize(this);
         }
 
+        public bool HasTransaction()
+        {
+            return Transaction != null;
+        }
+
         public async Task BeginTransaction()
         {
             Transaction ??= await Connection.BeginTransactionAsync();
@@ -100,7 +104,10 @@ namespace key_vault.Database
 
         public async Task Commit()
         {
-            await Transaction?.CommitAsync();
+            if (Environment.Environment == APIEnvironment.EnvironmentName.LocalApp || Environment.Environment == APIEnvironment.EnvironmentName.ProdApp)
+            {
+                await Transaction?.CommitAsync();
+            }
         }
 
         public async Task Rollback()
