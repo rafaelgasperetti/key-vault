@@ -11,18 +11,16 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-    - name: Restore dependencies
+    - name: Restore dependencies key-vault/key-vault.sln
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build key-vault/key-vault.sln --no-restore 
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test key-vault/key-vault.sln --no-build --verbosity normal
