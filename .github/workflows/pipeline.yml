@@ -15,15 +15,15 @@ jobs:
     env:
       working-directory: .
     steps:
-    - name: root directory
-      run: |
-        ls /usr/share/dotnet -R
-      working-directory: ${{env.working-directory}}
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
+    - name: root directory
+      run: |
+        ls /usr/share/dotnet -R
+      working-directory: ${{env.working-directory}}
     - name: Restore dependencies ${{env.working-directory}}/key-vault/key-vault.sln
       run: dotnet restore
     - name: Build
