@@ -10,6 +10,8 @@ namespace key_vault_test.Tests.Base
 {
     public class BaseTest : IDisposable
     {
+        protected const string API_SKIP_REASON = "Skipped due to be an API call into the tested project. Only possible locally.";
+
         private readonly APIEnvironment Environment;
         private readonly IDatabase Database;
         private readonly IServiceProvider ServiceProvider;
