@@ -62,6 +62,8 @@ namespace key_vault_test.Tests
             Assert.NotNull(createResponse.ClientSecret);
             Assert.NotNull(createResponse.CreatedAt);
 
+            AccountIdToDelete = createResponse.AccountId;
+
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {createResponse.ClientSecret}");
 
             rawResponse = await client.GetAsync(accountsEndpoint);
