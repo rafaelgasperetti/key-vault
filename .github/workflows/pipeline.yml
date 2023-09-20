@@ -17,7 +17,7 @@ jobs:
     steps:
     - name: root directory
       run: |
-        ls -R
+        ls /usr/share/dotnet -R
       working-directory: ${{env.working-directory}}
     - uses: actions/checkout@v3
     - name: Setup .NET
