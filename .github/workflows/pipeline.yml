@@ -34,7 +34,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore  ${{env.working-directory}}/key-vault/key-vault.sln
     - name: Build
-      run: dotnet build ${{env.working-directory}}/key-vault/key-vault.sln --no-restore 
+      run: dotnet build ${{env.working-directory}}/key-vault/key-vault.sln -c Release --no-restore 
     - name: Test
       run: dotnet test ${{env.working-directory}}/key-vault/key-vault.sln --no-build --verbosity normal
       timeout-minutes: 10
