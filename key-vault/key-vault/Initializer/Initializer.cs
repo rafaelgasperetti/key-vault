@@ -6,20 +6,19 @@ using key_vault.Models;
 using key_vault.Services.Interfaces;
 using key_vault.Services;
 using System.Reflection;
-using key_vault.Models.Interfaces;
 using key_vault.Helpers;
 
 namespace key_vault.Initializer
 {
     public static class Initializer
     {
-        private static readonly object MigrationLock = new();
         private static bool Migrated = false;
 
         public static APIEnvironment GetAPIEnvironment(IConfiguration configuration)
         {
             var assembly = Assembly.GetAssembly(typeof(Initializer));
 
+            var envStr = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Environment)}"];
             var host = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.DatabaseHost)}"];
             var port = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.DatabasePort)}"];
             var user = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.DatabaseUser)}"];
@@ -28,11 +27,15 @@ namespace key_vault.Initializer
             var secret = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Secret)}"];
             var jwtIssuer = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.JWTIssuer)}"];
             var jwtAudience = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.JWTAudience)}"];
+            var keyVaultAPIUrl = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.KeyVaultAPIUrl)}"];
             
             var version = assembly.GetName().Version;
 
+            _ = Enum.TryParse(envStr, out APIEnvironment.EnvironmentName env);
+
             return new APIEnvironment()
             {
+                Environment = env,
                 DatabaseHost = host,
                 DatabasePort = port,
                 DatabaseUser = user,
@@ -41,29 +44,12 @@ namespace key_vault.Initializer
                 Secret = secret,
                 JWTIssuer = jwtIssuer,
                 JWTAudience = jwtAudience,
+                KeyVaultAPIUrl = new Uri(keyVaultAPIUrl),
                 Version = version
             };
         }
 
-        public static TestEnvironment GetTestEnvironment(IConfiguration configuration)
-        {
-            var host = configuration[$"{nameof(TestEnvironment)}:{nameof(TestEnvironment.DatabaseHost)}"];
-            var port = configuration[$"{nameof(TestEnvironment)}:{nameof(TestEnvironment.DatabasePort)}"];
-            var user = configuration[$"{nameof(TestEnvironment)}:{nameof(TestEnvironment.DatabaseUser)}"];
-            var password = configuration[$"{nameof(TestEnvironment)}:{nameof(TestEnvironment.DatabasePassword)}"];
-            var keyVaultAPIUrl = configuration[$"{nameof(TestEnvironment)}:{nameof(TestEnvironment.KeyVaultAPIUrl)}"];
-
-            return new TestEnvironment()
-            {
-                DatabaseHost = host,
-                DatabasePort = port,
-                DatabaseUser = user,
-                DatabasePassword = password,
-                KeyVaultAPIUrl = keyVaultAPIUrl
-            };
-        }
-
-        public static void Initialize(IServiceCollection services, IEnvironment env)
+        public static void Initialize(IServiceCollection services, APIEnvironment env)
         {
             Migrate(env);
 
@@ -72,9 +58,11 @@ namespace key_vault.Initializer
             services.AddScopedIfNotExists<IEncryption, Encryption>();
             services.AddScopedIfNotExists<IAccountService, AccountService>();
             services.AddScopedIfNotExists<ISecretService, SecretService>();
+
+            services.AddHttpContextAccessor();
         }
 
-        private static void Migrate(IEnvironment env)
+        private static void Migrate(APIEnvironment env)
         {
             if (Migrated)
             {
@@ -83,12 +71,9 @@ namespace key_vault.Initializer
 
             Migrated = true;
 
-            lock (MigrationLock)
-            {
-                using var db = new MySqlDb(env, false);
-                using var migrator = new Migrator(db);
-                migrator.Migrate();
-            }
+            using var db = new MySqlDb(env, false);
+            using var migrator = new Migrator(db);
+            migrator.Migrate();
         }
     }
 }

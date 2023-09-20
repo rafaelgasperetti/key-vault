@@ -1,4 +1,5 @@
 using Azure;
+using key_vault.Database.Interfaces;
 using key_vault.Helpers;
 using key_vault.Models;
 using key_vault_test.Properties;
@@ -17,16 +18,30 @@ namespace key_vault_test.Tests
         public SecretAPITest() : base(false)
         {
             Account = ConfigureAccount().Result;
-            Vault = new Vault.Vault(GetTestEnvironment().KeyVaultAPIUrl, Account.ClientSecret!);
+            Vault = new Vault.Vault(GetEnvironment().KeyVaultAPIUrl.ToString(), Account.ClientSecret!);
+        }
+
+        protected override void CleanUp()
+        {
+            if (Account == null)
+            {
+                return;
+            }
+
+            var db = GetService<IDatabase>();
+            using var cmd = db.CreateComand(Strings.BaseTest_CleanUpSecretKey);
+            cmd.Parameters.Add(db.GetParameter(nameof(Account.AccountId), Account.AccountId));
+            cmd.ExecuteNonQueryAsync().Wait();
+
+            cmd.CommandText = Strings.BaseTest_CleanUpAccount;
+            cmd.ExecuteNonQueryAsync().Wait();
         }
 
         private async Task<Account> ConfigureAccount()
         {
-            var uri = new Uri(GetTestEnvironment().KeyVaultAPIUrl);
-
             using HttpClient client = new()
             {
-                BaseAddress = uri
+                BaseAddress = GetEnvironment().KeyVaultAPIUrl
             };
 
             string accountName = Helper.RandomString();
@@ -45,11 +60,9 @@ namespace key_vault_test.Tests
 
         private async Task DeleteAccount()
         {
-            var uri = new Uri(GetTestEnvironment().KeyVaultAPIUrl);
-
             using HttpClient client = new()
             {
-                BaseAddress = uri
+                BaseAddress = GetEnvironment().KeyVaultAPIUrl
             };
 
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Account.ClientSecret}");

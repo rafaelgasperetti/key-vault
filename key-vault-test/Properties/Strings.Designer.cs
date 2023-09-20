@@ -70,7 +70,16 @@ namespace key_vault_test.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM Account.
+        ///   Looks up a localized string similar to SELECT DeletedAt FROM Account WHERE AccountId = @AccountId.
+        /// </summary>
+        internal static string AccountTest_DeletedAccount {
+            get {
+                return ResourceManager.GetString("AccountTest_DeletedAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM Account WHERE AccountId = @AccountId.
         /// </summary>
         internal static string BaseTest_CleanUpAccount {
             get {
@@ -79,7 +88,7 @@ namespace key_vault_test.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM SecretKey.
+        ///   Looks up a localized string similar to DELETE FROM SecretKey WHERE AccountId = @AccountId.
         /// </summary>
         internal static string BaseTest_CleanUpSecretKey {
             get {
@@ -93,6 +102,15 @@ namespace key_vault_test.Properties {
         internal static string BaseTest_Initialize_AppSettings {
             get {
                 return ResourceManager.GetString("BaseTest_Initialize_AppSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT DeletedAt FROM SecretKey WHERE Name = @name.
+        /// </summary>
+        internal static string SecretTest_DeletedSecret {
+            get {
+                return ResourceManager.GetString("SecretTest_DeletedSecret", resourceCulture);
             }
         }
     }

@@ -1,25 +1,26 @@
 ﻿using key_vault.Database.Interfaces;
 using key_vault.Models;
-using key_vault.Models.Interfaces;
 using key_vault.Properties;
 using MySql.Data.MySqlClient;
 using System.Data.Common;
+using System.Threading;
 
 namespace key_vault.Database
 {
     public class MySqlDb : IDatabase
     {
-        private readonly IEnvironment Environment;
+        private readonly APIEnvironment Environment;
         private MySqlConnection Connection;
         private DbTransaction Transaction;
+        private static readonly SemaphoreSlim Semaphore = new(1);
 
-        public MySqlDb(IEnvironment env)
+        public MySqlDb(APIEnvironment env)
         {
             Environment = env;
             Connection = (MySqlConnection)OpenConnection().Result;
         }
 
-        public MySqlDb(IEnvironment env, bool openConnection)
+        public MySqlDb(APIEnvironment env, bool openConnection)
         {
             Environment = env;
 
@@ -31,13 +32,23 @@ namespace key_vault.Database
 
         public async Task<DbConnection> OpenConnection(bool mainDb = true)
         {
-            string dbString = mainDb ? $"Database={Strings.DatabaseName};" : string.Empty;
 
-            string connString = string.Format(Strings.ConnectionString, Environment.DatabaseHost, Environment.DatabasePort, Environment.DatabaseUser, Environment.DatabasePassword, dbString);
-            var connection = new MySqlConnection(connString);
-            await connection.OpenAsync();
+            await Semaphore.WaitAsync();
 
-            return connection;
+            try
+            {
+                string dbString = mainDb ? $"Database={Strings.DatabaseName};" : string.Empty;
+
+                string connString = string.Format(Strings.ConnectionString, Environment.DatabaseHost, Environment.DatabasePort, Environment.DatabaseUser, Environment.DatabasePassword, dbString);
+                var connection = new MySqlConnection(connString);
+                await connection.OpenAsync();
+
+                return connection;
+            }
+            finally
+            {
+                Semaphore.Release();
+            }
         }
 
         public DbConnection GetConnection()

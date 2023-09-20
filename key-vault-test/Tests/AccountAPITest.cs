@@ -1,5 +1,7 @@
+using key_vault.Database.Interfaces;
 using key_vault.Helpers;
 using key_vault.Models;
+using key_vault_test.Properties;
 using key_vault_test.Tests.Base;
 using Newtonsoft.Json;
 using System.Net;
@@ -9,20 +11,34 @@ namespace key_vault_test.Tests
 {
     public class AccountAPITest : BaseTest
     {
+        private int? AccountIdToDelete = null;
+
         public AccountAPITest() : base(false)
         {
 
+        }
+
+        protected override void CleanUp()
+        {
+            if (AccountIdToDelete == null)
+            {
+                return;
+            }
+
+            var db = GetService<IDatabase>();
+            using var cmd = db.CreateComand(Strings.BaseTest_CleanUpAccount);
+            cmd.Parameters.Add(db.GetParameter(nameof(Account.AccountId), AccountIdToDelete));
+            cmd.ExecuteNonQueryAsync().Wait();
         }
 
         [Fact]
         public async Task TestCrudNewAccountSuccess()
         {
             string accountsEndpoint = "accounts";
-            var uri = new Uri(GetTestEnvironment().KeyVaultAPIUrl);
 
             using HttpClient client = new()
             {
-                BaseAddress = uri
+                BaseAddress = GetEnvironment().KeyVaultAPIUrl
             };
 
             string accountName = Helper.RandomString();

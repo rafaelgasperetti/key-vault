@@ -41,7 +41,6 @@ builder.Services.AddApiVersioning(v =>
     v.ReportApiVersions = true;
 });
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
-builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(options =>
 {

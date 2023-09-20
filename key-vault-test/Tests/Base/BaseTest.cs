@@ -1,4 +1,4 @@
-﻿using key_vault.Database;
+﻿using key_vault.Database.Interfaces;
 using key_vault.Initializer;
 using key_vault.Models;
 using key_vault_test.Properties;
@@ -10,22 +10,22 @@ namespace key_vault_test.Tests.Base
 {
     public class BaseTest : IDisposable
     {
-        private readonly TestEnvironment TestEnvironment;
-        private readonly MySqlDb Database;
+        private readonly APIEnvironment Environment;
+        private readonly IDatabase Database;
         private readonly IServiceProvider ServiceProvider;
 
         public BaseTest(bool initDb = true)
         {
-            (TestEnvironment, ServiceProvider) = Initialize();
+            (Environment, ServiceProvider) = Initialize();
 
             if (initDb)
             {
-                Database = new(TestEnvironment.ToAPIEnvironment());
+                Database = GetService<IDatabase>();
                 Database.BeginTransaction().Wait();
             }
         }
 
-        private (TestEnvironment,IServiceProvider) Initialize()
+        private (APIEnvironment, IServiceProvider) Initialize()
         {
             var assembly = Assembly.GetAssembly(typeof(Initializer));
             string name = assembly.GetName().Name;
@@ -37,31 +37,30 @@ namespace key_vault_test.Tests.Base
                     .AddEnvironmentVariables();
 
             var config = builder.Build();
-            var env = Initializer.GetTestEnvironment(config);
+            
+            var env = Initializer.GetAPIEnvironment(config);
+            env.Version = assembly.GetName().Version;
 
             IServiceCollection services = new ServiceCollection();
-            services.Configure<TestEnvironment>(config.GetSection(nameof(TestEnvironment)));
-            
+            services.Configure<APIEnvironment>(config.GetSection(nameof(Environment)));
+
             Initializer.Initialize(services, env);
             return new(env, services.BuildServiceProvider());
         }
 
-        private void CleanUp()
+        protected virtual void CleanUp()
         {
-            using MySqlDb db = new(TestEnvironment.ToAPIEnvironment());
 
-            db.CreateComand(Strings.BaseTest_CleanUpSecretKey).ExecuteNonQueryAsync().Wait();
-            db.CreateComand(Strings.BaseTest_CleanUpAccount).ExecuteNonQueryAsync().Wait();
-        }
-
-        public TestEnvironment GetTestEnvironment()
-        {
-            return TestEnvironment;
         }
 
         public T GetService<T>() where T : class
         {
             return ServiceProvider.GetService<T>();
+        }
+
+        public APIEnvironment GetEnvironment()
+        {
+            return Environment;
         }
 
         public void Dispose()

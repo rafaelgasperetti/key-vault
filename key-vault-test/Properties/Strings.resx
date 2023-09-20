@@ -120,13 +120,19 @@
   <data name="AccountsEndpoint" xml:space="preserve">
     <value>accounts</value>
   </data>
+  <data name="AccountTest_DeletedAccount" xml:space="preserve">
+    <value>SELECT DeletedAt FROM Account WHERE AccountId = @AccountId</value>
+  </data>
   <data name="BaseTest_CleanUpAccount" xml:space="preserve">
-    <value>DELETE FROM Account</value>
+    <value>DELETE FROM Account WHERE AccountId = @AccountId</value>
   </data>
   <data name="BaseTest_CleanUpSecretKey" xml:space="preserve">
-    <value>DELETE FROM SecretKey</value>
+    <value>DELETE FROM SecretKey WHERE AccountId = @AccountId</value>
   </data>
   <data name="BaseTest_Initialize_AppSettings" xml:space="preserve">
     <value>appsettings.json</value>
+  </data>
+  <data name="SecretTest_DeletedSecret" xml:space="preserve">
+    <value>SELECT DeletedAt FROM SecretKey WHERE Name = @name</value>
   </data>
 </root>

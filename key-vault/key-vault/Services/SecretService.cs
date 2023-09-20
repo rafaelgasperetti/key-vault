@@ -4,7 +4,6 @@ using key_vault.Models;
 using key_vault.Properties;
 using key_vault.Services.Interfaces;
 using key_vault.Helpers;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace key_vault.Services
 {
@@ -32,11 +31,21 @@ namespace key_vault.Services
                 return new();
             }
 
-            var request = HttpContext.HttpContext.Request;
-            string id = $"{request.Scheme}://{request.Host}/secrets/{secretKey.Name}/{secretKey.Version}";
+            string id;
+
+            if (Environment.Environment == APIEnvironment.EnvironmentName.LocalTest || Environment.Environment == APIEnvironment.EnvironmentName.ProdTest)
+            {
+                id = $"{Environment.KeyVaultAPIUrl}secrets/{secretKey.Name}/{secretKey.Version}";
+            }
+            else
+            {
+                var request = HttpContext.HttpContext.Request;
+                id = $"{request.Scheme}://{request.Host}/secrets/{secretKey.Name}/{secretKey.Version}";
+            }
 
             return new SecretResponse()
             {
+                name = secretKey.Name,
                 value = secretKey.Value,
                 id = new Uri(id),
                 attributes = new SecretResponseAttributes()

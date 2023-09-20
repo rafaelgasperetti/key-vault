@@ -1,6 +1,4 @@
-﻿using key_vault.Services.Interfaces;
-
-namespace key_vault.Models
+﻿namespace key_vault.Models
 {
     public class SecretResponseAttributes
     {
@@ -17,5 +15,22 @@ namespace key_vault.Models
         public string value { get; set; }
         public Uri id { get; set; }
         public SecretResponseAttributes attributes { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || obj.GetType() != typeof(SecretResponse))
+            {
+                return false;
+            }
+
+            var resp = (SecretResponse)obj;
+
+            return name == resp.name && value == resp.value && (id?.Equals(resp.id) ?? false);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

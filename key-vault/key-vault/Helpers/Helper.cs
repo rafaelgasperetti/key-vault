@@ -27,5 +27,11 @@ namespace key_vault.Helpers
 
             return builder.ToString();
         }
+
+        public static int RandomInt(int min = 0, int max = int.MaxValue)
+        {
+            Random random = new();
+            return random.Next(min, max);
+        }
     }
 }
