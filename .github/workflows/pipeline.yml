@@ -13,14 +13,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      working-directory: /home/runner/work/key-vault
+      working-directory: /home/runner/work/key-vault/key-vault
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-    - name: root directory
+    - name: ${{env.working-directory}}
       run: |
         ls ${{env.working-directory}} -R
       working-directory: ${{env.working-directory}}
