@@ -16,17 +16,15 @@ jobs:
       working-directory: /home/runner/work/key-vault/key-vault
     steps:
     - uses: actions/checkout@v3
+      with:
+        path: ${{env.working-directory}}
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-    - name: ${{env.working-directory}}
-      run: |
-        ls ${{env.working-directory}} -R
-      working-directory: ${{env.working-directory}}
     - name: Restore dependencies
       run: dotnet restore  ${{env.working-directory}}/key-vault/key-vault.sln
     - name: Build
       run: dotnet build ${{env.working-directory}}/key-vault/key-vault.sln --no-restore 
     - name: Test
-      run: dotnet test ${{env.working-directory}}/key-vault/key-vault.sln --no-build --verbosity normal
+      run: dotnet test ${{env.working-directory}}/key-vault-test/key-vault.sln --no-build --verbosity normal
