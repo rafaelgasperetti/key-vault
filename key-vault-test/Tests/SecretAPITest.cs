@@ -37,40 +37,6 @@ namespace key_vault_test.Tests
             cmd.ExecuteNonQueryAsync().Wait();
         }
 
-        private async Task<Account> ConfigureAccount()
-        {
-            using HttpClient client = new()
-            {
-                BaseAddress = GetEnvironment().KeyVaultAPIUrl
-            };
-
-            string accountName = Helper.RandomString();
-            dynamic body = new
-            {
-                Name = accountName
-            };
-            var content = new StringContent(JsonConvert.SerializeObject(body), new MediaTypeHeaderValue("application/json"));
-
-            var rawResponse = await client.PostAsync(Strings.AccountsEndpoint, content);
-            Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
-            
-            var responseStr = await rawResponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Account>(responseStr)!;
-        }
-
-        private async Task DeleteAccount()
-        {
-            using HttpClient client = new()
-            {
-                BaseAddress = GetEnvironment().KeyVaultAPIUrl
-            };
-
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Account.ClientSecret}");
-
-            var rawResponse = await client.DeleteAsync(Strings.AccountsEndpoint);
-            Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
-        }
-
         [Fact]
         public async Task TestCrudSecret()
         {
@@ -90,6 +56,40 @@ namespace key_vault_test.Tests
 
             await Vault.Delete(secretName);
             await Assert.ThrowsAsync<RequestFailedException>(() => Vault.Delete(secretName));
+        }
+
+        private async Task<Account> ConfigureAccount()
+        {
+            using HttpClient client = new()
+            {
+                BaseAddress = GetEnvironment().KeyVaultAPIUrl
+            };
+
+            string accountName = Helper.RandomString();
+            dynamic body = new
+            {
+                Name = accountName
+            };
+            var content = new StringContent(JsonConvert.SerializeObject(body), new MediaTypeHeaderValue("application/json"));
+
+            var rawResponse = await client.PostAsync(Strings.AccountsEndpoint, content);
+            Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
+
+            var responseStr = await rawResponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Account>(responseStr)!;
+        }
+
+        private async Task DeleteAccount()
+        {
+            using HttpClient client = new()
+            {
+                BaseAddress = GetEnvironment().KeyVaultAPIUrl
+            };
+
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Account.ClientSecret}");
+
+            var rawResponse = await client.DeleteAsync(Strings.AccountsEndpoint);
+            Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
         }
     }
 }

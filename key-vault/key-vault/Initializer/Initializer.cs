@@ -13,6 +13,7 @@ namespace key_vault.Initializer
     public static class Initializer
     {
         private static bool Migrated = false;
+        private static readonly SemaphoreSlim Semaphore = new(1);
 
         public static APIEnvironment GetAPIEnvironment(IConfiguration configuration)
         {
@@ -64,16 +65,25 @@ namespace key_vault.Initializer
 
         private static void Migrate(APIEnvironment env)
         {
-            if (Migrated)
+            Semaphore.Wait();
+
+            try
             {
-                return;
+                if (Migrated)
+                {
+                    return;
+                }
+
+                Migrated = true;
+
+                using var db = new MySqlDb(env, false);
+                using var migrator = new Migrator(db);
+                migrator.Migrate();
             }
-
-            Migrated = true;
-
-            using var db = new MySqlDb(env, false);
-            using var migrator = new Migrator(db);
-            migrator.Migrate();
+            finally
+            {
+                Semaphore.Release();
+            }
         }
     }
 }
