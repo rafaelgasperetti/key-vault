@@ -15,8 +15,8 @@ jobs:
     steps:
     - task: CmdLine@2
       inputs:
-      script: |
-        echo  '$(System.DefaultWorkingDirectory)'
+        script: |
+          echo  '$(System.DefaultWorkingDirectory)'
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
