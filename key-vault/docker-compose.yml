@@ -24,7 +24,7 @@ services:
   key-vault.db:
     container_name: key-vault.db
     hostname: key-vault
-    image: mysql
+    image: mysql:latest
     ports:
       - "9090:3306"
     environment:

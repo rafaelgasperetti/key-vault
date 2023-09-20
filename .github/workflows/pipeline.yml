@@ -14,6 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: /home/runner/work/key-vault/key-vault
+      mysql-login: root
+      mysql-database: key-vault
+    services:
+      key-vault.db:
+        image: mysql:latest
+        ports:
+          - "9090:3306"
+        env:
+          MYSQL_ROOT_PASSWORD: ${{secrets.mysql_password}}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -28,3 +37,4 @@ jobs:
       run: dotnet build ${{env.working-directory}}/key-vault/key-vault.sln --no-restore 
     - name: Test
       run: dotnet test ${{env.working-directory}}/key-vault/key-vault.sln --no-build --verbosity normal
+      timeout-minutes: 10
