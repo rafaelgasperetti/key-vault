@@ -4,10 +4,12 @@ namespace key_vault.Services.Interfaces
 {
     public interface ISecretService
     {
-        public SecretResponse Get(int accountId, string name, string? version);
+        public const string DEFAULT_RECOVERY_LEVEL = "Recoverable+Purgeable";
 
-        public SecretResponse Create(string name, SecretKey secretKey);
+        public Task<SecretResponse> Get(int? accountId, string name, string? version);
 
-        public void Delete(int accountId, string name);
+        public Task<SecretResponse> Create(int? accountId, string name, SecretRequest request);
+
+        public Task<SecretResponse> Delete(int? accountId, string name);
     }
 }

@@ -4,7 +4,7 @@ namespace key_vault.Database.Interfaces
 {
     public interface IDatabase : IDisposable
     {
-        public DbConnection OpenConnection(bool mainDb = true);
+        public Task<DbConnection> OpenConnection(bool mainDb = true);
 
         public DbConnection GetConnection();
 
@@ -12,10 +12,10 @@ namespace key_vault.Database.Interfaces
 
         public DbParameter GetParameter(string name, object value);
 
-        public int? GetLastId();
+        public Task<int?> GetLastId();
 
-        public void BeginTransaction();
+        public Task BeginTransaction();
 
-        public void Commit();
+        public Task Commit();
     }
 }

@@ -119,6 +119,15 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Application Running....
+        /// </summary>
+        internal static string ApplicationRunningMessage {
+            get {
+                return ResourceManager.GetString("ApplicationRunningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server={0};Port={1};User ID={2};Password={3};{4}.
         /// </summary>
         internal static string ConnectionString {
@@ -160,6 +169,15 @@ namespace key_vault.Properties {
         internal static string MySql_GetLastInsertedId {
             get {
                 return ResourceManager.GetString("MySql_GetLastInsertedId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;NULL&gt;.
+        /// </summary>
+        internal static string NullRepresentation {
+            get {
+                return ResourceManager.GetString("NullRepresentation", resourceCulture);
             }
         }
         
@@ -230,6 +248,24 @@ namespace key_vault.Properties {
         internal static string SecretService_GetVersion {
             get {
                 return ResourceManager.GetString("SecretService_GetVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account ID &quot;{0}&quot; not found..
+        /// </summary>
+        internal static string Service_AccountNotFound {
+            get {
+                return ResourceManager.GetString("Service_AccountNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret &quot;{0}&quot; not found in account &quot;{1}&quot;..
+        /// </summary>
+        internal static string Service_SecretNotFound {
+            get {
+                return ResourceManager.GetString("Service_SecretNotFound", resourceCulture);
             }
         }
     }

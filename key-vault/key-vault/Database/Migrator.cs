@@ -14,7 +14,7 @@ namespace key_vault.Database
 
         private void CreateDatabase()
         {
-            using var connection = MySql.OpenConnection(false);
+            using var connection = MySql.OpenConnection(false).Result;
             using var command = connection.CreateCommand();
 
             command.CommandText = string.Format(Strings.CreateDatabaseString, Strings.DatabaseName);
@@ -26,7 +26,7 @@ namespace key_vault.Database
         {
             CreateDatabase();
 
-            using var connection = MySql.OpenConnection();
+            using var connection = MySql.OpenConnection().Result;
             using var command = connection.CreateCommand();
 
             command.CommandText = EnvironmentHelper.ReadResource(Strings.DatabaseScriptFile);

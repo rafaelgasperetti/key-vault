@@ -145,6 +145,9 @@ VALUES
   <data name="AccountService_UpdateClientSecret" xml:space="preserve">
     <value>UPDATE Account SET ClientSecret = @ClientSecret WHERE AccountId = @AccountId</value>
   </data>
+  <data name="ApplicationRunningMessage" xml:space="preserve">
+    <value>Application Running...</value>
+  </data>
   <data name="ConnectionString" xml:space="preserve">
     <value>Server={0};Port={1};User ID={2};Password={3};{4}</value>
   </data>
@@ -159,6 +162,9 @@ VALUES
   </data>
   <data name="MySql_GetLastInsertedId" xml:space="preserve">
     <value>SELECT LAST_INSERT_ID();</value>
+  </data>
+  <data name="NullRepresentation" xml:space="preserve">
+    <value>&lt;NULL&gt;</value>
   </data>
   <data name="SecretService_Create" xml:space="preserve">
     <value>INSERT INTO SecretKey
@@ -205,5 +211,11 @@ WHERE	SecretKey.AccountId = @AccountId AND
     <value>SELECT	SecretKey.*
 FROM	SecretKey
 WHERE	AccountId = @AccountId AND Name = @Name AND Version = @Version AND DeletedAt IS NULL</value>
+  </data>
+  <data name="Service_AccountNotFound" xml:space="preserve">
+    <value>Account ID "{0}" not found.</value>
+  </data>
+  <data name="Service_SecretNotFound" xml:space="preserve">
+    <value>Secret "{0}" not found in account "{1}".</value>
   </data>
 </root>

@@ -3,6 +3,7 @@ using key_vault.Initializer.Jwt.Interfaces;
 using key_vault.Models;
 using key_vault.Properties;
 using key_vault.Services.Interfaces;
+using key_vault.Helpers;
 
 namespace key_vault.Services
 {
@@ -23,11 +24,11 @@ namespace key_vault.Services
             HttpContext = httpContext;
         }
 
-        private SecretResponse GenerateSecretResponse(SecretKey secretKey)
+        private SecretResponse GenerateSecretResponse(SecretKey secretKey, string recoveryLevel = ISecretService.DEFAULT_RECOVERY_LEVEL)
         {
             if (secretKey == null)
             {
-                return null;
+                return new();
             }
 
             var request = HttpContext.HttpContext.Request;
@@ -37,22 +38,19 @@ namespace key_vault.Services
             {
                 value = secretKey.Value,
                 id = new Uri(id),
-                attributes = new SecretAttributes()
+                attributes = new SecretResponseAttributes()
                 {
                     enabled = secretKey.DeletedAt == null,
-                    created = secretKey.CreatedAt.Value.Ticks / TimeSpan.TicksPerMillisecond,
-                    updated = secretKey.CreatedAt.Value.Ticks / TimeSpan.TicksPerMillisecond,
-                    recoveryLevel = "Recoverable+Purgeable"
+                    created = secretKey.CreatedAt.Value.GetCurrentTimestamp(),
+                    updated = secretKey.CreatedAt.Value.GetCurrentTimestamp(),
+                    recoveryLevel = recoveryLevel
                 }
             };
         }
 
-        public SecretResponse Get(int accountId, string name, string? version)
+        public async Task<SecretResponse> Get(int? accountId, string name, string? version)
         {
-            if (AccountService.Get(accountId) == null)
-            {
-                return null;
-            }
+            await AccountService.Get(accountId);
 
             using var cmd = Database.CreateComand(string.IsNullOrEmpty(version) ? Strings.SecretService_Get : Strings.SecretService_GetVersion);
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), accountId));
@@ -63,10 +61,10 @@ namespace key_vault.Services
                 cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Version), version));
             }
             
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
             if (!reader.Read())
             {
-                return null;
+                throw new InvalidDataException(string.Format(Strings.Service_SecretNotFound, name, accountId));
             }
 
             string value = reader.IsDBNull(5) ? null : reader.GetString(5);
@@ -91,45 +89,56 @@ namespace key_vault.Services
             return GenerateSecretResponse(secretKey);
         }
 
-        public SecretResponse Create(string name, SecretKey secretKey)
+        public async Task<SecretResponse> Create(int? accountId, string name, SecretRequest request)
         {
-            if (AccountService.Get(secretKey.AccountId) == null)
+            try
             {
-                return null;
+                if (accountId == null || await AccountService.Get(accountId.Value) == null)
+                {
+                    throw new InvalidDataException(string.Format(Strings.Service_AccountNotFound, accountId));
+                }
+
+                SecretKey secretKey = new()
+                {
+                    AccountId = accountId.Value,
+                    Name = name,
+                    Version = Guid.NewGuid(),
+                    Value = request.value
+                };
+
+                if (!string.IsNullOrEmpty(secretKey.Value) && Environment.EncryptValues)
+                {
+                    secretKey.Value = Encryption.Encrypt(secretKey.Value);
+                }
+
+                using var cmd = Database.CreateComand(Strings.SecretService_Create);
+                cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), secretKey.AccountId));
+                cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), secretKey.Name));
+                cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Description), (object)secretKey.Description ?? DBNull.Value));
+                cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Version), secretKey.Version));
+                cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Value), (object)secretKey.Value ?? DBNull.Value));
+
+                await cmd.ExecuteNonQueryAsync();
+
+                return await Get(secretKey.AccountId, secretKey.Name, null);
             }
-
-            secretKey.Name = name;
-            secretKey.Version = Guid.NewGuid();
-
-            if (!string.IsNullOrEmpty(secretKey.Value) && Environment.EncryptValues)
+            catch
             {
-                secretKey.Value = Encryption.Encrypt(secretKey.Value);
+                throw;
             }
-
-            using var cmd = Database.CreateComand(Strings.SecretService_Create);
-            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), secretKey.AccountId));
-            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), secretKey.Name));
-            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Description), (object) secretKey.Description ?? DBNull.Value));
-            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Version), secretKey.Version));
-            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Value), (object) secretKey.Value ?? DBNull.Value));
-
-            cmd.ExecuteNonQuery();
-
-            return Get(secretKey.AccountId, secretKey.Name, null);
         }
 
-        public void Delete(int accountId, string name)
+        public async Task<SecretResponse> Delete(int? accountId, string name)
         {
-            if (AccountService.Get(accountId) == null)
-            {
-                return;
-            }
+            await AccountService.Get(accountId);
+            await Get(accountId, name, null);
 
             using var cmd = Database.CreateComand(Strings.SecretService_Delete);
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), accountId));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), name));
 
-            cmd.ExecuteNonQuery();
+            await cmd.ExecuteNonQueryAsync();
+            return GenerateSecretResponse(null);
         }
     }
 }

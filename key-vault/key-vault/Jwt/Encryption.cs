@@ -29,7 +29,6 @@ namespace key_vault.Initializer.Jwt
                     new Claim(nameof(Account.TenantId), tenantId.ToString()),
                     new Claim(nameof(Account.ClientId), clientId.ToString())
                 }),
-                //Expires = DateTime.UtcNow.AddHours(2),
                 Issuer = Environment.JWTIssuer,
                 Audience = Environment.JWTAudience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

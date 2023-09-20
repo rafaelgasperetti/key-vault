@@ -15,43 +15,24 @@ namespace key_vault.Controllers
         }
 
         [HttpGet("secrets/{name}/{version?}")]
-        public SecretResponse Get(string name, string? version)
+        public async Task<SecretResponse> Get(string name, string? version)
         {
             int? accountId = GetAccountId();
-
-            if (accountId == null)
-            {
-                return null;
-            }
-
-            return Service.Get(accountId.Value, name, version);
+            return await Service.Get(accountId, name, version);
         }
 
         [HttpPut("secrets/{name}")]
-        public SecretResponse Create(string name, [FromBody] SecretKey secretKey)
+        public async Task<SecretResponse> Create(string name, [FromBody] SecretRequest request)
         {
             int? accountId = GetAccountId();
-
-            if (accountId == null)
-            {
-                return null;
-            }
-
-            secretKey.AccountId = accountId.Value;
-            return Service.Create(name, secretKey);
+            return await Service.Create(accountId, name, request);
         }
 
         [HttpDelete("secrets/{name}")]
-        public void Delete(string name)
+        public async Task Delete(string name)
         {
             int? accountId = GetAccountId();
-
-            if (accountId == null)
-            {
-                return;
-            }
-
-            Service.Delete(accountId.Value, name);
+            await Service.Delete(accountId.Value, name);
         }
     }
 }

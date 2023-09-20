@@ -17,15 +17,20 @@ namespace key_vault.Services
             Encryption = encryption;
         }
 
-        public Account Get(int accountId)
+        public async Task<Account> Get(int? accountId)
         {
+            if (accountId == null)
+            {
+                throw new InvalidDataException(string.Format(Strings.Service_AccountNotFound, Strings.NullRepresentation));
+            }
+
             using var cmd = Database.CreateComand(Strings.AccountService_Get);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), accountId));
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
             if (!reader.Read())
             {
-                return null;
+                throw new InvalidDataException(string.Format(Strings.Service_AccountNotFound, accountId));
             }
 
             return new Account()
@@ -40,13 +45,13 @@ namespace key_vault.Services
             };
         }
 
-        public Account Create(Account account)
+        public async Task<Account> Create(Account account)
         {
             account.TenantId = Guid.NewGuid();
             account.ClientId = Guid.NewGuid();
             account.ClientSecret = Guid.NewGuid().ToString();
 
-            Database.BeginTransaction();
+            await Database.BeginTransaction();
 
             using var cmd = Database.CreateComand(Strings.AccountService_Create);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.Name), account.Name));
@@ -54,30 +59,32 @@ namespace key_vault.Services
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.ClientId), account.ClientId));
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.ClientSecret), account.ClientSecret));
 
-            cmd.ExecuteNonQuery();
-            var id = (int) Database.GetLastId();
+            await cmd.ExecuteNonQueryAsync();
+            var id = (int) (await Database.GetLastId());
             string clientSecret = Encryption.GenerateToken(id, account.TenantId.Value, account.ClientId.Value);
 
             cmd.CommandText = Strings.AccountService_UpdateClientSecret;
             cmd.Parameters.Clear();
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.ClientSecret), clientSecret));
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), id));
-            cmd.ExecuteNonQuery();
+            await cmd.ExecuteNonQueryAsync();
 
-            Database.Commit();
+            await Database.Commit();
 
-            account = Get(id);
+            account = await Get(id);
             return account;
         }
 
-        public void Delete(int accountId)
+        public async Task Delete(int? accountId)
         {
+            await Get(accountId);
+
             using var cmd = Database.CreateComand(Strings.AccountService_Delete);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), accountId));
-            cmd.ExecuteNonQuery();
+            await cmd.ExecuteNonQueryAsync();
 
             cmd.CommandText = Strings.AccountService_DeleteAccountSecrets;
-            cmd.ExecuteNonQuery();
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 }

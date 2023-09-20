@@ -1,5 +1,6 @@
 ﻿using key_vault.Controllers.Interfaces;
 using key_vault.Models;
+using key_vault.Properties;
 using key_vault.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,37 +16,32 @@ namespace key_vault.Controllers
             Service = service;
         }
 
+        [AllowAnonymous]
+        [HttpGet("/")]
+        public string Index()
+        {
+            return Strings.ApplicationRunningMessage;
+        }
+
         [HttpGet("accounts")]
-        public Account Get()
+        public async Task<Account> Get()
         {
             int? accountId = GetAccountId();
-
-            if (accountId == null)
-            {
-                return null;
-            }
-
-            return Service.Get(accountId.Value);
+            return await Service.Get(accountId);
         }
 
         [AllowAnonymous]
         [HttpPost("accounts")]
-        public Account Create([FromBody] Account account)
+        public async Task<Account> Create([FromBody] Account account)
         {
-            return Service.Create(account);
+            return await Service.Create(account);
         }
 
         [HttpDelete("accounts")]
-        public void Delete()
+        public async Task Delete()
         {
             int? accountId = GetAccountId();
-
-            if (accountId == null)
-            {
-                return;
-            }
-
-            Service.Delete(accountId.Value);
+            await Service.Delete(accountId);
         }
     }
 }

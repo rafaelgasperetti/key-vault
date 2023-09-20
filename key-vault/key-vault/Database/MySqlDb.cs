@@ -15,7 +15,7 @@ namespace key_vault.Database
         public MySqlDb(APIEnvironment env)
         {
             Environment = env;
-            Connection = (MySqlConnection)OpenConnection();
+            Connection = (MySqlConnection)OpenConnection().Result;
         }
 
         public MySqlDb(APIEnvironment env, bool openConnection)
@@ -24,17 +24,17 @@ namespace key_vault.Database
 
             if (openConnection)
             {
-                Connection = (MySqlConnection)OpenConnection();
+                Connection = (MySqlConnection)OpenConnection().Result;
             }
         }
 
-        public DbConnection OpenConnection(bool mainDb = true)
+        public async Task<DbConnection> OpenConnection(bool mainDb = true)
         {
             string dbString = mainDb ? $"Database={Strings.DatabaseName};" : string.Empty;
 
             string connString = string.Format(Strings.ConnectionString, Environment.DatabaseHost, Environment.DatabasePort, Environment.DatabaseUser, Environment.DatabasePassword, dbString);
             var connection = new MySqlConnection(connString);
-            connection.Open();
+            await connection.OpenAsync();
 
             return connection;
         }
@@ -57,12 +57,12 @@ namespace key_vault.Database
             return new MySqlParameter(name, value);
         }
 
-        public int? GetLastId()
+        public async Task<int?> GetLastId()
         {
             using var cmd = Connection.CreateCommand();
             cmd.Connection = Connection;
             cmd.CommandText = Strings.MySql_GetLastInsertedId;
-            var result = cmd.ExecuteScalar();
+            var result = await cmd.ExecuteScalarAsync();
             return result == null ? null : Convert.ToInt32(result.ToString());
         }
 
@@ -74,14 +74,14 @@ namespace key_vault.Database
             GC.SuppressFinalize(this);
         }
 
-        public void BeginTransaction()
+        public async Task BeginTransaction()
         {
-            Transaction ??= Connection.BeginTransaction();
+            Transaction ??= await Connection.BeginTransactionAsync();
         }
 
-        public void Commit()
+        public async Task Commit()
         {
-            Transaction?.Commit();
+            await Transaction?.CommitAsync();
         }
     }
 }

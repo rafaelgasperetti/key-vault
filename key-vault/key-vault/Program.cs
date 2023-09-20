@@ -71,6 +71,8 @@ builder.Services.AddResponseCompression();
 
 var app = builder.Build();
 
+app.UseMiddleware<CustomMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

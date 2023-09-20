@@ -4,10 +4,10 @@ namespace key_vault.Services.Interfaces
 {
     public interface IAccountService
     {
-        public Account Get(int accountId);
+        public Task<Account> Get(int? accountId);
 
-        public Account Create(Account account);
+        public Task<Account> Create(Account account);
 
-        public void Delete(int accountId);
+        public Task Delete(int? accountId);
     }
 }
