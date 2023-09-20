@@ -1,19 +1,24 @@
 using key_vault.Helpers;
 using key_vault.Models;
-using key_vault_test.Properties;
+using key_vault_test.Tests.Base;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 
 namespace key_vault_test.Tests
 {
-    public class AccountAPITest
+    public class AccountAPITest : BaseTest
     {
+        public AccountAPITest() : base(false)
+        {
+
+        }
+
         [Fact]
         public async Task TestCrudNewAccountSuccess()
         {
             string accountsEndpoint = "accounts";
-            var uri = new Uri(Strings.KeyVaultAPIUrl);
+            var uri = new Uri(GetTestEnvironment().KeyVaultAPIUrl);
 
             using HttpClient client = new()
             {

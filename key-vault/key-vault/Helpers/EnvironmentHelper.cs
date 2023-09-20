@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 
 namespace key_vault.Helpers
 {
-    public class EnvironmentHelper
+    public static class EnvironmentHelper
     {
         public static string ReadResource(string name)
         {
@@ -16,6 +17,32 @@ namespace key_vault.Helpers
         {
             string value = ReadResource(name);
             return JsonConvert.DeserializeObject<T>(value);
+        }
+
+        public static IServiceCollection AddSingletonIfNotExists<TService>(this IServiceCollection services, TService implementationInstance) where TService : class
+        {
+            if (!services.Any(s => s.ServiceType == typeof(TService)))
+            {
+                return services.AddSingleton(implementationInstance);
+            }
+            else
+            {
+                return services;
+            }
+        }
+
+        public static IServiceCollection AddScopedIfNotExists<TService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(this IServiceCollection services)
+            where TService : class
+            where TImplementation : class, TService
+        {
+            if (!services.Any(s => s.ServiceType == typeof(TService)))
+            {
+                return services.AddScoped<TService, TImplementation>();
+            }
+            else
+            {
+                return services;
+            }
         }
     }
 }

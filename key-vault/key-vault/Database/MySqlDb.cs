@@ -1,5 +1,6 @@
 ﻿using key_vault.Database.Interfaces;
 using key_vault.Models;
+using key_vault.Models.Interfaces;
 using key_vault.Properties;
 using MySql.Data.MySqlClient;
 using System.Data.Common;
@@ -8,17 +9,17 @@ namespace key_vault.Database
 {
     public class MySqlDb : IDatabase
     {
-        private readonly APIEnvironment Environment;
+        private readonly IEnvironment Environment;
         private MySqlConnection Connection;
         private DbTransaction Transaction;
 
-        public MySqlDb(APIEnvironment env)
+        public MySqlDb(IEnvironment env)
         {
             Environment = env;
             Connection = (MySqlConnection)OpenConnection().Result;
         }
 
-        public MySqlDb(APIEnvironment env, bool openConnection)
+        public MySqlDb(IEnvironment env, bool openConnection)
         {
             Environment = env;
 
@@ -68,8 +69,15 @@ namespace key_vault.Database
 
         public void Dispose()
         {
-            Connection?.Dispose();
-            Connection = null;
+            try
+            {
+                Connection?.Dispose();
+                Connection = null;
+            }
+            catch
+            {
+
+            }
 
             GC.SuppressFinalize(this);
         }
@@ -82,6 +90,11 @@ namespace key_vault.Database
         public async Task Commit()
         {
             await Transaction?.CommitAsync();
+        }
+
+        public async Task Rollback()
+        {
+            await Transaction?.RollbackAsync();
         }
     }
 }

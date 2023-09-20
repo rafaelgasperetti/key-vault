@@ -117,7 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="KeyVaultAPIUrl" xml:space="preserve">
-    <value>https://localhost:57304</value>
+  <data name="AccountsEndpoint" xml:space="preserve">
+    <value>accounts</value>
+  </data>
+  <data name="BaseTest_CleanUpAccount" xml:space="preserve">
+    <value>DELETE FROM Account</value>
+  </data>
+  <data name="BaseTest_CleanUpSecretKey" xml:space="preserve">
+    <value>DELETE FROM SecretKey</value>
+  </data>
+  <data name="BaseTest_Initialize_AppSettings" xml:space="preserve">
+    <value>appsettings.json</value>
   </data>
 </root>

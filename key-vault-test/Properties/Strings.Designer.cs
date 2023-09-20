@@ -61,11 +61,38 @@ namespace key_vault_test.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://localhost:57304.
+        ///   Looks up a localized string similar to accounts.
         /// </summary>
-        internal static string KeyVaultAPIUrl {
+        internal static string AccountsEndpoint {
             get {
-                return ResourceManager.GetString("KeyVaultAPIUrl", resourceCulture);
+                return ResourceManager.GetString("AccountsEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM Account.
+        /// </summary>
+        internal static string BaseTest_CleanUpAccount {
+            get {
+                return ResourceManager.GetString("BaseTest_CleanUpAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM SecretKey.
+        /// </summary>
+        internal static string BaseTest_CleanUpSecretKey {
+            get {
+                return ResourceManager.GetString("BaseTest_CleanUpSecretKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to appsettings.json.
+        /// </summary>
+        internal static string BaseTest_Initialize_AppSettings {
+            get {
+                return ResourceManager.GetString("BaseTest_Initialize_AppSettings", resourceCulture);
             }
         }
     }

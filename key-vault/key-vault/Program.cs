@@ -12,15 +12,13 @@ using key_vault.Initializer.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using key_vault.Controllers.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<APIEnvironment>(builder.Configuration.GetSection(nameof(APIEnvironment)));
-var env = Initializer.GetEnvironment(builder.Configuration);
+var env = Initializer.GetAPIEnvironment(builder.Configuration);
 
-Initializer.Migrate(env);
-
+Initializer.Initialize(builder.Services, env);
 builder.Services.AddSingleton(env);
 builder.Services.AddScoped<IDatabase, MySqlDb>();
 builder.Services.AddScoped<IEncryption, Encryption>();
@@ -38,7 +36,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApiVersioning(v =>
 {
-    v.DefaultApiVersion = new ApiVersion(BaseController.GetMajorVersion(), BaseController.GetMinorVersion());
+    v.DefaultApiVersion = new ApiVersion(env.Version.Major, env.Version.Minor);
     v.AssumeDefaultVersionWhenUnspecified = true;
     v.ReportApiVersions = true;
 });

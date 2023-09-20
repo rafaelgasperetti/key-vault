@@ -11,7 +11,7 @@ namespace key_vault.Controllers
     {
         private readonly IAccountService Service;
 
-        public AccountController(IAccountService service)
+        public AccountController(APIEnvironment environment, IAccountService service) : base(environment)
         {
             Service = service;
         }
@@ -20,7 +20,7 @@ namespace key_vault.Controllers
         [HttpGet("/")]
         public string Index()
         {
-            return Strings.ApplicationRunningMessage;
+            return string.Format(Strings.ApplicationRunningMessage, APIEnvironment.Version.ToString());
         }
 
         [HttpGet("accounts")]

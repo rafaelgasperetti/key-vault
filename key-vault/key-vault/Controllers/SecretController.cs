@@ -9,7 +9,7 @@ namespace key_vault.Controllers
     {
         private readonly ISecretService Service;
 
-        public SecretController(ISecretService service)
+        public SecretController(APIEnvironment environment, ISecretService service) : base(environment)
         {
             Service = service;
         }

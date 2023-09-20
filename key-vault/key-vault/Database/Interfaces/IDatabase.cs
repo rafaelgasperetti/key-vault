@@ -17,5 +17,7 @@ namespace key_vault.Database.Interfaces
         public Task BeginTransaction();
 
         public Task Commit();
+
+        public Task Rollback();
     }
 }

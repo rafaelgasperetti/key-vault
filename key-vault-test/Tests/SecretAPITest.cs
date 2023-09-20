@@ -2,27 +2,27 @@ using Azure;
 using key_vault.Helpers;
 using key_vault.Models;
 using key_vault_test.Properties;
+using key_vault_test.Tests.Base;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 
 namespace key_vault_test.Tests
 {
-    public class SecretAPITest : IDisposable
+    public class SecretAPITest : BaseTest
     {
-        private readonly string AccountsEndpoint = "accounts";
         private readonly Account Account;
         private readonly Vault.Vault Vault;
 
-        public SecretAPITest()
+        public SecretAPITest() : base(false)
         {
             Account = ConfigureAccount().Result;
-            Vault = new Vault.Vault(Strings.KeyVaultAPIUrl, Account.ClientSecret!);
+            Vault = new Vault.Vault(GetTestEnvironment().KeyVaultAPIUrl, Account.ClientSecret!);
         }
 
         private async Task<Account> ConfigureAccount()
         {
-            var uri = new Uri(Strings.KeyVaultAPIUrl);
+            var uri = new Uri(GetTestEnvironment().KeyVaultAPIUrl);
 
             using HttpClient client = new()
             {
@@ -36,7 +36,7 @@ namespace key_vault_test.Tests
             };
             var content = new StringContent(JsonConvert.SerializeObject(body), new MediaTypeHeaderValue("application/json"));
 
-            var rawResponse = await client.PostAsync(AccountsEndpoint, content);
+            var rawResponse = await client.PostAsync(Strings.AccountsEndpoint, content);
             Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
             
             var responseStr = await rawResponse.Content.ReadAsStringAsync();
@@ -45,7 +45,7 @@ namespace key_vault_test.Tests
 
         private async Task DeleteAccount()
         {
-            var uri = new Uri(Strings.KeyVaultAPIUrl);
+            var uri = new Uri(GetTestEnvironment().KeyVaultAPIUrl);
 
             using HttpClient client = new()
             {
@@ -54,7 +54,7 @@ namespace key_vault_test.Tests
 
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Account.ClientSecret}");
 
-            var rawResponse = await client.DeleteAsync(AccountsEndpoint);
+            var rawResponse = await client.DeleteAsync(Strings.AccountsEndpoint);
             Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
         }
 
@@ -77,21 +77,6 @@ namespace key_vault_test.Tests
 
             await Vault.Delete(secretName);
             await Assert.ThrowsAsync<RequestFailedException>(() => Vault.Delete(secretName));
-        }
-
-        public void Dispose()
-        {
-            try
-            {
-                DeleteAccount().Wait();
-            }
-            catch(Exception ex)
-            {
-                GC.SuppressFinalize(this);
-                Assert.Fail(ex.Message);
-            }
-
-            GC.SuppressFinalize(this);
         }
     }
 }

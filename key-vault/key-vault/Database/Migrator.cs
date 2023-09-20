@@ -14,6 +14,7 @@ namespace key_vault.Database
 
         private void CreateDatabase()
         {
+            Thread.Sleep(2000);
             using var connection = MySql.OpenConnection(false).Result;
             using var command = connection.CreateCommand();
 

@@ -8,6 +8,10 @@
     <UserSecretsId>4d57ae03-97ad-468d-9326-dddfd7a5768f</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <Version>$(VersionPrefix)7.4</Version>
+    <Description>Azure Key Vault Simulator.</Description>
+    <Authors>$(AssemblyName) by Rafael Gasperetti</Authors>
+    <Title>Key Vault</Title>
   </PropertyGroup>
 
   <ItemGroup>
