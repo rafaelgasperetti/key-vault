@@ -11,7 +11,7 @@
 
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (Content != null)
+            if (Content != null && request.Content == null)
             {
                 request.Content = Content;
             }
