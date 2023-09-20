@@ -15,7 +15,7 @@ jobs:
     env:
       WorkingDirectory: /home/runner/work/key-vault/key-vault
       APIEnvironment__Environment: LocalTest
-      APIEnvironment__DatabaseHost: mysql
+      APIEnvironment__DatabaseHost: key-vault.db
       APIEnvironment__DatabasePort: 9090
       APIEnvironment__DatabaseUser: ${{secrets.MYSQL_USER}}
       APIEnvironment__DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
