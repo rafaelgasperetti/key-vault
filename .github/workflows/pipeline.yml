@@ -9,16 +9,16 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_call:
-      secrets:
-        MYSQL_USER:
-          required: true
-        MYSQL_PASSWORD:
-          required: true
-        SECRET:
-          required: true
+    secrets:
+      MYSQL_USER:
+        required: true
+      MYSQL_PASSWORD:
+        required: true
+      SECRET:
+        required: true
 
 jobs:
-  build:
+  build-test:
     runs-on: self-hosted
     env:
       DOTNET_INSTALL_DIR: ~/dotnet
@@ -50,7 +50,6 @@ jobs:
       with:
         dotnet-version: 7.0.x
         dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
-        secrets: inherit
     - name: Restore dependencies
       run: dotnet restore  ${{github.workspace}}/key-vault/key-vault.sln
     - name: Build
