@@ -28,7 +28,7 @@ jobs:
         ports:
           - "9191:3306"
         env:
-          MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+          MYSQL_ROOT_PASSWORD: ${{env.MYSQL_PASSWORD}}
     steps:
     #- name: Remove appsettings.json
     #  run: |
@@ -54,7 +54,7 @@ jobs:
       env:
         APIEnvironment__Environment: ProdTest
         APIEnvironment__DatabaseHost: key-vault.db
-        APIEnvironment__DatabasePort: 9090
+        APIEnvironment__DatabasePort: 9091
         APIEnvironment__DatabaseUser: ${{env.MYSQL_USER}}
         APIEnvironment__DatabasePassword: ${{env.MYSQL_PASSWORD}}
         APIEnvironment__EncryptValues: true
