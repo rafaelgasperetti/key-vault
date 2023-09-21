@@ -1,8 +1,6 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: .NET Pipeline
-
 on:
   push:
     branches: [ "main" ]
@@ -16,7 +14,6 @@ on:
         required: true
       SECRET:
         required: true
-
 jobs:
   build-test:
     runs-on: self-hosted
@@ -32,16 +29,8 @@ jobs:
     steps:
     - name: Remove appsettings.json
       run: |
-        echo "1"
-        ls ${{github.workspace}}/key-vault
-        echo "2"
-        ls ${{github.workspace}}/key-vault-test
         rm -rf ${{github.workspace}}/key-vault/appsettings.json
         rm -rf ${{github.workspace}}/key-vault-test/appsettings.json
-        echo "3"
-        ls ${{github.workspace}}/key-vault
-        echo "4"
-        ls ${{github.workspace}}/key-vault-test
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
@@ -50,10 +39,13 @@ jobs:
       with:
         dotnet-version: 7.0.x
         dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
+        MYSQL_USER: ${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        SECRET: ${{ secrets.SECRET }}
     - name: Restore dependencies
       run: dotnet restore  ${{github.workspace}}/key-vault/key-vault.sln
     - name: Build
-      run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore 
+      run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
     - name: Test
       run: dotnet test ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
       env:
