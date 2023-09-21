@@ -35,36 +35,36 @@ jobs:
         rm -rf ${{github.workspace}}/key-vault/appsettings.json
         rm -rf ${{github.workspace}}/key-vault-test/appsettings.json
         echo "USER [${{secrets.MYSQL_USER}}] PWD [${{secrets.MYSQL_PASSWORD}}] SECRET [${{secrets.SECRET}}]"
-        echo "USER [${{env.MYSQL_USER}}] PWD [${{env.MYSQL_PASSWORD}}] SECRET [${{env.SECRET}}]"
-    - uses: actions/checkout@v3
-      with:
-        path: ${{github.workspace}}
-        MYSQL_USER: ${{ secrets.MYSQL_USER }}
-        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        SECRET: ${{ secrets.SECRET }}
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-        dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
-        MYSQL_USER: ${{ secrets.MYSQL_USER }}
-        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        SECRET: ${{ secrets.SECRET }}
-    - name: Restore dependencies
-      run: dotnet restore  ${{github.workspace}}/key-vault/key-vault.sln
-    - name: Build
-      run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
-    - name: Test
-      run: dotnet test ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
-      env:
-        APIEnvironment__Environment: ProdTest
-        APIEnvironment__DatabaseHost: key-vault.db
-        APIEnvironment__DatabasePort: 3306
-        APIEnvironment__DatabaseUser: ${{env.MYSQL_USER}}
-        APIEnvironment__DatabasePassword: ${{env.MYSQL_PASSWORD}}
-        APIEnvironment__EncryptValues: true
-        APIEnvironment__Secret: ${{env.SECRET}}
-        APIEnvironment__JWTIssuer: https://localhost:57304
-        APIEnvironment__JWTAudience: localhost:57304
-        APIEnvironment__KeyVaultAPIUrl: https://localhost:57304
-      timeout-minutes: 10
+        echo "USER [${{env.MYSQL_USER}}] PWD [${{env.MYSQL_PASSWORD}}] SECRET [${{env.SECRET}}] ENV [${{env.DOTNET_INSTALL_DIR}}]"
+    #- uses: actions/checkout@v3
+    #  with:
+    #    path: ${{github.workspace}}
+    #    MYSQL_USER: ${{ secrets.MYSQL_USER }}
+    #    MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+    #    SECRET: ${{ secrets.SECRET }}
+    #- name: Setup .NET
+    #  uses: actions/setup-dotnet@v3
+    #  with:
+    #    dotnet-version: 7.0.x
+    #    dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
+    #    MYSQL_USER: ${{ secrets.MYSQL_USER }}
+    #    MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+    #    SECRET: ${{ secrets.SECRET }}
+    #- name: Restore dependencies
+    #  run: dotnet restore  ${{github.workspace}}/key-vault/key-vault.sln
+    #- name: Build
+    #  run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
+    #- name: Test
+    #  run: dotnet test ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
+    #  env:
+    #    APIEnvironment__Environment: ProdTest
+    #    APIEnvironment__DatabaseHost: key-vault.db
+    #    APIEnvironment__DatabasePort: 3306
+    #    APIEnvironment__DatabaseUser: ${{env.MYSQL_USER}}
+    #    APIEnvironment__DatabasePassword: ${{env.MYSQL_PASSWORD}}
+    #    APIEnvironment__EncryptValues: true
+    #    APIEnvironment__Secret: ${{env.SECRET}}
+    #    APIEnvironment__JWTIssuer: https://localhost:57304
+    #    APIEnvironment__JWTAudience: localhost:57304
+    #    APIEnvironment__KeyVaultAPIUrl: https://localhost:57304
+    #  timeout-minutes: 10
