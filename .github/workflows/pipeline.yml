@@ -24,6 +24,7 @@ jobs:
         image: mysql:latest
         ports:
           - "9191:3306"
+        options: --name key-vault.db
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
     steps:
