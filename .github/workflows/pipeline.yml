@@ -25,6 +25,7 @@ jobs:
     - name: Remove appsettings.json
       run: |
         ls ${{github.workspace}}/key-vault-test
+        rm -rf ${{github.workspace}}/key-vault/appsettings.json
         rm -rf ${{github.workspace}}/key-vault-test/appsettings.json
         ls ${{github.workspace}}/key-vault-test
     - uses: actions/checkout@v3
