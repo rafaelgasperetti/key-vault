@@ -54,7 +54,7 @@ jobs:
         APIEnvironment__DatabaseHost: key-vault.db
         APIEnvironment__DatabasePort: 3306
         APIEnvironment__DatabaseUser: ${{secrets.MYSQL_USER}}
-        APIEnvironment__DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
+        APIEnvironment__DatabasePassword: 123454
         APIEnvironment__EncryptValues: true
         APIEnvironment__Secret: ${{secrets.SECRET}}
         APIEnvironment__JWTIssuer: https://localhost:57304
