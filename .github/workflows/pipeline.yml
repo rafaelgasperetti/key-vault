@@ -35,7 +35,7 @@ jobs:
         rm -rf ${{github.workspace}}/key-vault/appsettings.json
         rm -rf ${{github.workspace}}/key-vault-test/appsettings.json
         echo "USER [${{secrets.MYSQL_USER}}] PWD [${{secrets.MYSQL_PASSWORD}}] SECRET [${{secrets.SECRET}}]"
-        echo "USER [MYSQL_USER] PWD [MYSQL_PASSWORD] SECRET [SECRET]"
+        echo "USER [$MYSQL_USER] PWD [$MYSQL_PASSWORD] SECRET [$SECRET]"
         echo "USER [${{env.MYSQL_USER}}] PWD [${{env.MYSQL_PASSWORD}}] SECRET [${{env.SECRET}}] ENV [${{env.DOTNET_INSTALL_DIR}}]"
     #- uses: actions/checkout@v3
     #  with:
