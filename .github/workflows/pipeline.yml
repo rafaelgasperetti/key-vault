@@ -34,6 +34,9 @@ jobs:
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
+        MYSQL_USER: ${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        SECRET: ${{ secrets.SECRET }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
