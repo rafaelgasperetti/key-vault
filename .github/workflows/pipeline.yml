@@ -13,19 +13,6 @@ jobs:
   build:
     runs-on: self-hosted
     env:
-      #MYSQL_USER: ${{secrets.MYSQL_USER}}
-      #MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
-      #SECRET: ${{secrets.SECRET}}
-      #APIEnvironment:Environment: ProdTest
-      #APIEnvironment:DatabaseHost: key-vault.db
-      #APIEnvironment:DatabasePort: 3306
-      #APIEnvironment:DatabaseUser: ${{secrets.MYSQL_USER}}
-      #APIEnvironment:DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
-      #APIEnvironment:EncryptValues: true
-      #APIEnvironment:Secret: ${{secrets.SECRET}}
-      #APIEnvironment:JWTIssuer: https://localhost:57304
-      #APIEnvironment:JWTAudience: localhost:57304
-      #APIEnvironment:KeyVaultAPIUrl: https://localhost:57304
       DOTNET_INSTALL_DIR: ~/dotnet
     services:
       key-vault.db:
