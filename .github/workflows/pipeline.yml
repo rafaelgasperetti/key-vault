@@ -16,7 +16,7 @@ jobs:
       #MYSQL_USER: ${{secrets.MYSQL_USER}}
       #MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
       #SECRET: ${{secrets.SECRET}}
-      #APIEnvironment:Environment: LocalTest
+      #APIEnvironment:Environment: ProdTest
       #APIEnvironment:DatabaseHost: key-vault.db
       #APIEnvironment:DatabasePort: 3306
       #APIEnvironment:DatabaseUser: ${{secrets.MYSQL_USER}}
@@ -37,7 +37,8 @@ jobs:
     steps:
     - name: Remove appsettings.json
       run: |
-        rm -rf appsettings.json
+        rm -rf ${{github.workspace}}/key-vault-test/appsettings.json
+        ls ${{github.workspace}}/key-vault-test
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
