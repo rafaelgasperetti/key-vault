@@ -160,8 +160,14 @@ VALUES
   <data name="DatabaseScriptFile" xml:space="preserve">
     <value>Properties/Scripts/DatabaseScript.sql</value>
   </data>
+  <data name="MySql_DatabaseNameString" xml:space="preserve">
+    <value>Database={0}</value>
+  </data>
   <data name="MySql_GetLastInsertedId" xml:space="preserve">
     <value>SELECT LAST_INSERT_ID();</value>
+  </data>
+  <data name="MySql_UnableToConnectMessage" xml:space="preserve">
+    <value>Unable to connect to mysql database "{0}:{1}" for user "{2}" - "{3}".</value>
   </data>
   <data name="NullRepresentation" xml:space="preserve">
     <value>&lt;NULL&gt;</value>

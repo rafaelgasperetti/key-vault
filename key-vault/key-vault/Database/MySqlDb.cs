@@ -36,13 +36,18 @@ namespace key_vault.Database
 
             try
             {
-                string dbString = mainDb ? $"Database={Strings.DatabaseName};" : string.Empty;
+                string dbString = mainDb ? string.Format(Strings.MySql_DatabaseNameString, Strings.DatabaseName) : string.Empty;
 
                 string connString = string.Format(Strings.ConnectionString, Environment.DatabaseHost, Environment.DatabasePort, Environment.DatabaseUser, Environment.DatabasePassword, dbString);
                 var connection = new MySqlConnection(connString);
                 await connection.OpenAsync();
 
                 return connection;
+            }
+            catch (Exception ex)
+            {
+                var message = string.Format(Strings.MySql_UnableToConnectMessage, Environment.DatabaseHost, Environment.DatabasePort, Environment.DatabaseUser, Environment.DatabasePassword);
+                throw new Exception(message, ex);
             }
             finally
             {

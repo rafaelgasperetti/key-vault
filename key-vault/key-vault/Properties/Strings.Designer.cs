@@ -164,11 +164,29 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Database={0}.
+        /// </summary>
+        internal static string MySql_DatabaseNameString {
+            get {
+                return ResourceManager.GetString("MySql_DatabaseNameString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT LAST_INSERT_ID();.
         /// </summary>
         internal static string MySql_GetLastInsertedId {
             get {
                 return ResourceManager.GetString("MySql_GetLastInsertedId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to connect to mysql database &quot;{0}:{1}&quot; for user &quot;{2}&quot; - &quot;{3}&quot;..
+        /// </summary>
+        internal static string MySql_UnableToConnectMessage {
+            get {
+                return ResourceManager.GetString("MySql_UnableToConnectMessage", resourceCulture);
             }
         }
         
