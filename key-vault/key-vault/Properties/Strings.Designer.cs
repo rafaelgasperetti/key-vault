@@ -182,7 +182,7 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to connect to mysql database &quot;{0}:{1}&quot; for user &quot;{2}&quot; - &quot;{3}&quot;..
+        ///   Looks up a localized string similar to Unable to connect to mysql database &quot;{0}:{1}&quot; for user &quot;{2}&quot; - &quot;{3}&quot; in &quot;{4}&quot;..
         /// </summary>
         internal static string MySql_UnableToConnectMessage {
             get {

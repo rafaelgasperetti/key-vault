@@ -35,6 +35,9 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
     steps:
+    - name: Remove appsettings.json
+      run: |
+        rm -rf appsettings.json
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
@@ -53,7 +56,7 @@ jobs:
         #MYSQL_USER: ${{secrets.MYSQL_USER}}
         #MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
         #SECRET: ${{secrets.SECRET}}
-        APIEnvironment__Environment: LocalTest
+        APIEnvironment__Environment: ProdTest
         APIEnvironment__DatabaseHost: key-vault.db
         APIEnvironment__DatabasePort: 3306
         APIEnvironment__DatabaseUser: ${{secrets.MYSQL_USER}}

@@ -167,7 +167,7 @@ VALUES
     <value>SELECT LAST_INSERT_ID();</value>
   </data>
   <data name="MySql_UnableToConnectMessage" xml:space="preserve">
-    <value>Unable to connect to mysql database "{0}:{1}" for user "{2}" - "{3}".</value>
+    <value>Unable to connect to mysql database "{0}:{1}" for user "{2}" - "{3}" in "{4}".</value>
   </data>
   <data name="NullRepresentation" xml:space="preserve">
     <value>&lt;NULL&gt;</value>

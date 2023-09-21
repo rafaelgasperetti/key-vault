@@ -46,7 +46,7 @@ namespace key_vault.Database
             }
             catch (Exception ex)
             {
-                var message = Enum.GetName(Environment.Environment) + ": " + string.Format(Strings.MySql_UnableToConnectMessage, Environment.DatabaseHost, Environment.DatabasePort, Environment.DatabaseUser, Environment.DatabasePassword);
+                var message = string.Format(Strings.MySql_UnableToConnectMessage, Environment.DatabaseHost, Environment.DatabasePort, Environment.DatabaseUser, Environment.DatabasePassword, Enum.GetName(Environment.Environment));
                 throw new Exception(message, ex);
             }
             finally
