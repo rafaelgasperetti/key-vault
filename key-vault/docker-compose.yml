@@ -28,7 +28,7 @@ services:
     ports:
       - "9090:3306"
     environment:
-        MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
+        MYSQL_ROOT_PASSWORD: 123
     networks:
         key-vault:
             ipv4_address: 192.169.0.202
