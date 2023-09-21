@@ -25,10 +25,9 @@ jobs:
         image: mysql:latest
         ports:
           - "9191:3306"
-        options: --name ${{env.MYSQL_DATABASE_NAME}}
+        options: --name $MYSQL_DATABASE_NAME
         env:
           MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
-          MYSQL_DATABASE_NAME: ${{env.MYSQL_DATABASE_NAME}}
     steps:
     - uses: actions/checkout@v3
       with:
