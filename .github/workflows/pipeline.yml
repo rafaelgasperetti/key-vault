@@ -26,7 +26,7 @@ jobs:
       key-vault.db:
         image: mysql:latest
         ports:
-          - "3306:3306"
+          - "9090:3306"
         env:
           MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
     steps:
@@ -60,7 +60,7 @@ jobs:
     #  env:
     #    APIEnvironment__Environment: ProdTest
     #    APIEnvironment__DatabaseHost: key-vault.db
-    #    APIEnvironment__DatabasePort: 3306
+    #    APIEnvironment__DatabasePort: 9090
     #    APIEnvironment__DatabaseUser: ${{env.MYSQL_USER}}
     #    APIEnvironment__DatabasePassword: ${{env.MYSQL_PASSWORD}}
     #    APIEnvironment__EncryptValues: true
