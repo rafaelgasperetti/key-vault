@@ -17,6 +17,7 @@ jobs:
     services:
       key-vault.db:
         image: mysql:latest
+        container_name: key-vault.db
         ports:
           - "3306:3306"
         env:
@@ -37,7 +38,7 @@ jobs:
       env:
         APIEnvironment__Environment: LocalTest
         APIEnvironment__DatabaseHost: key-vault.db
-        APIEnvironment__DatabasePort: 9090
+        APIEnvironment__DatabasePort: 3306
         APIEnvironment__DatabaseUser: ${{ secrets.MYSQL_USER }}
         APIEnvironment__DatabasePassword: ${{ secrets.MYSQL_PASSWORD }}
         APIEnvironment__EncryptValues: true
@@ -45,5 +46,5 @@ jobs:
         APIEnvironment__JWTIssuer: https://localhost:57304
         APIEnvironment__JWTAudience: localhost:57304
         APIEnvironment__KeyVaultAPIUrl: https://localhost:57304
-      run: dotnet test ${{env.WorkingDirectory}}/key-vault/key-vault.sln -c Release --no-build --verbosity detailed
+      run: dotnet test ${{env.WorkingDirectory}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
       timeout-minutes: 10
