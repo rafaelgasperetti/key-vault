@@ -9,8 +9,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions: write-all
-
 jobs:
   build:
     runs-on: self-hosted
@@ -26,6 +24,8 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{env.MYSQL_PASSWORD}}
     steps:
+    - name: Create /usr/share/dotnet Directory
+      run: mkdir /usr/share/dotnet
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
