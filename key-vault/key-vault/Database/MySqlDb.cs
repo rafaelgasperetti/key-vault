@@ -38,7 +38,7 @@ namespace key_vault.Database
             {
                 string dbString = mainDb ? string.Format(Strings.MySql_DatabaseNameString, Strings.DatabaseName) : string.Empty;
 
-                string connString = string.Format(Strings.ConnectionString, Environment.DatabaseHost, Environment.DatabasePort, dbString);
+                string connString = string.Format(Strings.ConnectionString, Environment.DatabaseHost, Environment.DatabasePort, Environment.DatabaseUser, Environment.DatabasePassword, dbString);
                 var connection = new MySqlConnection(connString);
                 await connection.OpenAsync();
 
@@ -46,7 +46,7 @@ namespace key_vault.Database
             }
             catch (Exception ex)
             {
-                var message = string.Format(Strings.MySql_UnableToConnectMessage, Environment.DatabaseHost, Environment.DatabasePort, Environment.DatabaseUser, Environment.DatabasePassword, Enum.GetName(Environment.Environment));
+                var message = string.Format(Strings.MySql_UnableToConnectMessage, Environment.DatabaseHost, Environment.DatabasePort, Enum.GetName(Environment.Environment));
                 throw new Exception(message, ex);
             }
             finally
