@@ -24,14 +24,14 @@ jobs:
     steps:
     - name: Remove appsettings.json
       run: |
-        ls ${{github.workspace}}/key-vault | grep "appsettings.json"
-        ls ${{github.workspace}}/key-vault-test | grep "appsettings.json"
+        ls ${{github.workspace}}/key-vault
+        ls ${{github.workspace}}/key-vault-test
         echo "Removing"
         rm -rf ${{github.workspace}}/key-vault/appsettings.json
         rm -rf ${{github.workspace}}/key-vault-test/appsettings.json
         echo "Removed"
-        ls ${{github.workspace}}/key-vault | grep "appsettings.json"
-        ls ${{github.workspace}}/key-vault-test | grep "appsettings.json"
+        ls ${{github.workspace}}/key-vault
+        ls ${{github.workspace}}/key-vault-test
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
