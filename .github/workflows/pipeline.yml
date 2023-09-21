@@ -24,13 +24,15 @@ jobs:
     steps:
     - name: Remove appsettings.json
       run: |
+        echo "1"
         ls ${{github.workspace}}/key-vault
+        echo "2"
         ls ${{github.workspace}}/key-vault-test
-        echo "Removing"
         rm -rf ${{github.workspace}}/key-vault/appsettings.json
         rm -rf ${{github.workspace}}/key-vault-test/appsettings.json
-        echo "Removed"
+        echo "3"
         ls ${{github.workspace}}/key-vault
+        echo "4"
         ls ${{github.workspace}}/key-vault-test
     - uses: actions/checkout@v3
       with:
@@ -47,14 +49,11 @@ jobs:
     - name: Test
       run: dotnet test ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
       env:
-        #MYSQL_USER: ${{secrets.MYSQL_USER}}
-        #MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
-        #SECRET: ${{secrets.SECRET}}
         APIEnvironment__Environment: ProdTest
         APIEnvironment__DatabaseHost: key-vault.db
         APIEnvironment__DatabasePort: 3306
         APIEnvironment__DatabaseUser: ${{secrets.MYSQL_USER}}
-        APIEnvironment__DatabasePassword: 123454
+        APIEnvironment__DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
         APIEnvironment__EncryptValues: true
         APIEnvironment__Secret: ${{secrets.SECRET}}
         APIEnvironment__JWTIssuer: https://localhost:57304
