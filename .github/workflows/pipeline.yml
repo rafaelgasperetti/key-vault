@@ -8,6 +8,14 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_call:
+      secrets:
+        MYSQL_USER:
+          required: true
+        MYSQL_PASSWORD:
+          required: true
+        SECRET:
+          required: true
 
 jobs:
   build:
