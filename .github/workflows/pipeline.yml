@@ -28,6 +28,7 @@ jobs:
         options: --name ${{env.MYSQL_DATABASE_NAME}}
         env:
           MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+          MYSQL_DATABASE_NAME: ${{env.MYSQL_DATABASE_NAME}}
     steps:
     - uses: actions/checkout@v3
       with:
