@@ -21,11 +21,10 @@ jobs:
       DOTNET_INSTALL_DIR: ~/dotnet
       MYSQL_DATABASE_NAME: key-vault.test-db
     services:
-      key-vault.db:
+      ${{env.MYSQL_DATABASE_NAME}}:
         image: mysql:latest
         ports:
           - "9191:3306"
-        options: --name $MYSQL_DATABASE_NAME
         env:
           MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
           MYSQL_DATABASE_NAME: ${{env.MYSQL_DATABASE_NAME}}
