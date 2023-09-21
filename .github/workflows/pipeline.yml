@@ -30,8 +30,8 @@ jobs:
     - name: Prepare .NET directory
       run: |
         echo $(pwd)
-        DOTNET_INSTALL_DIR="$(pwd)/dotnet
-        echo $DOTNET_INSTALL_DIR"
+        DOTNET_INSTALL_DIR="$(pwd)/dotnet"
+        echo $DOTNET_INSTALL_DIR
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
