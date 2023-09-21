@@ -16,16 +16,16 @@ jobs:
       #MYSQL_USER: ${{secrets.MYSQL_USER}}
       #MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
       #SECRET: ${{secrets.SECRET}}
-      APIEnvironment:Environment: LocalTest
-      APIEnvironment:DatabaseHost: key-vault.db
-      APIEnvironment:DatabasePort: 3306
-      APIEnvironment:DatabaseUser: ${{secrets.MYSQL_USER}}
-      APIEnvironment:DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
-      APIEnvironment:EncryptValues: true
-      APIEnvironment:Secret: ${{secrets.SECRET}}
-      APIEnvironment:JWTIssuer: https://localhost:57304
-      APIEnvironment:JWTAudience: localhost:57304
-      APIEnvironment:KeyVaultAPIUrl: https://localhost:57304
+      #APIEnvironment:Environment: LocalTest
+      #APIEnvironment:DatabaseHost: key-vault.db
+      #APIEnvironment:DatabasePort: 3306
+      #APIEnvironment:DatabaseUser: ${{secrets.MYSQL_USER}}
+      #APIEnvironment:DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
+      #APIEnvironment:EncryptValues: true
+      #APIEnvironment:Secret: ${{secrets.SECRET}}
+      #APIEnvironment:JWTIssuer: https://localhost:57304
+      #APIEnvironment:JWTAudience: localhost:57304
+      #APIEnvironment:KeyVaultAPIUrl: https://localhost:57304
       DOTNET_INSTALL_DIR: ~/dotnet
     services:
       key-vault.db:
@@ -49,4 +49,18 @@ jobs:
       run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore 
     - name: Test
       run: dotnet test ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
+      env:
+        #MYSQL_USER: ${{secrets.MYSQL_USER}}
+        #MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+        #SECRET: ${{secrets.SECRET}}
+        APIEnvironment:Environment: LocalTest
+        APIEnvironment:DatabaseHost: key-vault.db
+        APIEnvironment:DatabasePort: 3306
+        APIEnvironment:DatabaseUser: ${{secrets.MYSQL_USER}}
+        APIEnvironment:DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
+        APIEnvironment:EncryptValues: true
+        APIEnvironment:Secret: ${{secrets.SECRET}}
+        APIEnvironment:JWTIssuer: https://localhost:57304
+        APIEnvironment:JWTAudience: localhost:57304
+        APIEnvironment:KeyVaultAPIUrl: https://localhost:57304
       timeout-minutes: 10
