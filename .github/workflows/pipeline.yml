@@ -34,6 +34,7 @@ jobs:
       run: |
         rm -rf ${{github.workspace}}/key-vault/appsettings.json
         rm -rf ${{github.workspace}}/key-vault-test/appsettings.json
+        echo "USER ${{env.MYSQL_USER}} PWD ${{env.MYSQL_PASSWORD}} SECRET ${{env.SECRET}}""
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
