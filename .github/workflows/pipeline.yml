@@ -24,7 +24,7 @@ jobs:
         image: mysql:latest
         ports:
           - "9191:3306"
-        options: --name key-vault.db
+        options: --name key-vault.test-db
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
     steps:
@@ -44,7 +44,7 @@ jobs:
       run: dotnet test ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
       env:
         APIEnvironment__Environment: ProdTest
-        APIEnvironment__DatabaseHost: key-vault.db
+        APIEnvironment__DatabaseHost: key-vault.test-db
         APIEnvironment__DatabasePort: 9191
         APIEnvironment__DatabaseUser: ${{ secrets.MYSQL_USER }}
         APIEnvironment__DatabasePassword: ${{env.MYSQL_PASSWORD}}
