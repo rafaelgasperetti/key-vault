@@ -9,7 +9,7 @@ services:
     hostname: key-vault
     build:
       context: .
-      dockerfile: key-vault/Dockerfile
+      dockerfile: key-vault/Environments/Local/Dockerfile
     networks:
         key-vault:
             ipv4_address: 192.169.0.201

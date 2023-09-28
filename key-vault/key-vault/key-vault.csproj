@@ -49,4 +49,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="..\.dockerignore" Link="Environments\Local\.dockerignore" />
+  </ItemGroup>
+
 </Project>
