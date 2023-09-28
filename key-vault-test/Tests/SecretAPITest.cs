@@ -18,7 +18,7 @@ namespace key_vault_test.Tests
         public SecretAPITest() : base(false)
         {
             Account = ConfigureAccount().Result;
-            Vault = new Vault.Vault(GetEnvironment().KeyVaultAPIUrl.ToString(), Account.ClientSecret!);
+            Vault = new Vault.Vault(GetEnvironment().KeyVaultAPIUrl.ToString(), Account.ClientSecret!, GetEnvironment().Environment);
         }
 
         protected override void CleanUp()
@@ -64,7 +64,12 @@ namespace key_vault_test.Tests
 
         private async Task<Account> ConfigureAccount()
         {
-            using HttpClient client = new()
+            HttpClientHandler clientHandler = new()
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+            };
+
+            using HttpClient client = new(clientHandler)
             {
                 BaseAddress = GetEnvironment().KeyVaultAPIUrl
             };
@@ -85,7 +90,12 @@ namespace key_vault_test.Tests
 
         private async Task DeleteAccount()
         {
-            using HttpClient client = new()
+            HttpClientHandler clientHandler = new()
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+            };
+
+            using HttpClient client = new(clientHandler)
             {
                 BaseAddress = GetEnvironment().KeyVaultAPIUrl
             };

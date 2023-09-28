@@ -164,6 +164,15 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Waiting for MySql to start up....
+        /// </summary>
+        internal static string Initializer_MySqlWaitMessage {
+            get {
+                return ResourceManager.GetString("Initializer_MySqlWaitMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Database={0}.
         /// </summary>
         internal static string MySql_DatabaseNameString {

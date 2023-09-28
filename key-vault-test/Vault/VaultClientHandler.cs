@@ -4,7 +4,7 @@
     {
         private readonly HttpContent? Content = null;
 
-        public VaultClientHandler(HttpContent? content = null) : base(new HttpClientHandler())
+        public VaultClientHandler(HttpContent? content = null, HttpClientHandler? httpHandler = null) : base(httpHandler ?? new HttpClientHandler())
         {
             Content = content;
         }

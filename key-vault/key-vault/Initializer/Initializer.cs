@@ -7,6 +7,7 @@ using key_vault.Services.Interfaces;
 using key_vault.Services;
 using System.Reflection;
 using key_vault.Helpers;
+using key_vault.Properties;
 
 namespace key_vault.Initializer
 {
@@ -14,6 +15,7 @@ namespace key_vault.Initializer
     {
         private static bool Migrated = false;
         private static readonly SemaphoreSlim Semaphore = new(1);
+        private const int MYSQL_WAIT_SECONDS = 15;
 
         public static APIEnvironment GetAPIEnvironment(IConfiguration configuration)
         {
@@ -75,6 +77,12 @@ namespace key_vault.Initializer
                 }
 
                 Migrated = true;
+
+                if (env.Environment != APIEnvironment.EnvironmentName.ProdApp)
+                {
+                    Console.WriteLine(Strings.Initializer_MySqlWaitMessage);
+                    Thread.Sleep(MYSQL_WAIT_SECONDS * 1000);
+                }
 
                 using var db = new MySqlDb(env, false);
                 using var migrator = new Migrator(db);

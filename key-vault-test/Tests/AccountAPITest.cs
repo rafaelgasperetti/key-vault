@@ -40,7 +40,12 @@ namespace key_vault_test.Tests
         {
             string accountsEndpoint = "accounts";
 
-            using HttpClient client = new()
+            HttpClientHandler clientHandler = new()
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+            };
+
+            using HttpClient client = new(clientHandler)
             {
                 BaseAddress = GetEnvironment().KeyVaultAPIUrl
             };

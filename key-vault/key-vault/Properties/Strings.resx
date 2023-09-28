@@ -160,6 +160,9 @@ VALUES
   <data name="DatabaseScriptFile" xml:space="preserve">
     <value>Properties/Scripts/DatabaseScript.sql</value>
   </data>
+  <data name="Initializer_MySqlWaitMessage" xml:space="preserve">
+    <value>Waiting for MySql to start up...</value>
+  </data>
   <data name="MySql_DatabaseNameString" xml:space="preserve">
     <value>Database={0}</value>
   </data>

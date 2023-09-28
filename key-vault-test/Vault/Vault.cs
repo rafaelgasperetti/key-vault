@@ -4,6 +4,7 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using static key_vault.Models.APIEnvironment;
 
 namespace key_vault_test.Vault
 {
@@ -13,13 +14,15 @@ namespace key_vault_test.Vault
         private string TenantID { get; set; }
         private string ClientID { get; set; }
         private string ClientSecret { get; set; }
+        private EnvironmentName Environment { get; }
 
-        public Vault(string baseUrl, string clientSecret)
+        public Vault(string baseUrl, string clientSecret, EnvironmentName environment)
         {
             BaseUri = string.IsNullOrEmpty(baseUrl) ? throw new InvalidDataException("Must fill baseUrl in Vault") : new Uri(baseUrl);
             TenantID = Guid.NewGuid().ToString();
             ClientID = Guid.NewGuid().ToString();
             ClientSecret = string.IsNullOrEmpty(clientSecret) ? throw new InvalidDataException("Must fill clientSecret in Vault") : clientSecret;
+            Environment = environment;
         }
 
         private TokenCredential GetCredential()
@@ -29,7 +32,17 @@ namespace key_vault_test.Vault
 
         private HttpClientTransport GetTransport(HttpContent? content = null)
         {
-            var messageHandler = new VaultClientHandler(content);
+            HttpClientHandler? clientHandler = null;
+
+            if (Environment != EnvironmentName.ProdApp)
+            {
+                clientHandler = new()
+                {
+                    ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+                };
+            }
+
+            var messageHandler = new VaultClientHandler(content, clientHandler);
             HttpClient client = new(messageHandler);
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {ClientSecret}");
             client.BaseAddress = BaseUri;

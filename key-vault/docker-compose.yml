@@ -6,12 +6,12 @@ services:
     ports:
       - "57304:443"
     container_name: local-test.key-vault
-    hostname: key-vault-local-test
+    hostname: local-test.key-vault
     build:
       context: .
       dockerfile: key-vault/Environments/Local/Dockerfile
     networks:
-        key-vault-local-test-network:
+        key-vault-local-test:
             ipv4_address: 192.169.0.201
     depends_on:
       - local-test.db
@@ -23,18 +23,18 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
   local-test.db:
     container_name: local-test.db
-    hostname: key-vault-local-test
+    hostname: local-test.db
     image: mysql:latest
     ports:
       - "9090:3306"
     environment:
         MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
     networks:
-        key-vault-local-test-network:
+        key-vault-local-test:
             ipv4_address: 192.169.0.202
 networks:
-  key-vault-local-test-network:
-    name: key-vault-local-test-network
+  key-vault-local-test:
+    name: key-vault-local-test
     ipam:
        config:
        - subnet: 192.169.0.0/24
