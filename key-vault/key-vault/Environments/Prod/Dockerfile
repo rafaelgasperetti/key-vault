@@ -2,9 +2,9 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS copy
 WORKDIR /app
-COPY key-vault/key-vault/ ./src/
 RUN ls -la key-vault/key-vault/*
-RUN ls -la /src/*
+COPY key-vault/key-vault/ /src/
+RUN ls -la key-vault/key-vault/*
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app/src
