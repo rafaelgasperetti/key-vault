@@ -48,8 +48,10 @@ jobs:
         dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
     - name: Restore dependencies
       run: dotnet restore  ${{github.workspace}}/key-vault/key-vault.sln
-    - name: Build Docker image
-      run: docker build -t key-vault:latest -f key-vault/key-vault/Environments/Prod/Dockerfile .
+    - name: Build
+      run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
+    #- name: Build Docker image
+    #  run: docker build -t key-vault:latest -f key-vault/key-vault/Environments/Prod/Dockerfile .
     - name: Build and Run Tests with Docker Compose
       run: |
          compose_location=key-vault/key-vault/Environments/Prod/docker-compose.yml
