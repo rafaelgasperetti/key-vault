@@ -53,7 +53,7 @@ jobs:
     - name: Build and Run Tests with Docker Compose
       run: |
          docker-compose -f key-vault/key-vault/Environments/Prod/docker-compose.yml -p key-vault-pipe-test --ansi never up -d --remove-orphans
-         docker-compose down
+    #     docker-compose down
     #- name: Build
     #  run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
     #- name: Test
