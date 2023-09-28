@@ -56,19 +56,28 @@ jobs:
          docker-compose -f $compose_location -p key-vault-pipe-test --ansi never up -d --remove-orphans
          set -e
          max_retries=6
-         retries=0
-         while [ $retries -lt $max_retries ]; do
-          docker-compose -f $compose_location ps -q
-          curl --insecure https://localhost:57303/
-          echo "\n"
-          if docker-compose -f $compose_location ps -q | xargs -I {} docker inspect -f '{{ .State.Health.Status }}' {} | grep -q healthy; then
-            echo "Containers are healthy!"
-            exit 0
-          else
-            echo "Waiting for containers to be up and healthy..."
+         retry_count=0
+         #while [ $retries -lt $max_retries ]; do
+         # docker-compose -f $compose_location ps -q
+         # curl --insecure https://localhost:57303/
+         # echo "\n"
+         # if docker-compose -f $compose_location ps -q | xargs -I {} docker inspect -f '{{ .State.Health.Status }}' {} | grep -q healthy; then
+         #   echo "Containers are healthy!"
+         #   exit 0
+         # else
+         #   echo "Waiting for containers to be up and healthy..."
+         #   sleep 5
+         #   retries=$((retries+1))
+         # fi
+         #done
+         while [ $retry_count -lt $max_retries ]; do
+            if docker-compose exec web curl --insecure -f https://localhost:57303/; then
+                break  # Service is healthy; exit the loop
+            fi
+            
+            echo "Waiting for web service to become healthy (Retry $((retry_count + 1)) of $max_retries)..."
             sleep 5
-            retries=$((retries+1))
-          fi
+            retry_count=$((retry_count + 1))
          done
          docker exec key-vault-pipe-test.key-vault dotnet test
          #while ! docker-compose ps --quiet; do
