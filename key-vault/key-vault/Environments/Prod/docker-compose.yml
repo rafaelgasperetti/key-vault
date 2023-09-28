@@ -47,5 +47,5 @@ networks:
     name: key-vault-local-pipe-test
     ipam:
        config:
-       - subnet: 192.167.0.0/24
+       - subnet: 192.167.0.0/16
          gateway: 192.167.0.1
