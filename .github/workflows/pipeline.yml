@@ -19,16 +19,16 @@ jobs:
     runs-on: self-hosted
     env:
       DOTNET_INSTALL_DIR: ~/dotnet
-    services:
-      key-vault-pipe-test.db:
-        image: mysql:latest
-        ports:
-          - "9191:3306"
-        options:
-            --name key-vault-pipe-test.db
-            --hostname key-vault-pipe-test.db
-        env:
-          MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+    #services:
+    #  key-vault-pipe-test.db:
+    #    image: mysql:latest
+    #    ports:
+    #      - "9191:3306"
+    #    options:
+    #        --name key-vault-pipe-test.db
+    #        --hostname key-vault-pipe-test.db
+    #    env:
+    #      MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
     steps:
     #- name: Add MySql container name to /etc/hosts
     #  run: |
@@ -46,25 +46,31 @@ jobs:
       with:
         dotnet-version: 7.0.x
         dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
-    - name: Restore dependencies
-      run: dotnet restore  ${{github.workspace}}/key-vault/key-vault.sln
-    - name: Build
-      run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
-    - name: Test
-      run: dotnet test ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
-      env:
-        APIEnvironment__Environment: ProdTest
-        APIEnvironment__DatabaseHost: key-vault-pipe-test.db
-        APIEnvironment__DatabasePort: 9191
-        APIEnvironment__DatabaseUser: ${{secrets.MYSQL_USER}}
-        APIEnvironment__DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
-        APIEnvironment__EncryptValues: true
-        APIEnvironment__Secret: ${{secrets.SECRET}}
-        APIEnvironment__JWTIssuer: https://localhost:57304
-        APIEnvironment__JWTAudience: localhost:57304
-        APIEnvironment__KeyVaultAPIUrl: https://localhost:57304
-    - name: Build Docker image
-      run: docker build -t key-vault:latest -f key-vault/key-vault/Environments/Prod/Dockerfile .
+    #- name: Restore dependencies
+    #  run: dotnet restore  ${{github.workspace}}/key-vault/key-vault.sln
+    #- name: Build Docker image
+    #  run: docker build -t key-vault:latest -f key-vault/key-vault/Environments/Prod/Dockerfile .
+    - name: Build and Run Tests with Docker Compose
+      run: |
+         docker-compose -f key-vault/key-vault/Environments/Prod/docker-compose.yml up --abort-on-container-exit
+         docker-compose down
+    #- name: Build
+    #  run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
+    #- name: Test
+    #  run: dotnet test ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
+    #  env:
+    #    APIEnvironment__Environment: ProdTest
+    #    APIEnvironment__DatabaseHost: key-vault-pipe-test.db
+    #    APIEnvironment__DatabasePort: 9191
+    #    APIEnvironment__DatabaseUser: ${{secrets.MYSQL_USER}}
+    #    APIEnvironment__DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
+    #    APIEnvironment__EncryptValues: true
+    #    APIEnvironment__Secret: ${{secrets.SECRET}}
+    #    APIEnvironment__JWTIssuer: https://localhost:57304
+    #    APIEnvironment__JWTAudience: localhost:57304
+    #    APIEnvironment__KeyVaultAPIUrl: https://localhost:57304
+    #- name: Build Docker image
+    #  run: docker build -t key-vault:latest -f key-vault/key-vault/Environments/Prod/Dockerfile .
     - name: Login to Docker Hub
       uses: docker/login-action@v1
       with:

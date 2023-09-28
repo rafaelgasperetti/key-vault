@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  key-vault-pipe-test.key-vault:
+    image: ${DOCKER_REGISTRY-}keyvault
+    ports:
+      - "57303:443"
+    container_name: key-vault-pipe-test.key-vault
+    hostname: key-vault-pipe-test.key-vault
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+        key-vault-local-pipe-test:
+            ipv4_address: 192.169.2.201
+    depends_on:
+      - key-vault-pipe-test.db
+    environment:
+      APIEnvironment__Environment: ProdTest
+      APIEnvironment__DatabaseHost: key-vault-pipe-test.db
+      APIEnvironment__DatabasePort: 8989
+      APIEnvironment__DatabaseUser: ${{secrets.MYSQL_USER}}
+      APIEnvironment__DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
+      APIEnvironment__EncryptValues: true
+      APIEnvironment__Secret: ${{secrets.SECRET}}
+      APIEnvironment__JWTIssuer: https://localhost:57303
+      APIEnvironment__JWTAudience: localhost:57303
+      APIEnvironment__KeyVaultAPIUrl: https://localhost:57303
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  key-vault-pipe-test.db:
+    container_name: key-vault-pipe-test.db
+    hostname: key-vault-pipe-test.db
+    image: mysql:latest
+    ports:
+      - "8989:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
+    networks:
+        key-vault-local-pipe-test:
+            ipv4_address: 192.169.2.202
+networks:
+  key-vault-local-pipe-test:
+    name: key-vault-local-pipe-test
+    ipam:
+       config:
+       - subnet: 192.169.2.0/24
+         gateway: 192.169.2.1
