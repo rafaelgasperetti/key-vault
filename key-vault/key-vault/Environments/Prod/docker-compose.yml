@@ -18,7 +18,7 @@ services:
     environment:
       APIEnvironment__Environment: ProdTest
       APIEnvironment__DatabaseHost: key-vault-pipe-test.db
-      APIEnvironment__DatabasePort: 8989
+      APIEnvironment__DatabasePort: 3306
       APIEnvironment__DatabaseUser: $${{secrets.MYSQL_USER}}
       APIEnvironment__DatabasePassword: $${{secrets.MYSQL_PASSWORD}}
       APIEnvironment__EncryptValues: true
