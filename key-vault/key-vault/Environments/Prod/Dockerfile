@@ -2,7 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
-RUN ls
+RUN ls -l /
 COPY ./key-vault /app/src
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Release --output /app/build
