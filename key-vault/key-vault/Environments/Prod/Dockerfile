@@ -2,7 +2,8 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
-COPY ./src /app/src
+RUN ls
+COPY ./key-vault /app/src
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Release --output /app/build
 RUN dotnet test /app/src/key-vault/key-vault.csproj --configuration Release --logger "console;verbosity=detailed"
