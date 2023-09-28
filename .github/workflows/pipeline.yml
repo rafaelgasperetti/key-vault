@@ -30,8 +30,8 @@ jobs:
     steps:
     - name: Add MySql container name to /etc/hosts
       run: |
-        if ! grep -q "127.0.0.1 key-vault.test-db" /etc/hosts; then
-          echo "127.0.0.1 key-vault.test-db" | sudo tee -a /etc/hosts
+        if ! grep -q "key-vault.test-db" /etc/hosts; then
+          echo "127.0.0.1   key-vault.test-db" | sudo tee -a /etc/hosts
         fi
     - uses: actions/checkout@v3
       with:
