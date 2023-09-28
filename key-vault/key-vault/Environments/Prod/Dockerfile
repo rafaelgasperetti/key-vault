@@ -2,7 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS copy
 WORKDIR /app
-COPY . ./src
+COPY key-vault/key-vault/. ./src
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app/src
