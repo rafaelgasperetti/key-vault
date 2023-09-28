@@ -9,8 +9,8 @@
     <DockerServiceName>key-vault</DockerServiceName>
   </PropertyGroup>
   <PropertyGroup>
-    <DockerServiceName>key-vault</DockerServiceName>
-    <DockerComposeProjectName>key-vault</DockerComposeProjectName>
+    <DockerServiceName>key-vault-local-test</DockerServiceName>
+    <DockerComposeProjectName>key-vault-local-test</DockerComposeProjectName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.yml" />

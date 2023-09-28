@@ -1,40 +1,40 @@
 version: '3.9'
 
 services:
-  key-vault:
+  key-vault-local-test:
     image: ${DOCKER_REGISTRY-}keyvault
     ports:
       - "57304:443"
-    container_name: key-vault
-    hostname: key-vault
+    container_name: key-vault-local-test
+    hostname: key-vault-local-test
     build:
       context: .
       dockerfile: key-vault/Environments/Local/Dockerfile
     networks:
-        key-vault:
+        key-vault-local-test:
             ipv4_address: 192.169.0.201
     depends_on:
-      - key-vault.db
+      - key-vault-local-test.db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-  key-vault.db:
-    container_name: key-vault.db
-    hostname: key-vault
+  key-vault-local-test.db:
+    container_name: key-vault-local-test.db
+    hostname: key-vault-local-test
     image: mysql:latest
     ports:
       - "9090:3306"
     environment:
         MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
     networks:
-        key-vault:
+        key-vault-local-test:
             ipv4_address: 192.169.0.202
 networks:
-  key-vault:
-    name: key-vault
+  key-vault-local-test:
+    name: key-vault-local-test
     ipam:
      config:
        - subnet: 192.169.0.0/24
