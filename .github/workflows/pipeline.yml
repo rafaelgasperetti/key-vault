@@ -59,6 +59,7 @@ jobs:
          retries=0
          while [ $retries -lt $max_retries ]; do
           docker-compose -f $compose_location ps -q
+          curl -f http://key-vault-pipe-test.key-vault:57303
           if docker-compose -f $compose_location ps -q | xargs -I {} docker inspect -f '{{ .State.Health.Status }}' {} | grep -q healthy; then
             echo "Containers are healthy!"
             exit 0
