@@ -2,7 +2,9 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app/src
-COPY ["key-vault/key-vault.csproj", "key-vault/"]
+COPY ./key-vault ./
+COPY ["key-vault/key-vault.sln", "./key-vault/"]
+COPY ["key-vault/key-vault.csproj", "./key-vault/"]
 RUN dotnet restore "key-vault/key-vault.sln"
 RUN dotnet build "key-vault/key-vault.csproj" -c Release -o /app/build
 #RUN dotnet test "key-vault/key-vault.sln" -c Release --no-build --verbosity normal
