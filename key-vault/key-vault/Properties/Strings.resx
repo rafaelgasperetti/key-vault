@@ -146,7 +146,7 @@ VALUES
     <value>UPDATE Account SET ClientSecret = @ClientSecret WHERE AccountId = @AccountId</value>
   </data>
   <data name="ApplicationRunningMessage" xml:space="preserve">
-    <value>Application Running with version {0}.</value>
+    <value>Application running and healthy with version {0}.</value>
   </data>
   <data name="ConnectionString" xml:space="preserve">
     <value>Server={0};Port={1};User ID={2};Password={3};{4}</value>
