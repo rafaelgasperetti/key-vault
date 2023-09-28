@@ -53,16 +53,31 @@ jobs:
     - name: Build and Run Tests with Docker Compose
       run: |
          docker-compose -f key-vault/key-vault/Environments/Prod/docker-compose.yml -p key-vault-pipe-test --ansi never up -d --remove-orphans
-         docker-compose -f key-vault/key-vault/Environments/Prod/docker-compose.yml ps
-      env:
-          MYSQL_USER: ${{secrets.MYSQL_USER}}
-          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
-          SECRET: ${{secrets.SECRET}}
+         #echo "Waiting for containers to be up..."
+         #sleep 20
+         set -e
+         max_retries=6
+         retries=0
+         while [ $retries -lt $max_retries ]; do
+          if docker-compose ps -q | xargs docker inspect -f '{{ .State.Health.Status }}' | grep -q healthy; then
+            echo "Containers are healthy!"
+            exit 0
+          else
+            echo "Waiting for containers to be up and healthy..."
+            sleep 5
+            retries=$((retries+1))
+          fi
+         done
+         docker exec key-vault-pipe-test.key-vault dotnet test
          #while ! docker-compose ps --quiet; do
          #   echo "Waiting docker build and tests to be done..."
          #   sleep 1
          #done
-    #     docker-compose down
+         #docker-compose down
+      env:
+          MYSQL_USER: ${{secrets.MYSQL_USER}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+          SECRET: ${{secrets.SECRET}}
     #- name: Build
     #  run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
     #- name: Test

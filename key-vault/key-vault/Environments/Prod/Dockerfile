@@ -5,7 +5,7 @@ WORKDIR /app/src
 COPY ./key-vault ./
 RUN dotnet restore "key-vault/key-vault.sln"
 RUN dotnet build "key-vault/key-vault.csproj" -c Release -o /app/build
-RUN dotnet test "key-vault/key-vault.sln" -c Release --no-build --verbosity normal
+#RUN dotnet test "key-vault/key-vault.sln" -c Release --no-build --verbosity normal
 RUN dotnet publish "key-vault/key-vault.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS final
