@@ -19,7 +19,6 @@ jobs:
     runs-on: self-hosted
     env:
       DOTNET_INSTALL_DIR: ~/dotnet
-      MYSQL_DATABASE_NAME: key-vault.test-db
     services:
       key-vault.test-db:
         image: mysql:latest
