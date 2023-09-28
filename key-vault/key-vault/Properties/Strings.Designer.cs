@@ -119,7 +119,7 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Application running and healthy with version {0}..
+        ///   Looks up a localized string similar to Application running and healthy with version {0}....
         /// </summary>
         internal static string ApplicationRunningMessage {
             get {
