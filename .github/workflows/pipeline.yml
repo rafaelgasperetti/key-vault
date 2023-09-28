@@ -52,15 +52,16 @@ jobs:
     #  run: docker build -t key-vault:latest -f key-vault/key-vault/Environments/Prod/Dockerfile .
     - name: Build and Run Tests with Docker Compose
       run: |
-         docker-compose -f key-vault/key-vault/Environments/Prod/docker-compose.yml -p key-vault-pipe-test --ansi never up -d --remove-orphans
+         compose_location=key-vault/key-vault/Environments/Prod/docker-compose.yml
+         docker-compose -f $compose_location -p key-vault-pipe-test --ansi never up -d --remove-orphans
          #echo "Waiting for containers to be up..."
          #sleep 20
          set -e
          max_retries=6
          retries=0
          while [ $retries -lt $max_retries ]; do
-          docker-compose -f /path/to/your/docker-compose-file.yml ps -q
-          if docker-compose -f /path/to/your/docker-compose-file.yml ps -q | xargs docker inspect -f '{{ .State.Health.Status }}' | grep -q healthy; then
+          docker-compose -f $compose_location ps -q
+          if docker-compose -f $compose_location ps -q | xargs docker inspect -f '{{ .State.Health.Status }}' | grep -q healthy; then
             echo "Containers are healthy!"
             exit 0
           else
