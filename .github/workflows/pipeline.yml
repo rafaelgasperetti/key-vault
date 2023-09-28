@@ -55,7 +55,7 @@ jobs:
          compose_location=key-vault/key-vault/Environments/Prod/docker-compose.yml
          docker-compose -f $compose_location -p key-vault-pipe-test --ansi never up -d --remove-orphans
          set -e
-         max_retries=6
+         max_retries=2
          retry_count=0
          #while [ $retries -lt $max_retries ]; do
          # docker-compose -f $compose_location ps -q
@@ -71,12 +71,12 @@ jobs:
          # fi
          #done
          while [ $retry_count -lt $max_retries ]; do
-            if docker-compose exec web curl --insecure -f https://key-vault-pipe-test.key-vault/; then
-                break  # Service is healthy; exit the loop
+            if docker-compose exec web curl --insecure -f https://localhost:57303/; then
+                break
             fi
             
             echo "Waiting for web service to become healthy (Retry $((retry_count + 1)) of $max_retries)..."
-            sleep 5
+            sleep 20
             retry_count=$((retry_count + 1))
          done
          docker exec key-vault-pipe-test.key-vault dotnet test
