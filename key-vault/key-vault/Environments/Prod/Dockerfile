@@ -8,6 +8,5 @@ RUN dotnet build "key-vault.csproj" -c Release -o /app/build
 RUN dotnet publish "key-vault.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM build AS publish
-WORKDIR /app
-COPY --from=publish /app/publish .
+WORKDIR /app/publish
 ENTRYPOINT ["dotnet", "key-vault.dll"]
