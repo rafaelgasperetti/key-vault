@@ -67,7 +67,7 @@ jobs:
          #   echo "Containers are healthy!"
          #   exit 0
          # else
-         #   echo "Waiting for containers to be up and healthy..."
+         #   echo "Waiting for containers to be up and healthy...."
          #   sleep 5
          #   retries=$((retries+1))
          # fi
