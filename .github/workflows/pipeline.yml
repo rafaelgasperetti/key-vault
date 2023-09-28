@@ -19,23 +19,25 @@ jobs:
     runs-on: self-hosted
     env:
       DOTNET_INSTALL_DIR: ~/dotnet
-    #services:
-      #key-vault-pipe-test.db:
-      #  image: mysql:latest
-      #  ports:
-      #    - "9191:3306"
-      #  options: --name key-vault-pipe-test.db --hostname key-vault-pipe-test.db
-      #  env:
-      #    MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+    services:
+      key-vault-pipe-test.db:
+        image: mysql:latest
+        ports:
+          - "9191:3306"
+        options:
+            --name key-vault-pipe-test.db
+            --hostname key-vault-pipe-test.db
+        env:
+          MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
     steps:
     #- name: Add MySql container name to /etc/hosts
     #  run: |
     #    if ! grep -q "key-vault-pipe-test.db" /etc/hosts; then
     #      echo "127.0.0.1   key-vault-pipe-test.db" | sudo tee -a /etc/hosts
     #    fi
-    - name: Start MySql database
-      run: |
-        docker run -d --name key-vault-pipe-test.db -p "9191:3306" -e MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_PASSWORD}} --hostname key-vault-pipe-test.db mysql:latest
+    #- name: Start MySql database
+    #  run: |
+    #    docker run -d --name key-vault-pipe-test.db -p "9191:3306" -e MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_PASSWORD}} --hostname key-vault-pipe-test.db mysql:latest
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
