@@ -28,6 +28,11 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
     steps:
+    - name: Add MySql container name to /etc/hosts
+      run: |
+        if ! grep -q "key-vault-pipe-test.db" /etc/hosts; then
+          echo "127.0.0.1   key-vault-pipe-test.db" | sudo tee -a /etc/hosts
+        fi
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
