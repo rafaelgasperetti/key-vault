@@ -38,7 +38,7 @@ services:
     ports:
       - "8989:3306"
     environment:
-        MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
+        MYSQL_ROOT_PASSWORD: $${{secrets.MYSQL_PASSWORD}}
     networks:
         key-vault-local-pipe-test:
             ipv4_address: 192.167.0.202
@@ -47,5 +47,5 @@ networks:
     name: key-vault-local-pipe-test
     ipam:
        config:
-       - subnet: 192.167.0.0/16
+       - subnet: 192.167.0.0/24
          gateway: 192.167.0.1
