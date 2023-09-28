@@ -3,8 +3,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app/src
 COPY . ./src
-RUN dotnet build "src/key-vault.csproj" -c Release -o /app/build
-RUN dotnet publish "src/key-vault.csproj" -c Release -o /app/publish
+RUN dotnet build "key-vault.csproj" -c Release -o /app/build
+RUN dotnet publish "key-vault.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS final
 WORKDIR /app
