@@ -71,7 +71,7 @@ jobs:
          # fi
          #done
          while [ $retry_count -lt $max_retries ]; do
-            if docker-compose exec web curl --insecure -f https://localhost:57303/; then
+            if docker-compose exec web curl --insecure -f https://key-vault-pipe-test.key-vault/; then
                 break  # Service is healthy; exit the loop
             fi
             

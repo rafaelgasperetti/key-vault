@@ -14,7 +14,7 @@ services:
         key-vault-local-pipe-test:
             ipv4_address: 192.167.0.201
     healthcheck:
-      test: ["CMD", "curl", "--insecure", "-f", "https://localhost:57303/"]
+      test: ["CMD", "curl", "--insecure", "-f", "https://key-vault-pipe-test.key-vault/"]
       interval: 5s
       timeout: 1s
       retries: 6
