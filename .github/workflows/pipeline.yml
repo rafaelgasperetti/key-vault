@@ -54,6 +54,10 @@ jobs:
       run: |
          docker-compose -f key-vault/key-vault/Environments/Prod/docker-compose.yml -p key-vault-pipe-test --ansi never up -d --remove-orphans
          docker-compose -f key-vault/key-vault/Environments/Prod/docker-compose.yml ps
+      env:
+          MYSQL_USER: ${{secrets.MYSQL_USER}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+          SECRET: ${{secrets.SECRET}}
          #while ! docker-compose ps --quiet; do
          #   echo "Waiting docker build and tests to be done..."
          #   sleep 1
