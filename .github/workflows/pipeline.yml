@@ -61,7 +61,7 @@ jobs:
          retries=0
          while [ $retries -lt $max_retries ]; do
           docker-compose -f $compose_location ps -q
-          if docker-compose -f $compose_location ps -q | xargs docker inspect -f '{{ .State.Health.Status }}' | grep -q healthy; then
+          if docker-compose -f $compose_location ps -q | xargs -I {} docker inspect -f '{{ .State.Health.Status }}' {} | grep -q healthy; then
             echo "Containers are healthy!"
             exit 0
           else
