@@ -13,11 +13,11 @@ services:
     networks:
         key-vault-local-pipe-test:
             ipv4_address: 192.167.0.201
-    healthcheck:
-      test: ["CMD", "curl", "-f", "https://key-vault-pipe-test.key-vault:57303/"]
-      interval: 5s
-      timeout: 1s
-      retries: 6
+    #healthcheck:
+    #  test: ["CMD", "curl", "-f", "https://key-vault-pipe-test.key-vault:57303/"]
+    #  interval: 5s
+    #  timeout: 1s
+    #  retries: 6
     depends_on:
       - key-vault-pipe-test.db
     environment:
