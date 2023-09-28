@@ -19,10 +19,10 @@ services:
       APIEnvironment__Environment: ProdTest
       APIEnvironment__DatabaseHost: key-vault-pipe-test.db
       APIEnvironment__DatabasePort: 8989
-      APIEnvironment__DatabaseUser: ${{secrets.MYSQL_USER}}
-      APIEnvironment__DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
+      APIEnvironment__DatabaseUser: $${{secrets.MYSQL_USER}}
+      APIEnvironment__DatabasePassword: $${{secrets.MYSQL_PASSWORD}}
       APIEnvironment__EncryptValues: true
-      APIEnvironment__Secret: ${{secrets.SECRET}}
+      APIEnvironment__Secret: $${{secrets.SECRET}}
       APIEnvironment__JWTIssuer: https://localhost:57303
       APIEnvironment__JWTAudience: localhost:57303
       APIEnvironment__KeyVaultAPIUrl: https://localhost:57303
