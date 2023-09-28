@@ -8,7 +8,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["key-vault/key-vault/key-vault.csproj", "key-vault/"]
-RUN dotnet restore "key-vault/key-vault/key-vault.csproj"
+RUN dotnet restore "key-vault/key-vault.csproj"
 COPY . .
 WORKDIR "/src/key-vault"
 RUN dotnet build "key-vault.csproj" -c Release -o /app/build

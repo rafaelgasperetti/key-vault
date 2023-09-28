@@ -47,7 +47,7 @@ jobs:
       run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
     - name: Sleep for 5 seconds
       run: |
-        echo "Sleeping for 5 seconds..."
+        echo "Waiting MySql to be ready..."
         sleep 5
         echo "Done sleeping."
     - name: Test
