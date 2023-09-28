@@ -12,7 +12,7 @@ services:
       dockerfile: Dockerfile
     networks:
         key-vault-local-pipe-test:
-            ipv4_address: 192.166.0.201
+            ipv4_address: 192.167.0.201
     depends_on:
       - key-vault-pipe-test.db
     environment:
@@ -41,11 +41,11 @@ services:
         MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
     networks:
         key-vault-local-pipe-test:
-            ipv4_address: 192.166.0.202
+            ipv4_address: 192.167.0.202
 networks:
   key-vault-local-pipe-test:
     name: key-vault-local-pipe-test
     ipam:
        config:
-       - subnet: 192.166.0.0/24
-         gateway: 192.166.0.1
+       - subnet: 192.167.0.0/24
+         gateway: 192.167.0.1
