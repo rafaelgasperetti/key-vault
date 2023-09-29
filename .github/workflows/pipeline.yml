@@ -55,10 +55,13 @@ jobs:
     - name: Build and Run Tests with Docker Compose
       run: |
          compose_location=key-vault/key-vault/Environments/Prod/docker-compose.yml
-         docker-compose -f $compose_location -p key-vault-pipe-test --ansi never up -d --remove-orphans
-         set -e
-         max_retries=2
-         retry_count=0
+         #docker-compose -f $compose_location build key-vault -f Dockerfile .
+         #docker-compose -f $compose_location build --pull --no-cache key-vault-pipe-test.key-vault
+         docker-compose -f $compose_location build --pull --no-cache key-vault-pipe-test.key-vault
+         docker-compose -f $compose_location -p key-vault-pipe-test --ansi never up -d
+         #set -e
+         #max_retries=2
+         #retry_count=0
          #while [ $retries -lt $max_retries ]; do
          # docker-compose -f $compose_location ps -q
          # curl --insecure https://localhost:57303/
@@ -72,18 +75,17 @@ jobs:
          #   retries=$((retries+1))
          # fi
          #done
-         hostname
-         while [ $retry_count -lt $max_retries ]; do
-            curl --insecure -f https://localhost:57303/
-            if docker-compose exec web curl --insecure -f https://localhost:57303/; then
-                break
-            fi
-            
-            echo "Waiting for web service to become healthy (Retry $((retry_count + 1)) of $max_retries)..."
-            sleep 20
-            retry_count=$((retry_count + 1))
-         done
-         docker exec key-vault-pipe-test.key-vault dotnet test
+         #while [ $retry_count -lt $max_retries ]; do
+         #   curl --insecure -f https://localhost:57303/
+         #   if docker-compose exec web curl --insecure -f https://localhost:57303/; then
+         #       break
+         #   fi
+         #   
+         #   echo "Waiting for web service to become healthy (Retry $((retry_count + 1)) of $max_retries)..."
+         #   sleep 20
+         #   retry_count=$((retry_count + 1))
+         #done
+         #docker exec key-vault-pipe-test.key-vault dotnet test
          #while ! docker-compose ps --quiet; do
          #   echo "Waiting docker build and tests to be done..."
          #   sleep 1

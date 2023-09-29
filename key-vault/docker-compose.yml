@@ -5,11 +5,13 @@ services:
     image: ${DOCKER_REGISTRY-}keyvault
     ports:
       - "57304:443"
+      - "80:80"
     container_name: local-test.key-vault
     hostname: local-test.key-vault
     build:
       context: .
       dockerfile: key-vault/Environments/Local/Dockerfile
+    #env_file: ../../env.file
     networks:
         key-vault-local-test:
             ipv4_address: 192.169.0.201
@@ -17,10 +19,18 @@ services:
       - local-test.db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_URLS=http://+:80;https://+:443
+    #secrets:
+    #  - secret_file
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - key-vault/:/app/src/:ro
+    healthcheck:
+      test: ["CMD", "dotnet", "key-vault.dll", "health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   local-test.db:
     container_name: local-test.db
     hostname: local-test.db
@@ -32,6 +42,13 @@ services:
     networks:
         key-vault-local-test:
             ipv4_address: 192.169.0.202
+    volumes:
+        - local-test.db-volume:/var/lib/mysql:delegated
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 3s
+      timeout: 1s
+      retries: 3
 networks:
   key-vault-local-test:
     name: key-vault-local-test
@@ -39,3 +56,9 @@ networks:
        config:
        - subnet: 192.169.0.0/24
          gateway: 192.169.0.1
+volumes:
+  local-test.db-volume:
+    name: local-test.db-volume
+#secrets:
+#  name:
+#    file: ./name

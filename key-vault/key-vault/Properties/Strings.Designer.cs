@@ -128,6 +128,24 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Application is unhealhty with version {0} due to {1}..
+        /// </summary>
+        internal static string ApplicationUnhealthyMessage {
+            get {
+                return ResourceManager.GetString("ApplicationUnhealthyMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application failed to ping MySql host {0}:{1}..
+        /// </summary>
+        internal static string ApplicationUnhealthyPingFailed {
+            get {
+                return ResourceManager.GetString("ApplicationUnhealthyPingFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server={0};Port={1};User ID={2};Password={3};{4}.
         /// </summary>
         internal static string ConnectionString {
@@ -160,15 +178,6 @@ namespace key_vault.Properties {
         internal static string DatabaseScriptFile {
             get {
                 return ResourceManager.GetString("DatabaseScriptFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Waiting for MySql to start up....
-        /// </summary>
-        internal static string Initializer_MySqlWaitMessage {
-            get {
-                return ResourceManager.GetString("Initializer_MySqlWaitMessage", resourceCulture);
             }
         }
         

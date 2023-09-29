@@ -119,5 +119,10 @@ namespace key_vault.Database
         {
             await Transaction?.RollbackAsync();
         }
+
+        public bool IsHealhty()
+        {
+            return Connection.Ping();
+        }
     }
 }

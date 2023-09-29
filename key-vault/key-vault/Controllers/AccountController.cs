@@ -1,6 +1,5 @@
 ﻿using key_vault.Controllers.Interfaces;
 using key_vault.Models;
-using key_vault.Properties;
 using key_vault.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +13,6 @@ namespace key_vault.Controllers
         public AccountController(APIEnvironment environment, IAccountService service) : base(environment)
         {
             Service = service;
-        }
-
-        [AllowAnonymous]
-        [HttpGet("/")]
-        public string Index()
-        {
-            return string.Format(Strings.ApplicationRunningMessage, APIEnvironment.Version.ToString());
         }
 
         [HttpGet("accounts")]

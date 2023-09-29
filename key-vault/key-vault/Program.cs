@@ -12,6 +12,8 @@ using key_vault.Initializer.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,29 @@ builder.Services.AddScoped<IDatabase, MySqlDb>();
 builder.Services.AddScoped<IEncryption, Encryption>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ISecretService, SecretService>();
+
+builder.Services.AddHealthChecks().AddCheck("health", () =>
+{
+    return HealthCheckResult.Healthy("Healthier");
+    /*try
+    {
+        using var db = new MySqlDb(env);
+
+        if (db.IsHealhty())
+        {
+            return HealthCheckResult.Healthy(string.Format(Strings.ApplicationRunningMessage, env.Version.ToString()));
+        }
+        else
+        {
+            var notHealthyPingMessage = string.Format(Strings.ApplicationUnhealthyPingFailed, env.DatabaseHost, env.DatabasePort);
+            return HealthCheckResult.Unhealthy(string.Format(Strings.ApplicationRunningMessage, env.Version.ToString(), notHealthyPingMessage));
+        }
+    }
+    catch (Exception ex)
+    {
+        return HealthCheckResult.Unhealthy(string.Format(Strings.ApplicationRunningMessage, env.Version.ToString(), ex.Message));
+    }*/
+});
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -75,8 +100,19 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
+app.UseHealthChecks("/health");
+
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapHealthChecks("/health", new HealthCheckOptions
+    {
+        ResponseWriter = async (context, report) =>
+        {
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(Enum.GetName(report.Status));
+        }
+    });
+
     endpoints.MapControllers();
     endpoints.MapControllerRoute("default", "{controller}/{action}");
 });

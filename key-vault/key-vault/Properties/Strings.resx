@@ -148,6 +148,12 @@ VALUES
   <data name="ApplicationRunningMessage" xml:space="preserve">
     <value>Application running and healthy with version {0}...</value>
   </data>
+  <data name="ApplicationUnhealthyMessage" xml:space="preserve">
+    <value>Application is unhealhty with version {0} due to {1}.</value>
+  </data>
+  <data name="ApplicationUnhealthyPingFailed" xml:space="preserve">
+    <value>Application failed to ping MySql host {0}:{1}.</value>
+  </data>
   <data name="ConnectionString" xml:space="preserve">
     <value>Server={0};Port={1};User ID={2};Password={3};{4}</value>
   </data>
@@ -159,9 +165,6 @@ VALUES
   </data>
   <data name="DatabaseScriptFile" xml:space="preserve">
     <value>Properties/Scripts/DatabaseScript.sql</value>
-  </data>
-  <data name="Initializer_MySqlWaitMessage" xml:space="preserve">
-    <value>Waiting for MySql to start up...</value>
   </data>
   <data name="MySql_DatabaseNameString" xml:space="preserve">
     <value>Database={0}</value>

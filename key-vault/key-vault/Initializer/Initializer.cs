@@ -78,12 +78,6 @@ namespace key_vault.Initializer
 
                 Migrated = true;
 
-                if (env.Environment != APIEnvironment.EnvironmentName.ProdApp)
-                {
-                    Console.WriteLine(Strings.Initializer_MySqlWaitMessage);
-                    Thread.Sleep(MYSQL_WAIT_SECONDS * 1000);
-                }
-
                 using var db = new MySqlDb(env, false);
                 using var migrator = new Migrator(db);
                 migrator.Migrate();
