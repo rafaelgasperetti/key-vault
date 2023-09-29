@@ -57,7 +57,7 @@ jobs:
          compose_location=key-vault/key-vault/Environments/Prod/docker-compose.yml
          #docker-compose -f $compose_location build key-vault -f Dockerfile .
          #docker-compose -f $compose_location build --pull --no-cache key-vault-pipe-test.key-vault
-         docker-compose -f $compose_location build --pull --no-cache key-vault-pipe-test.key-vault
+         docker-compose -f $compose_location build --no-cache key-vault-pipe-test.key-vault
          docker-compose -f $compose_location -p key-vault-pipe-test --ansi never up -d
          #set -e
          #max_retries=2
