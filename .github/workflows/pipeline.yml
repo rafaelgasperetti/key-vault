@@ -19,25 +19,7 @@ jobs:
     runs-on: self-hosted
     env:
       DOTNET_INSTALL_DIR: ~/dotnet
-    #services:
-    #  key-vault-pipe-test.db:
-    #    image: mysql:latest
-    #    ports:
-    #      - "9191:3306"
-    #    options:
-    #        --name key-vault-pipe-test.db
-    #        --hostname key-vault-pipe-test.db
-    #    env:
-    #      MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
     steps:
-    #- name: Add MySql container name to /etc/hosts
-    #  run: |
-    #    if ! grep -q "key-vault-pipe-test.db" /etc/hosts; then
-    #      echo "127.0.0.1   key-vault-pipe-test.db" | sudo tee -a /etc/hosts
-    #    fi
-    #- name: Start MySql database
-    #  run: |
-    #    docker run -d --name key-vault-pipe-test.db -p "9191:3306" -e MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_PASSWORD}} --hostname key-vault-pipe-test.db mysql:latest
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
@@ -46,72 +28,16 @@ jobs:
       with:
         dotnet-version: 7.0.x
         dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
-    #- name: Restore dependencies
-    #  run: dotnet restore  ${{github.workspace}}/key-vault/key-vault.sln
-    #- name: Build
-    #  run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
-    #- name: Build Docker image
-    #  run: docker build -t key-vault:latest -f key-vault/key-vault/Environments/Prod/Dockerfile .
     - name: Build and Run Tests with Docker Compose
       run: |
          compose_location=key-vault/key-vault/Environments/Prod/docker-compose.yml
-         #docker-compose -f $compose_location build key-vault -f Dockerfile .
-         #docker-compose -f $compose_location build --pull --no-cache key-vault-pipe-test.key-vault
          docker-compose -f $compose_location build key-vault-pipe-test.key-vault
-         docker-compose -f $compose_location -p key-vault-pipe-test up -d
-         #set -e
-         #max_retries=2
-         #retry_count=0
-         #while [ $retries -lt $max_retries ]; do
-         # docker-compose -f $compose_location ps -q
-         # curl --insecure https://localhost:57303/
-         # echo "\n"
-         # if docker-compose -f $compose_location ps -q | xargs -I {} docker inspect -f '{{ .State.Health.Status }}' {} | grep -q healthy; then
-         #   echo "Containers are healthy!"
-         #   exit 0
-         # else
-         #   echo "Waiting for containers to be up and healthy...."
-         #   sleep 5
-         #   retries=$((retries+1))
-         # fi
-         #done
-         #while [ $retry_count -lt $max_retries ]; do
-         #   curl --insecure -f https://localhost:57303/
-         #   if docker-compose exec web curl --insecure -f https://localhost:57303/; then
-         #       break
-         #   fi
-         #   
-         #   echo "Waiting for web service to become healthy (Retry $((retry_count + 1)) of $max_retries)..."
-         #   sleep 20
-         #   retry_count=$((retry_count + 1))
-         #done
-         #docker exec key-vault-pipe-test.key-vault dotnet test
-         #while ! docker-compose ps --quiet; do
-         #   echo "Waiting docker build and tests to be done..."
-         #   sleep 1
-         #done
+         docker-compose -f $compose_location up -d -p key-vault-pipe-test
          #docker-compose down
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
           SECRET: ${{secrets.SECRET}}
-    #- name: Build
-    #  run: dotnet build ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-restore
-    #- name: Test
-    #  run: dotnet test ${{github.workspace}}/key-vault/key-vault.sln -c Release --no-build --verbosity normal
-    #  env:
-    #    APIEnvironment__Environment: ProdTest
-    #    APIEnvironment__DatabaseHost: key-vault-pipe-test.db
-    #    APIEnvironment__DatabasePort: 9191
-    #    APIEnvironment__DatabaseUser: ${{secrets.MYSQL_USER}}
-    #    APIEnvironment__DatabasePassword: ${{secrets.MYSQL_PASSWORD}}
-    #    APIEnvironment__EncryptValues: true
-    #    APIEnvironment__Secret: ${{secrets.SECRET}}
-    #    APIEnvironment__JWTIssuer: https://localhost:57304
-    #    APIEnvironment__JWTAudience: localhost:57304
-    #    APIEnvironment__KeyVaultAPIUrl: https://localhost:57304
-    #- name: Build Docker image
-    #  run: docker build -t key-vault:latest -f key-vault/key-vault/Environments/Prod/Dockerfile .
     - name: Login to Docker Hub
       uses: docker/login-action@v1
       with:
