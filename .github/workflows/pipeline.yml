@@ -72,6 +72,7 @@ jobs:
          #   retries=$((retries+1))
          # fi
          #done
+         hostname
          while [ $retry_count -lt $max_retries ]; do
             curl --insecure -f https://localhost:57303/
             if docker-compose exec web curl --insecure -f https://localhost:57303/; then
