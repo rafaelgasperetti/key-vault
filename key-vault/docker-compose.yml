@@ -5,7 +5,6 @@ services:
     image: ${DOCKER_REGISTRY-}keyvault
     ports:
       - "57304:443"
-      - "80:80"
     container_name: local-test.key-vault
     hostname: local-test.key-vault
     build:
@@ -19,18 +18,14 @@ services:
       - local-test.db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80;https://+:443
+      - ASPNETCORE_URLS=https://+:443
+      - CERTIFICATE_PASSWORD=WH2mYa97fRrxVEGd
     #secrets:
     #  - secret_file
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-      - key-vault/:/app/src/:ro
-    healthcheck:
-      test: ["CMD", "dotnet", "key-vault.dll", "health"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - ./key-vault/:/app/src/:ro
   local-test.db:
     container_name: local-test.db
     hostname: local-test.db

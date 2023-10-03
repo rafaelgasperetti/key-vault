@@ -3,21 +3,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
 WORKDIR /app
 RUN dotnet new webapi -o app
-RUN dotnet dev-certs https --clean && dotnet dev-certs https -ep /https/aspnetapp.pfx -p WH2mYa97fRrxVEGd && dotnet dev-certs https
-EXPOSE 443
+RUN dotnet dev-certs https --clean && dotnet dev-certs https -ep /https/aspnetapp.pfx -p $CERTIFICATE_PASSWORD && dotnet dev-certs https
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /src
-COPY ["key-vault/key-vault.csproj", "key-vault/"]
-RUN dotnet restore "key-vault/key-vault.csproj"
-COPY . .
-WORKDIR "/src/key-vault"
-RUN dotnet build "key-vault.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "key-vault.csproj" -c Release -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY . ./src
+RUN dotnet restore /app/src/key-vault/key-vault.csproj
+RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Debug --no-cache --output /app/build
+RUN dotnet publish /app/src/key-vault/key-vault.csproj --configuration Debug --output /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+WORKDIR /app
+RUN apt-get update
+RUN apt-get --yes install curl
+HEALTHCHECK --interval=3s --timeout=2s --retries=3 CMD curl -f -k https://localhost/health --fail
+COPY --from=build-env /app/publish .
 ENTRYPOINT ["dotnet", "key-vault.dll"]

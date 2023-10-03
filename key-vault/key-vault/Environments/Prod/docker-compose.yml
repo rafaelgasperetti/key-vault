@@ -5,7 +5,6 @@ services:
     image: ${DOCKER_REGISTRY-}keyvault
     ports:
       - "57303:443"
-      - "8080:8080"
     container_name: key-vault-pipe-test.key-vault
     hostname: key-vault-pipe-test.key-vault
     build:
@@ -15,12 +14,6 @@ services:
     networks:
         key-vault-local-pipe-test:
             ipv4_address: 192.167.0.201
-    healthcheck:
-      #test: ["CMD", "dotnet", "key-vault.dll", "health"]
-      test: ["CMD", "curl", "-f", "https://key-vault-pipe-test.key-vault/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     depends_on:
       - key-vault-pipe-test.db
     environment:
@@ -35,7 +28,7 @@ services:
       APIEnvironment__JWTAudience: key-vault-pipe-test.key-vault
       APIEnvironment__KeyVaultAPIUrl: https://key-vault-pipe-test.key-vault
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: http://+:8080;https://+:443
+      ASPNETCORE_URLS: https://+:443
     #secrets:
     #  - secret_file
     volumes:
