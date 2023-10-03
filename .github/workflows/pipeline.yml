@@ -30,7 +30,6 @@ jobs:
         dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
     - name: Set up Docker Compose
       run: |
-          apt-get --yes update
           apt-get --yes install docker-compose
     - name: Build and Run Tests with Docker Compose
       run: |
