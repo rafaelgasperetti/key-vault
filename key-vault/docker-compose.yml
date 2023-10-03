@@ -46,7 +46,6 @@ networks:
   key-vault-local-test:
 volumes:
   local-test.db-volume:
-    name: local-test.db-volume
 #secrets:
 #  name:
 #    file: ./name

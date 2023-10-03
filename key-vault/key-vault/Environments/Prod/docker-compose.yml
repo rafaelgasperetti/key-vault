@@ -55,7 +55,6 @@ networks:
   key-vault-local-pipe-test:
 volumes:
   key-vault-pipe-test.db-volume:
-    name: key-vault-pipe-test.db-volume
 #secrets:
 #  name:
 #    file: ./name
