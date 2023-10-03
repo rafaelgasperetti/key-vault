@@ -21,7 +21,7 @@ services:
       APIEnvironment__DatabasePort: 3306
       APIEnvironment__DatabaseUser: ${MYSQL_USER}
       APIEnvironment__DatabasePassword: ${MYSQL_PASSWORD}
-      APIEnvironment__EncryptValues: true
+      APIEnvironment__EncryptValues: "True"
       APIEnvironment__Secret: ${SECRET}
       APIEnvironment__JWTIssuer: https://key-vault-pipe-test.key-vault
       APIEnvironment__JWTAudience: key-vault-pipe-test.key-vault
