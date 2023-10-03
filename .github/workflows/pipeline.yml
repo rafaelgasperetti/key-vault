@@ -33,6 +33,7 @@ jobs:
           apt-get --yes install docker-compose
     - name: Build and Run Tests with Docker Compose
       run: |
+         docker-compose -f key-vault/key-vault/Environments/Prod/docker-compose.yml down
          docker-compose -f key-vault/key-vault/Environments/Prod/docker-compose.yml -p key-vault-pipe-test up -d
          #docker-compose down
       env:
