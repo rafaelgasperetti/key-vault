@@ -13,7 +13,8 @@ WORKDIR /app
 RUN apt-get update --yes
 RUN apt-get --yes install curl openssl
 RUN dotnet new webapi -o app
-RUN dotnet dev-certs https
+RUN dotnet dev-certs https --clean
+RUN dotnet dev-certs https -t
 HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail
 COPY --from=build-env /app/publish .
 ENTRYPOINT ["dotnet", "key-vault.dll"]
