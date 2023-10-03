@@ -30,13 +30,13 @@ jobs:
         dotnet-root: ${{env.DOTNET_INSTALL_DIR}}
     - name: Set up Docker Compose
       run: |
-          sudo apt-get -y update
-          sudo apt-get -y install docker-compose
+          apt-get --yes update
+          apt-get --yes install docker-compose
     - name: Build and Run Tests with Docker Compose
       run: |
          compose_location=key-vault/key-vault/Environments/Prod/docker-compose.yml
          docker-compose -f $compose_location build key-vault-pipe-test.key-vault
-         docker-compose -f $compose_location up -d -p key-vault-pipe-test
+         docker-compose -f $compose_location -p key-vault-pipe-test up -d
          #docker-compose down
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
