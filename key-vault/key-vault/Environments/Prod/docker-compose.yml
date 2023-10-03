@@ -13,7 +13,6 @@ services:
     #env_file: ../../env.file
     networks:
         key-vault-local-pipe-test:
-            ipv4_address: 192.167.0.201
     depends_on:
       - key-vault-pipe-test.db
     environment:
@@ -45,7 +44,6 @@ services:
         MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
     networks:
         key-vault-local-pipe-test:
-            ipv4_address: 192.167.0.202
     volumes:
         - key-vault-pipe-test.db-volume:/var/lib/mysql:delegated
     healthcheck:
@@ -55,11 +53,6 @@ services:
       retries: 3
 networks:
   key-vault-local-pipe-test:
-    name: key-vault-local-pipe-test
-    ipam:
-       config:
-       - subnet: 192.167.0.0/24
-         gateway: 192.167.0.1
 volumes:
   key-vault-pipe-test.db-volume:
     name: key-vault-pipe-test.db-volume

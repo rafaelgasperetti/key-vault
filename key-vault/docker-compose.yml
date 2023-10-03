@@ -13,7 +13,6 @@ services:
     #env_file: ../../env.file
     networks:
         key-vault-local-test:
-            ipv4_address: 192.169.0.201
     depends_on:
       - local-test.db
     environment:
@@ -36,7 +35,6 @@ services:
         MYSQL_ROOT_PASSWORD: nGAvySPtEEaZxucV
     networks:
         key-vault-local-test:
-            ipv4_address: 192.169.0.202
     volumes:
         - local-test.db-volume:/var/lib/mysql:delegated
     healthcheck:
@@ -46,11 +44,6 @@ services:
       retries: 3
 networks:
   key-vault-local-test:
-    name: key-vault-local-test
-    ipam:
-       config:
-       - subnet: 192.169.0.0/24
-         gateway: 192.169.0.1
 volumes:
   local-test.db-volume:
     name: local-test.db-volume
