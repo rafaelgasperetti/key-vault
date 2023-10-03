@@ -5,12 +5,11 @@ services:
     image: ${DOCKER_REGISTRY-}keyvault
     ports:
       - "57303:443"
-      - "8080:80"
     container_name: key-vault-pipe-test.key-vault
     hostname: key-vault-pipe-test.key-vault
     build:
       context: ../../../
-      dockerfile: key-vault/Environments/Prod/Dockerfile
+      dockerfile: key-vault/Environments/ProdTest/Dockerfile
     #env_file: ../../env.file
     networks:
         key-vault-local-pipe-test:
@@ -28,7 +27,7 @@ services:
       APIEnvironment__JWTAudience: key-vault-pipe-test.key-vault
       APIEnvironment__KeyVaultAPIUrl: https://key-vault-pipe-test.key-vault
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_URLS: https://+:443
     #secrets:
     #  - secret_file
     volumes:

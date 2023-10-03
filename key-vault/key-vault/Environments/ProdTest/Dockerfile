@@ -5,10 +5,11 @@ WORKDIR /app
 COPY . ./src
 RUN apt-get update --yes
 RUN apt-get --yes install curl openssl
-#RUN dotnet new webapi -o app
+RUN dotnet dev-certs https -ep ~/.aspnet/https/key-vault.pfx -p key-vault
+RUN dotnet dev-certs https --trust
+RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
-RUN dotnet dev-certs https
 RUN dotnet test /app/src/key-vault/key-vault.csproj --configuration Release --logger "console;verbosity=detailed"
 RUN dotnet publish /app/src/key-vault/key-vault.csproj --configuration Release --output /app/publish
 
@@ -16,4 +17,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
 HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail
 COPY --from=build-env /app/publish .
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password=
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/app/crt/key-vault.crt
 ENTRYPOINT ["dotnet", "key-vault.dll"]

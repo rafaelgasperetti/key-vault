@@ -5,9 +5,10 @@ WORKDIR /app
 COPY . ./src
 RUN apt-get update --yes
 RUN apt-get --yes install curl openssl
+RUN dotnet new webapi -o app
+RUN dotnet dev-certs https
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Debug --no-cache --output /app/build
-RUN dotnet dev-certs https
 RUN dotnet publish /app/src/key-vault/key-vault.csproj --configuration Debug --output /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
