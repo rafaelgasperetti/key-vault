@@ -2,8 +2,10 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
 WORKDIR /app
+RUN apt-get update
+RUN apt-get --yes install curl openssl
 RUN dotnet new webapi -o app
-RUN dotnet dev-certs https --clean && dotnet dev-certs https -ep /https/aspnetapp.pfx -p $CERTIFICATE_PASSWORD && dotnet dev-certs https
+RUN dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app

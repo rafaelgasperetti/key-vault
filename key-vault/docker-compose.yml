@@ -18,7 +18,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443
-      CERTIFICATE_PASSWORD: WH2mYa97fRrxVEGd
     #secrets:
     #  - secret_file
     volumes:

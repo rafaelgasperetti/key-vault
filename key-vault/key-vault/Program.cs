@@ -69,6 +69,11 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddResponseCompression();
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 443;
+});
+
 var app = builder.Build();
 
 app.UseMiddleware<CustomMiddleware>();

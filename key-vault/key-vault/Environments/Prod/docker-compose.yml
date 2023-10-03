@@ -28,7 +28,6 @@ services:
       APIEnvironment__KeyVaultAPIUrl: https://key-vault-pipe-test.key-vault
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443
-      CERTIFICATE_PASSWORD: ${CERTIFICATE_PASSWORD}
     #secrets:
     #  - secret_file
     volumes:
