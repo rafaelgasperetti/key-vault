@@ -16,6 +16,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
 RUN apt-get update
 RUN apt-get --yes install curl
-HEALTHCHECK --interval=3s --timeout=2s --retries=3 CMD curl -f -k https://localhost/health --fail
+HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail
 COPY --from=build-env /app/publish .
 ENTRYPOINT ["dotnet", "key-vault.dll"]
