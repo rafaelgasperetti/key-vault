@@ -3,17 +3,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 COPY . ./src
+RUN apt-get update --yes
+RUN apt-get --yes install curl openssl
+RUN dotnet new webapi -o app
+RUN dotnet dev-certs https --clean
+RUN dotnet dev-certs https -t
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Debug --no-cache --output /app/build
 RUN dotnet publish /app/src/key-vault/key-vault.csproj --configuration Debug --output /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
-RUN apt-get update --yes
-RUN apt-get --yes install curl openssl
-RUN dotnet new webapi -o app
-RUN dotnet dev-certs https --clean
-RUN dotnet dev-certs https -t
 HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail
 COPY --from=build-env /app/publish .
 ENTRYPOINT ["dotnet", "key-vault.dll"]
