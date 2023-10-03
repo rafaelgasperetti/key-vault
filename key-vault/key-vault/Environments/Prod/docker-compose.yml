@@ -31,8 +31,8 @@ services:
     #secrets:
     #  - secret_file
     volumes:
-      - /root/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
-      - /root/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
       - ../../../:/app/src/:ro
   key-vault-pipe-test.db:
     container_name: key-vault-pipe-test.db
