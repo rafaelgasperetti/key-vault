@@ -1,12 +1,5 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
-WORKDIR /app
-RUN apt-get update
-RUN apt-get --yes install curl openssl
-RUN dotnet new webapi -o app
-RUN dotnet dev-certs https
-
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 COPY . ./src
@@ -16,8 +9,10 @@ RUN dotnet publish /app/src/key-vault/key-vault.csproj --configuration Debug --o
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
-RUN apt-get update
-RUN apt-get --yes install curl
+RUN apt-get update --yes
+RUN apt-get --yes install curl openssl
+RUN dotnet new webapi -o app
+RUN dotnet dev-certs https
 HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail
 COPY --from=build-env /app/publish .
 ENTRYPOINT ["dotnet", "key-vault.dll"]
