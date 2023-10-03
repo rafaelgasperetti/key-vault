@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.3'
 
 services:
   key-vault-pipe-test.key-vault:
@@ -32,8 +32,8 @@ services:
     #secrets:
     #  - secret_file
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - /root/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+      - /root/.aspnet/https:/root/.aspnet/https:ro
       - ../../../:/app/src/:ro
   key-vault-pipe-test.db:
     container_name: key-vault-pipe-test.db
