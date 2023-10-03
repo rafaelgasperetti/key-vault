@@ -69,16 +69,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddResponseCompression();
 
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 443;
-});
-
 var app = builder.Build();
 
 app.UseMiddleware<CustomMiddleware>();
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
@@ -91,5 +85,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute("default", "{controller}/{action}");
 });
 
+app.UseHttpsRedirection();
 app.UseResponseCompression();
 app.Run();
