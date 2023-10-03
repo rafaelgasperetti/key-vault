@@ -5,11 +5,10 @@ WORKDIR /app
 COPY . ./src
 RUN apt-get update --yes
 RUN apt-get --yes install curl openssl
-RUN dotnet new webapi -o app
-RUN dotnet dev-certs https --clean
-RUN dotnet dev-certs https -t
+#RUN dotnet new webapi -o app
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
+RUN dotnet dev-certs https
 RUN dotnet test /app/src/key-vault/key-vault.csproj --configuration Release --logger "console;verbosity=detailed"
 RUN dotnet publish /app/src/key-vault/key-vault.csproj --configuration Release --output /app/publish
 

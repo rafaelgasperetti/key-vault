@@ -7,7 +7,6 @@ using key_vault.Services.Interfaces;
 using key_vault.Services;
 using System.Reflection;
 using key_vault.Helpers;
-using key_vault.Properties;
 
 namespace key_vault.Initializer
 {
