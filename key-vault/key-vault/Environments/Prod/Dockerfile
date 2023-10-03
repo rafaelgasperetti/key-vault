@@ -6,6 +6,7 @@ RUN apt-get update
 RUN apt-get --yes install curl openssl
 RUN dotnet new webapi -o app
 RUN dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM
+RUN update-ca-certificates
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
