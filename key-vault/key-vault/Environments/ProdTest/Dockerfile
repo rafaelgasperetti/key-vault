@@ -9,6 +9,7 @@ FROM ubuntu:latest
 RUN mkdir -p /app/tests
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+WORKDIR /app
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 
