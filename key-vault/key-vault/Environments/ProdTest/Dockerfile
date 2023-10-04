@@ -10,6 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 COPY . ./src
 RUN dotnet dev-certs https -ep /app/src/key-vault/key-vault.pfx -p key-vault
+RUN ls /app/src/key-vault
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
