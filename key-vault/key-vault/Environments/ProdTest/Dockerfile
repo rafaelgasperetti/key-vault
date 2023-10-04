@@ -1,13 +1,14 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM ubuntu:latest
-RUN mkdir -p /app/tests
-
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
 WORKDIR /app
 RUN rm -rf /app
 COPY . ./src
 
+FROM ubuntu:latest
+RUN mkdir -p /app/tests
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 
