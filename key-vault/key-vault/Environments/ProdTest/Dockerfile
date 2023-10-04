@@ -1,12 +1,18 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
+RUN apt-get update --yes
+RUN apt-get --yes install curl openssl
+RUN apt-get install -y ca-certificates
+RUN dotnet dev-certs https --clean
+RUN dotnet dev-certs https -ep /app/src/key-vault/key-vault.pfx -p key-vault
+#RUN cp ~/key-vault.pfx /usr/local/share/ca-certificates
+#COPY ~/key-vault.pfx ./src
+#RUN update-ca-certificates
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 COPY . ./src
-RUN apt-get update --yes
-RUN apt-get --yes install curl openssl
-RUN dotnet dev-certs https -ep ~/.aspnet/https/key-vault.pfx -p key-vault
-RUN dotnet dev-certs https --trust
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
