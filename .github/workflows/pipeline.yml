@@ -35,7 +35,7 @@ jobs:
       run: |
          docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml down
          docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml -p key-vault-pipe-test up -d
-         docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml logs
+         echo docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml logs
          #docker-compose down
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
