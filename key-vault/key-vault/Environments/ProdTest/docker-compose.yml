@@ -28,10 +28,13 @@ services:
       APIEnvironment__KeyVaultAPIUrl: https://key-vault-pipe-test.key-vault
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443
+      ASPNETCORE_Kestrel__Certificates__Default__Password: key-vault
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /app/src/key-vault/key-vault.pfx
     #secrets:
     #  - secret_file
     volumes:
       - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.aspnet/https:/https/:ro
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
       - ../../../:/app/src/:ro
   key-vault-pipe-test.db:

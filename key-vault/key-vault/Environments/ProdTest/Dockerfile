@@ -6,9 +6,6 @@ RUN apt-get --yes install curl openssl
 #RUN apt-get install -y ca-certificates
 RUN dotnet dev-certs https --clean
 RUN dotnet dev-certs https -ep /app/src/key-vault/key-vault.pfx -p key-vault
-#RUN cp ~/key-vault.pfx /usr/local/share/ca-certificates
-#COPY ~/key-vault.pfx ./src
-#RUN update-ca-certificates
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
@@ -23,6 +20,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
 #HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail
 COPY --from=build-env /app/publish .
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password=
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/app/crt/key-vault.crt
 ENTRYPOINT ["dotnet", "key-vault.dll"]
