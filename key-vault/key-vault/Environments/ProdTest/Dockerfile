@@ -4,8 +4,6 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 RUN rm -rf /app
 COPY . ./src
-RUN apt-get update --yes
-RUN apt-get --yes install curl
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
@@ -14,6 +12,8 @@ RUN dotnet publish /app/src/key-vault/key-vault.csproj --configuration Release -
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
+RUN apt-get update --yes
+RUN apt-get --yes install curl
 HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail
 COPY --from=build-env /app/publish .
 ENTRYPOINT ["dotnet", "key-vault.dll"]
