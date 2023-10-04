@@ -5,7 +5,8 @@ WORKDIR /app
 RUN rm -rf /app
 
 FROM ubuntu:latest
-RUN mkdir -p /app/tests
+WORKDIR /app
+RUN mkdir -p tests
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
