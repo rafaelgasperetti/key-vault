@@ -1,9 +1,9 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
+WORKDIR /app
 RUN apt-get update --yes
 RUN apt-get --yes install curl openssl
-#RUN apt-get install -y ca-certificates
 RUN dotnet dev-certs https --clean
 RUN dotnet dev-certs https -ep /app/src/key-vault/key-vault.pfx -p key-vault
 
