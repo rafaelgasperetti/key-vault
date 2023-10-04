@@ -3,13 +3,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
 WORKDIR /app
 RUN rm -rf /app
-COPY . ./src
 
 FROM ubuntu:latest
 RUN mkdir -p /app/tests
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
+COPY . ./src
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 
