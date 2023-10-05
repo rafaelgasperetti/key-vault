@@ -3,17 +3,20 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
 WORKDIR /app
 RUN rm -rf /app
-
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
-WORKDIR /app
 COPY . ./src
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 
 #Tests
+FROM base AS build-test
+WORKDIR /app
 RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
-RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
+RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release --build-arg APIEnvironment__DatabaseHost=key-vault-pipe-test.db APIEnvironment__DatabasePort=3306
 
 #App
+FROM base AS build-env
+WORKDIR /app
+COPY . ./src
+RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 RUN dotnet restore /app/src/key-vault/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
 RUN dotnet publish /app/src/key-vault/key-vault/key-vault.csproj --configuration Release --output /app/publish
