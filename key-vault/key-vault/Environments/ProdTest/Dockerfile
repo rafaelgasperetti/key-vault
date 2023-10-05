@@ -9,12 +9,12 @@ RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Ke
 FROM base AS build-env
 WORKDIR /app
 #Env
-ENV APIEnvironment__Environment=$APIEnvironment__Environment
-ENV APIEnvironment__DatabaseHost=key-vault-pipe-test.db
-ENV APIEnvironment__DatabasePort=3306
-ENV APIEnvironment__JWTIssuer=https://key-vault-pipe-test.key-vault
-ENV APIEnvironment__JWTAudience=key-vault-pipe-test.key-vault
-ENV APIEnvironment__KeyVaultAPIUrl=https://key-vault-pipe-test.key-vault
+#ENV APIEnvironment__Environment=$APIEnvironment__Environment
+#ENV APIEnvironment__DatabaseHost=key-vault-pipe-test.db
+#ENV APIEnvironment__DatabasePort=3306
+#ENV APIEnvironment__JWTIssuer=https://key-vault-pipe-test.key-vault
+#ENV APIEnvironment__JWTAudience=key-vault-pipe-test.key-vault
+#ENV APIEnvironment__KeyVaultAPIUrl=https://key-vault-pipe-test.key-vault
 #Tests
 RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
 RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
