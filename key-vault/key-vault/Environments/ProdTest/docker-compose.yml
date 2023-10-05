@@ -29,7 +29,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443
       ASPNETCORE_Kestrel__Certificates__Default__Password: key-vault
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /app/src/key-vault/Environments/ProdTest/key-vault.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /app/src/key-vault/key-vault/Environments/ProdTest/key-vault.pfx
     #secrets:
     #  - secret_file
     volumes:
