@@ -9,6 +9,8 @@ RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Ke
 FROM base AS build-env
 WORKDIR /app
 #Env
+ARG APIEnvironment__KeyVaultAPIUrl
+
 ENV APIEnvironment__Environment=$APIEnvironment__Environment
 ENV APIEnvironment__DatabaseHost=$APIEnvironment__DatabaseHost
 ENV APIEnvironment__DatabasePort=$APIEnvironment__DatabasePort
