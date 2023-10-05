@@ -11,11 +11,11 @@ RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Cert
 
 #Tests
 RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
-RUN dotnet build /app/src/key-vault-test/key-vault-test.csproj --configuration Release --no-cache --output /app/build
-RUN dotnet publish /app/src/key-vault-test/key-vault-test.csproj --configuration Release --output /app/tests
+RUN dotnet build /app/src/key-vault-test/key-vault-test.csproj --configuration Release --no-cache --output /app/build-tests
+RUN dotnet publish /app/src/key-vault-test/key-vault-test.csproj --configuration Release --output /app/publish-tests
 RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
 
-$#App
+#App
 RUN dotnet restore /app/src/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
 RUN dotnet publish /app/src/key-vault/key-vault.csproj --configuration Release --output /app/publish
