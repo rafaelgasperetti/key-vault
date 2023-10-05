@@ -10,12 +10,16 @@ RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Ke
 FROM base AS build-test
 WORKDIR /app
 RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
-RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release --build-arg APIEnvironment__DatabaseHost=key-vault-pipe-test.db APIEnvironment__DatabasePort=3306
+RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release --build-arg \
+	APIEnvironment__DatabaseHost=key-vault-pipe-test.db \
+	APIEnvironment__DatabasePort=3306 \
+	APIEnvironment__JWTIssuer: https://key-vault-pipe-test.key-vault \
+    APIEnvironment__JWTAudience: key-vault-pipe-test.key-vault \
+    APIEnvironment__KeyVaultAPIUrl: https://key-vault-pipe-test.key-vault
 
 #App
 FROM base AS build-env
 WORKDIR /app
-COPY . ./src
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 RUN dotnet restore /app/src/key-vault/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
