@@ -8,8 +8,8 @@ services:
     container_name: key-vault-pipe-test.key-vault
     hostname: key-vault-pipe-test.key-vault
     build:
-      context: ../../../
-      dockerfile: key-vault/Environments/ProdTest/Dockerfile
+      context: ../../../../
+      dockerfile: key-vault/key-vault/Environments/ProdTest/Dockerfile
     #env_file: ../../env.file
     networks:
         key-vault-local-pipe-test:
@@ -35,7 +35,7 @@ services:
     volumes:
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
       - ~/.aspnet/https:/root/.aspnet/https:ro
-      - ../../../:/app/src/:ro
+      - ../../../../:/app/src/:ro
   key-vault-pipe-test.db:
     container_name: key-vault-pipe-test.db
     hostname: key-vault-pipe-test.db

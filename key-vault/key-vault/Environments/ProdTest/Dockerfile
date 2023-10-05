@@ -7,7 +7,7 @@ RUN rm -rf /app
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 COPY . ./src
-RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
+RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 
 #Tests
 #RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
@@ -16,9 +16,9 @@ RUN dotnet user-secrets -p /app/src/key-vault/key-vault.csproj set "Kestrel:Cert
 #RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
 
 #App
-RUN dotnet restore /app/src/key-vault/key-vault.csproj
-RUN dotnet build /app/src/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
-RUN dotnet publish /app/src/key-vault/key-vault.csproj --configuration Release --output /app/publish
+RUN dotnet restore /app/src/key-vault/key-vault/key-vault.csproj
+RUN dotnet build /app/src/key-vault/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
+RUN dotnet publish /app/src/key-vault/key-vault/key-vault.csproj --configuration Release --output /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
