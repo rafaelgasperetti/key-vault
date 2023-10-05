@@ -10,10 +10,8 @@ COPY . ./src
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 
 #Tests
-#RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
-#RUN dotnet build /app/src/key-vault-test/key-vault-test.csproj --configuration Release --no-cache --output /app/build-tests
-#RUN dotnet publish /app/src/key-vault-test/key-vault-test.csproj --configuration Release --output /app/publish-tests
-#RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
+RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
+RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
 
 #App
 RUN dotnet restore /app/src/key-vault/key-vault/key-vault.csproj
