@@ -12,7 +12,7 @@ services:
       dockerfile: key-vault-test/Environments/ProdTest/Dockerfile
       args:
         - APIEnvironment__Environment=ProdTest
-        - APIEnvironment__DatabaseHost=host.docker.internal
+        - APIEnvironment__DatabaseHost=key-vault-pipe-test.db
         - APIEnvironment__DatabasePort=8989
         - APIEnvironment__DatabaseUser=${MYSQL_USER}
         - APIEnvironment__DatabasePassword=${MYSQL_PASSWORD}
@@ -20,7 +20,7 @@ services:
         - APIEnvironment__Secret=${SECRET}
         - APIEnvironment__JWTIssuer=https://key-vault-pipe-test.key-vault-test
         - APIEnvironment__JWTAudience=key-vault-pipe-test.key-vault-test
-        - APIEnvironment__KeyVaultAPIUrl=https://host.docker.internal:57303/
+        - APIEnvironment__KeyVaultAPIUrl=https://key-vault-pipe-test.key-vault:57303/
     #env_file: ../../env.file
     networks:
         key-vault-local-pipe-test:
