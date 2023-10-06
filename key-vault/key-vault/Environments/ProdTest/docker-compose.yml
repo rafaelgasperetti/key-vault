@@ -46,7 +46,7 @@ services:
     volumes:
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
       - ~/.aspnet/https:/root/.aspnet/https:ro
-      - ../../../../:/app/src/:ro
+      - ../../../../:/app/src/:rw
   key-vault-pipe-test.key-vault:
     image: ${DOCKER_REGISTRY-}keyvault
     ports:
