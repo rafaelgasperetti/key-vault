@@ -9,8 +9,28 @@ RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Ke
 FROM base AS build-env
 WORKDIR /app
 #Env
-#ARG env_from_dockerfile
+ARG APIEnvironment__Environment
+ARG APIEnvironment__DatabaseHost
+ARG APIEnvironment__DatabasePort
+ARG APIEnvironment__DatabaseUser
+ARG APIEnvironment__DatabasePassword
+ARG APIEnvironment__EncryptValues
+ARG APIEnvironment__Secret
+ARG APIEnvironment__JWTIssuer
+ARG APIEnvironment__JWTAudience
+ARG APIEnvironment__KeyVaultAPIUrl
+
 #ENV env_from_dockerfile=${env_from_dockerfile}
+ENV APIEnvironment__Environment=${APIEnvironment__Environment}
+ENV APIEnvironment__DatabaseHost=${APIEnvironment__DatabaseHost}
+ENV APIEnvironment__DatabasePort=${APIEnvironment__DatabasePort}
+ENV APIEnvironment__DatabaseUser=${APIEnvironment__DatabaseUser}
+ENV APIEnvironment__DatabasePassword=${APIEnvironment__DatabasePassword}
+ENV APIEnvironment__EncryptValues=${APIEnvironment__EncryptValues}
+ENV APIEnvironment__Secret=${APIEnvironment__Secret}
+ENV APIEnvironment__JWTIssuer=${APIEnvironment__JWTIssuer}
+ENV APIEnvironment__JWTAudience=${APIEnvironment__JWTAudience}
+ENV APIEnvironment__KeyVaultAPIUrl=${APIEnvironment__KeyVaultAPIUrl}
 #Tests
 RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
 RUN dotnet build /app/src/key-vault-test/key-vault-test.csproj --configuration Release --no-cache --output /app/build
