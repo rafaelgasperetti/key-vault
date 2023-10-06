@@ -8,10 +8,6 @@ RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Ke
 
 FROM base AS build-env
 WORKDIR /app
-#Env
-#ARG env_from_dockerfile
-#ENV env_from_dockerfile=${env_from_dockerfile}
-#App
 RUN dotnet restore /app/src/key-vault/key-vault/key-vault.csproj
 RUN dotnet build /app/src/key-vault/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
 RUN dotnet publish /app/src/key-vault/key-vault/key-vault.csproj --configuration Release --output /app/publish
