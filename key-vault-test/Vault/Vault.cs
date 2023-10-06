@@ -1,4 +1,5 @@
-﻿using Azure.Core;
+﻿using Azure;
+using Azure.Core;
 using Azure.Core.Pipeline;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
@@ -69,7 +70,7 @@ namespace key_vault_test.Vault
             catch (Exception ex)
             {
                 var message = string.Format(Strings.KeyVault_UnableToDoAction, BaseUri, TenantID, Enum.GetName(Environment));
-                throw new Exception(message, ex);
+                throw new RequestFailedException(message, ex);
             }
         }
 
@@ -95,7 +96,7 @@ namespace key_vault_test.Vault
             catch (Exception ex)
             {
                 var message = string.Format(Strings.KeyVault_UnableToDoAction, BaseUri, TenantID, Enum.GetName(Environment));
-                throw new Exception(message, ex);
+                throw new RequestFailedException(message, ex);
             }
         }
 
@@ -123,7 +124,7 @@ namespace key_vault_test.Vault
             catch (Exception ex)
             {
                 var message = string.Format(Strings.KeyVault_UnableToDoAction, BaseUri, TenantID, Enum.GetName(Environment));
-                throw new Exception(message, ex);
+                throw new RequestFailedException(message, ex);
             }
         }
     }
