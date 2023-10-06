@@ -23,7 +23,7 @@ services:
         - APIEnvironment__KeyVaultAPIUrl=https://host.docker.internal:57303/
     #env_file: ../../env.file
     networks:
-        key-vault-local-pipe-test:
+        key-vault-pipe-test:
     depends_on:
       - key-vault-pipe-test.key-vault
     environment:
@@ -58,7 +58,7 @@ services:
       dockerfile: key-vault/key-vault/Environments/ProdTest/Dockerfile
     #env_file: ../../env.file
     networks:
-        key-vault-local-pipe-test:
+        key-vault-pipe-test:
     depends_on:
       - key-vault-pipe-test.db
     environment:
@@ -91,7 +91,7 @@ services:
     environment:
         MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
     networks:
-        key-vault-local-pipe-test:
+        key-vault-pipe-test:
     volumes:
         - key-vault-pipe-test.db-volume:/var/lib/mysql:delegated
     healthcheck:
