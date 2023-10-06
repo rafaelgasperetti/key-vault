@@ -76,6 +76,7 @@ namespace key_vault.Initializer
                 }
 
                 Migrated = true;
+                Thread.Sleep(5000);
 
                 using var db = new MySqlDb(env, false);
                 using var migrator = new Migrator(db);
