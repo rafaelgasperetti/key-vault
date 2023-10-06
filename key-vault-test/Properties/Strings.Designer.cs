@@ -97,7 +97,7 @@ namespace key_vault_test.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to appsettings.json.
+        ///   Looks up a localized string similar to testsettings.json.
         /// </summary>
         internal static string BaseTest_Initialize_AppSettings {
             get {

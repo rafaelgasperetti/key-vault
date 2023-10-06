@@ -130,7 +130,7 @@
     <value>DELETE FROM SecretKey WHERE AccountId = @AccountId</value>
   </data>
   <data name="BaseTest_Initialize_AppSettings" xml:space="preserve">
-    <value>appsettings.json</value>
+    <value>testsettings.json</value>
   </data>
   <data name="SecretTest_DeletedSecret" xml:space="preserve">
     <value>SELECT DeletedAt FROM SecretKey WHERE Name = @name</value>

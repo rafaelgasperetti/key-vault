@@ -4,7 +4,6 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
 WORKDIR /app
 RUN rm -rf /app
 COPY . ./src
-RUN rm -rf /app/src/key-vault/key-vault/appsettings.json
 RUN dotnet user-secrets -p /app/src/key-vault/key-vault/key-vault.csproj set "Kestrel:Certificates:Development:Password" "key-vault"
 
 FROM base AS build-env
