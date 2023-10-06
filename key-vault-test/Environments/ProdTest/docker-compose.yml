@@ -8,7 +8,7 @@ services:
     container_name: key-vault-pipe-test.key-vault-test
     hostname: key-vault-pipe-test.key-vault-test
     build:
-      context: ../../../../
+      context: ../../../
       dockerfile: key-vault-test/Environments/ProdTest/Dockerfile
       args:
         - APIEnvironment__Environment=ProdTest
@@ -42,7 +42,7 @@ services:
     volumes:
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
       - ~/.aspnet/https:/root/.aspnet/https:ro
-      - ../../../../:/app/src/:rw
+      - ../../../:/app/src/:rw
 #secrets:
 #  name:
 #    file: ./name
