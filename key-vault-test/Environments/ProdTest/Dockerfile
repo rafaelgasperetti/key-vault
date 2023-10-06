@@ -36,8 +36,8 @@ RUN dotnet build /app/src/key-vault-test/key-vault-test.csproj --configuration R
 RUN dotnet publish /app/src/key-vault-test/key-vault-test.csproj --configuration Release --output /app/publish
 #RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
 
-#FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
-#WORKDIR /app
-#COPY --from=build-env /app/publish .
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+WORKDIR /app
+COPY --from=build-env /app/publish .
 #CMD ["dotnet", "test"]
 ENTRYPOINT ["dotnet", "test", "key-vault-test.dll"]
