@@ -100,7 +100,7 @@ services:
       timeout: 1s
       retries: 3
 networks:
-  key-vault-local-pipe-test:
+  key-vault-pipe-test:
 volumes:
   key-vault-pipe-test.db-volume:
 #secrets:

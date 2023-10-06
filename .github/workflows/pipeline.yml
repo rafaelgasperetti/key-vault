@@ -33,7 +33,8 @@ jobs:
           apt-get --yes install docker-compose
     - name: Build and Run Tests with Docker Compose
       run: |
-         docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml -p key-vault-pipe-test up -d --build
+         #docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml -p key-vault-pipe-test up -d --build
+         docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml up -d --build
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
