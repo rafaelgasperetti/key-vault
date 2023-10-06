@@ -8,8 +8,8 @@ services:
     container_name: key-vault-pipe-test.key-vault-test
     hostname: key-vault-pipe-test.key-vault-test
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../../../../
+      dockerfile: key-vault-test/Environments/ProdTest/Dockerfile
       args:
         - APIEnvironment__Environment=ProdTest
         - APIEnvironment__DatabaseHost=host.docker.internal
