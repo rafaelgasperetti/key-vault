@@ -56,9 +56,11 @@ namespace key_vault_test.Tests
             var rawResponse = await client.PostAsync(accountsEndpoint, content);
             var responseStr = await rawResponse.Content.ReadAsStringAsync();
 
+            Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
+            Assert.NotNull(responseStr);
+
             var createResponse = JsonConvert.DeserializeObject<Account>(responseStr);
 
-            Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
             Assert.NotNull(createResponse);
             Assert.NotNull(createResponse.AccountId);
             Assert.Equal(accountName, createResponse.Name);
@@ -74,9 +76,11 @@ namespace key_vault_test.Tests
             rawResponse = await client.GetAsync(accountsEndpoint);
             responseStr = await rawResponse.Content.ReadAsStringAsync();
 
+            Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
+            Assert.NotNull(responseStr);
+
             var getResponse = JsonConvert.DeserializeObject<Account>(responseStr);
 
-            Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
             Assert.NotNull(getResponse);
             Assert.Equal(createResponse.AccountId, getResponse.AccountId);
             Assert.Equal(createResponse.Name, getResponse.Name);
