@@ -34,14 +34,14 @@ WORKDIR /app
 RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
 RUN dotnet build /app/src/key-vault-test/key-vault-test.csproj --configuration Release --no-cache --output /app/build
 #RUN dotnet publish /app/src/key-vault-test/key-vault-test.csproj --configuration Release --output /app/publish
-#RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
+RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS runtime
-WORKDIR /app
+#FROM mcr.microsoft.com/dotnet/sdk:7.0 AS runtime
+#WORKDIR /app
 #COPY --from=build-env /app/publish .
 #ENTRYPOINT ["dotnet", "key-vault-test.dll"]
 #CMD ["dotnet", "test", "key-vault-test.dll"]
 #ENTRYPOINT ["dotnet", "test"]
 #CMD ["key-vault-test.dll"]
-ENTRYPOINT ["dotnet", "test", "/app/src/key-vault-test/key-vault-test.csproj", "--configuration", "Release"]
+#ENTRYPOINT ["dotnet", "test", "/app/src/key-vault-test/key-vault-test.csproj", "--configuration", "Release"]
 #CMD ["dotnet", "test", "/app/src/key-vault-test/key-vault-test.csproj"]
