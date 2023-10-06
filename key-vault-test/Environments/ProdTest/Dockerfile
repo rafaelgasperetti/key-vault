@@ -43,5 +43,5 @@ WORKDIR /app
 #CMD ["dotnet", "test", "key-vault-test.dll"]
 #ENTRYPOINT ["dotnet", "test"]
 #CMD ["key-vault-test.dll"]
-#ENTRYPOINT ["dotnet", "test", "/app/src/key-vault-test/key-vault-test.csproj", "--configuration", "Release"]
-CMD ["dotnet", "test", "/app/src/key-vault-test/key-vault-test.csproj"]
+ENTRYPOINT ["dotnet", "test", "/app/src/key-vault-test/key-vault-test.csproj", "--configuration", "Release"]
+#CMD ["dotnet", "test", "/app/src/key-vault-test/key-vault-test.csproj"]
