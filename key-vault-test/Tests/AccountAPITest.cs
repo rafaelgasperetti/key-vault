@@ -54,12 +54,12 @@ namespace key_vault_test.Tests
             var content = new StringContent(JsonConvert.SerializeObject(body), new MediaTypeHeaderValue("application/json"));
 
             var rawResponse = await client.PostAsync(accountsEndpoint, content);
-            var responseStr = await rawResponse.Content.ReadAsStringAsync();
+            var createResponseStr = await rawResponse.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
-            Assert.NotNull(responseStr);
+            Assert.NotNull(createResponseStr);
 
-            var createResponse = JsonConvert.DeserializeObject<Account>(responseStr);
+            var createResponse = JsonConvert.DeserializeObject<Account>(createResponseStr);
 
             Assert.NotNull(createResponse);
             Assert.NotNull(createResponse.AccountId);
@@ -74,12 +74,12 @@ namespace key_vault_test.Tests
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {createResponse.ClientSecret}");
 
             rawResponse = await client.GetAsync(accountsEndpoint);
-            responseStr = await rawResponse.Content.ReadAsStringAsync();
+            var getResponseStr = await rawResponse.Content.ReadAsStringAsync();
 
+            Assert.Equal(createResponseStr, getResponseStr);
             Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
-            Assert.NotNull(responseStr);
 
-            var getResponse = JsonConvert.DeserializeObject<Account>(responseStr);
+            var getResponse = JsonConvert.DeserializeObject<Account>(getResponseStr);
 
             Assert.NotNull(getResponse);
             Assert.Equal(createResponse.AccountId, getResponse.AccountId);
