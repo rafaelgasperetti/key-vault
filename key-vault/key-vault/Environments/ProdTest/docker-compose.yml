@@ -10,24 +10,23 @@ services:
     build:
       context: ../../../../
       dockerfile: key-vault-test/Environments/ProdTest/Dockerfile
-      #args:
-      #  - arg=arg
+      args:
+        - APIEnvironment__Environment=ProdTest
+        - APIEnvironment__DatabaseHost=key-vault-pipe-test.db
+        - APIEnvironment__DatabasePort=3306
+        - APIEnvironment__DatabaseUser=${MYSQL_USER}
+        - APIEnvironment__DatabasePassword=${MYSQL_PASSWORD}
+        - APIEnvironment__EncryptValues=True
+        - APIEnvironment__Secret=${SECRET}
+        - APIEnvironment__JWTIssuer=https://key-vault-pipe-test.key-vault
+        - APIEnvironment__JWTAudience=key-vault-pipe-test.key-vault
+        - APIEnvironment__KeyVaultAPIUrl=https://key-vault-pipe-test.key-vault
     #env_file: ../../env.file
     networks:
         key-vault-local-pipe-test:
     depends_on:
       - key-vault-pipe-test.key-vault
     environment:
-      APIEnvironment__Environment: ProdTest
-      APIEnvironment__DatabaseHost: key-vault-pipe-test.db
-      APIEnvironment__DatabasePort: 3306
-      APIEnvironment__DatabaseUser: ${MYSQL_USER}
-      APIEnvironment__DatabasePassword: ${MYSQL_PASSWORD}
-      APIEnvironment__EncryptValues: "True"
-      APIEnvironment__Secret: ${SECRET}
-      APIEnvironment__JWTIssuer: https://key-vault-pipe-test.key-vault
-      APIEnvironment__JWTAudience: key-vault-pipe-test.key-vault
-      APIEnvironment__KeyVaultAPIUrl: https://key-vault-pipe-test.key-vault
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443
       ASPNETCORE_Kestrel__Certificates__Default__Password: key-vault

@@ -20,7 +20,6 @@ ARG APIEnvironment__JWTIssuer
 ARG APIEnvironment__JWTAudience
 ARG APIEnvironment__KeyVaultAPIUrl
 
-#ENV env_from_dockerfile=${env_from_dockerfile}
 ENV APIEnvironment__Environment=${APIEnvironment__Environment}
 ENV APIEnvironment__DatabaseHost=${APIEnvironment__DatabaseHost}
 ENV APIEnvironment__DatabasePort=${APIEnvironment__DatabasePort}

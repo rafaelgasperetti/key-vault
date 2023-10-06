@@ -37,11 +37,7 @@ namespace key_vault_test.Tests
             cmd.ExecuteNonQueryAsync().Wait();
         }
 
-#if DEBUG
         [Fact]
-#else
-        [Fact(Skip = API_SKIP_REASON)]
-#endif
         public async Task TestCrudSecret()
         {
             string secretName = Helper.RandomString();
