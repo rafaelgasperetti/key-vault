@@ -33,7 +33,7 @@ jobs:
           apt-get --yes install docker-compose
     - name: Start database and key-vault API
       run: |
-         docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml up -p key-vault-pipe-test.key-vault  -d --build
+         docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml -p key-vault-pipe-test.key-vault up -d --build
       env:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
