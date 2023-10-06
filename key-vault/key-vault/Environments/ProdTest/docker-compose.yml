@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   key-vault-pipe-test.key-vault-test:
-    image: ${DOCKER_REGISTRY-}keyvaulttest
+    image: ${DOCKER_REGISTRY-}key-vault-test
     ports:
       - "57302:443"
     container_name: key-vault-pipe-test.key-vault-test
@@ -48,7 +48,7 @@ services:
       - ~/.aspnet/https:/root/.aspnet/https:ro
       - ../../../../:/app/src/:rw
   key-vault-pipe-test.key-vault:
-    image: ${DOCKER_REGISTRY-}keyvault
+    image: ${DOCKER_REGISTRY-}key-vault
     ports:
       - "57303:443"
     container_name: key-vault-pipe-test.key-vault
