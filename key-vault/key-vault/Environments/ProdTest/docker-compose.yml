@@ -20,7 +20,7 @@ services:
         - APIEnvironment__Secret=${SECRET}
         - APIEnvironment__JWTIssuer=https://key-vault-pipe-test.key-vault-test
         - APIEnvironment__JWTAudience=key-vault-pipe-test.key-vault-test
-        - APIEnvironment__KeyVaultAPIUrl=https://host.docker.internal:57303/
+        - APIEnvironment__KeyVaultAPIUrl=https://localhost:57303/
     #env_file: ../../env.file
     networks:
         key-vault-local-pipe-test:
