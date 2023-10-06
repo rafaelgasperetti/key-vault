@@ -11,14 +11,11 @@ WORKDIR /app
 #Env
 #ARG env_from_dockerfile
 #ENV env_from_dockerfile=${env_from_dockerfile}
-#App
-RUN dotnet restore /app/src/key-vault/key-vault/key-vault.csproj
-RUN dotnet build /app/src/key-vault/key-vault/key-vault.csproj --configuration Release --no-cache --output /app/build
-RUN dotnet publish /app/src/key-vault/key-vault/key-vault.csproj --configuration Release --output /app/publish
+#Tests
+RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
+RUN dotnet build /app/src/key-vault-test/key-vault-test.csproj --configuration Release --no-cache --output /app/build
+#RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
-RUN apt-get update && apt-get install -y curl
-HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail
-COPY --from=build-env /app/publish .
-ENTRYPOINT ["dotnet", "key-vault.dll"]
+ENTRYPOINT ["dotnet", "test"]
