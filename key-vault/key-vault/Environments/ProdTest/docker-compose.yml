@@ -13,7 +13,7 @@ services:
       args:
         - APIEnvironment__Environment=ProdTest
         - APIEnvironment__DatabaseHost=key-vault-pipe-test.db
-        - APIEnvironment__DatabasePort=3306
+        - APIEnvironment__DatabasePort=8989
         - APIEnvironment__DatabaseUser=${MYSQL_USER}
         - APIEnvironment__DatabasePassword=${MYSQL_PASSWORD}
         - APIEnvironment__EncryptValues=True
