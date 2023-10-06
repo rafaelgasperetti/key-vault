@@ -4,7 +4,7 @@ services:
   key-vault-pipe-test.key-vault-test:
     image: ${DOCKER_REGISTRY-}keyvaulttest
     ports:
-      - "57303:443"
+      - "57302:443"
     container_name: key-vault-pipe-test.key-vault-test
     hostname: key-vault-pipe-test.key-vault-test
     build:
