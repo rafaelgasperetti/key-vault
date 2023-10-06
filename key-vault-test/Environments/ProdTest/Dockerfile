@@ -33,4 +33,4 @@ ENV APIEnvironment__KeyVaultAPIUrl=${APIEnvironment__KeyVaultAPIUrl}
 #Tests
 RUN dotnet restore /app/src/key-vault-test/key-vault-test.csproj
 RUN dotnet build /app/src/key-vault-test/key-vault-test.csproj --configuration Release --no-cache --output /app/build
-RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release --verbosity detailed
+RUN dotnet test /app/src/key-vault-test/key-vault-test.csproj --configuration Release --verbosity diagnostic
