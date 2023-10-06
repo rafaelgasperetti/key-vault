@@ -61,4 +61,5 @@ jobs:
     - name: Tear Down Docker Compose
       run: |
           docker-compose -f key-vault/key-vault/Environments/ProdTest/docker-compose.yml down
+      if: always()
       timeout-minutes: 10
