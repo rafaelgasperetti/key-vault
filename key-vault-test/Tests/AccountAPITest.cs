@@ -76,7 +76,7 @@ namespace key_vault_test.Tests
             rawResponse = await client.GetAsync(accountsEndpoint);
             var getResponseStr = await rawResponse.Content.ReadAsStringAsync();
 
-            Assert.Equal(createResponseStr, getResponseStr);
+            Assert.True(createResponseStr == getResponseStr, $"Expected:\n{createResponseStr}\nActual:\n{getResponseStr}");
             Assert.Equal(HttpStatusCode.OK, rawResponse.StatusCode);
 
             var getResponse = JsonConvert.DeserializeObject<Account>(getResponseStr);
