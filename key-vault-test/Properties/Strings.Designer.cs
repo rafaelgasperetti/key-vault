@@ -106,6 +106,15 @@ namespace key_vault_test.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to do action in key-vault &quot;{0}:{1}&quot; in &quot;{2}&quot;..
+        /// </summary>
+        internal static string KeyVault_UnableToDoAction {
+            get {
+                return ResourceManager.GetString("KeyVault_UnableToDoAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT DeletedAt FROM SecretKey WHERE Name = @name.
         /// </summary>
         internal static string SecretTest_DeletedSecret {

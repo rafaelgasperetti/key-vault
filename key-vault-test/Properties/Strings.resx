@@ -132,6 +132,9 @@
   <data name="BaseTest_Initialize_AppSettings" xml:space="preserve">
     <value>testsettings.json</value>
   </data>
+  <data name="KeyVault_UnableToDoAction" xml:space="preserve">
+    <value>Unable to do action in key-vault "{0}:{1}" in "{2}".</value>
+  </data>
   <data name="SecretTest_DeletedSecret" xml:space="preserve">
     <value>SELECT DeletedAt FROM SecretKey WHERE Name = @name</value>
   </data>

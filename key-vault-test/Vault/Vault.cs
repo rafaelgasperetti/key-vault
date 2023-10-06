@@ -2,6 +2,7 @@
 using Azure.Core.Pipeline;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using key_vault_test.Properties;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using static key_vault.Models.APIEnvironment;
@@ -65,9 +66,10 @@ namespace key_vault_test.Vault
 
                 return secret.Value;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                var message = string.Format(Strings.KeyVault_UnableToDoAction, BaseUri, TenantID, Enum.GetName(Environment));
+                throw new Exception(message, ex);
             }
         }
 
@@ -90,9 +92,10 @@ namespace key_vault_test.Vault
                 var rawSecret = new KeyVaultSecret(key, secret);
                 await client.SetSecretAsync(rawSecret);
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                var message = string.Format(Strings.KeyVault_UnableToDoAction, BaseUri, TenantID, Enum.GetName(Environment));
+                throw new Exception(message, ex);
             }
         }
 
@@ -117,9 +120,10 @@ namespace key_vault_test.Vault
                 var operation = await client.StartDeleteSecretAsync(key);
                 await operation.WaitForCompletionAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                var message = string.Format(Strings.KeyVault_UnableToDoAction, BaseUri, TenantID, Enum.GetName(Environment));
+                throw new Exception(message, ex);
             }
         }
     }
