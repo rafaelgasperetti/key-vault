@@ -26,5 +26,17 @@ namespace key_vault.Controllers.Interfaces
 
             return null;
         }
+
+        protected string? GetAccountName()
+        {
+            var claim = User.Claims.FirstOrDefault(c => c.Type == nameof(Account.Name));
+
+            if (claim != null && !string.IsNullOrEmpty(claim.Value))
+            {
+                return claim.Value;
+            }
+
+            return null;
+        }
     }
 }

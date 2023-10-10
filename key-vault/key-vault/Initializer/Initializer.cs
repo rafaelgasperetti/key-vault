@@ -83,10 +83,11 @@ namespace key_vault.Initializer
 
             services.AddHttpContextAccessor();
 
-            Migrate(env, encryption);
+            Migrate(env);
+            FillInitialData(env, encryption);
         }
 
-        private static void Migrate(APIEnvironment env, IEncryption encryption)
+        private static void Migrate(APIEnvironment env)
         {
             Semaphore.Wait();
 
@@ -103,30 +104,33 @@ namespace key_vault.Initializer
                 using var db = new MySqlDb(env, false);
                 using var migrator = new Migrator(db);
                 migrator.Migrate();
-
-                foreach(var account in env.Accounts)
-                {
-                    if (!string.IsNullOrEmpty(account.Account) && !string.IsNullOrEmpty(account.Token) && encryption.IsTokenValid(account.Token))
-                    {
-                        using var serviceDb = new MySqlDb(env);
-                        IAccountService service = new AccountService(serviceDb, encryption);
-
-                        if (service.GetByName(account.Account).Result == null)
-                        {
-                            service.Create(new Account()
-                            {
-                                Name = account.Account,
-                                ClientSecret = account.Token
-                            }).Wait();
-
-                            Console.WriteLine(string.Format("Created account \"{0}\"", account.Account));
-                        }
-                    }
-                }
             }
             finally
             {
                 Semaphore.Release();
+            }
+        }
+
+        private static void FillInitialData(APIEnvironment env, IEncryption encryption)
+        {
+            using var serviceDb = new MySqlDb(env);
+            IAccountService service = new AccountService(serviceDb, encryption);
+
+            foreach (var account in env.Accounts)
+            {
+                if (!string.IsNullOrEmpty(account.Account) && !string.IsNullOrEmpty(account.Token) && encryption.IsTokenValid(account.Token))
+                {
+                    if (service.GetByName(account.Account).Result == null)
+                    {
+                        service.Create(new Account()
+                        {
+                            Name = account.Account,
+                            ClientSecret = account.Token
+                        }).Wait();
+
+                        Console.WriteLine(string.Format("Created account \"{0}\"", account.Account));
+                    }
+                }
             }
         }
 

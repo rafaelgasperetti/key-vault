@@ -2,7 +2,7 @@
 {
     public interface IEncryption
 	{
-		public string GenerateToken(int accountId, Guid tenantId, Guid clientId);
+		public string GenerateToken(int accountId, string accountName, Guid tenantId, Guid clientId);
 
         public bool IsTokenValid(string token);
 

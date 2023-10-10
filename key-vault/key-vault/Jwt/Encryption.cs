@@ -17,7 +17,7 @@ namespace key_vault.Initializer.Jwt
             Environment = env;
 		}
 
-        public string GenerateToken(int accountId, Guid tenantId, Guid clientId)
+        public string GenerateToken(int accountId, string accountName, Guid tenantId, Guid clientId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(Environment.Secret);
@@ -26,6 +26,7 @@ namespace key_vault.Initializer.Jwt
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(nameof(Account.AccountId), accountId.ToString()),
+                    new Claim(nameof(Account.Name), accountName),
                     new Claim(nameof(Account.TenantId), tenantId.ToString()),
                     new Claim(nameof(Account.ClientId), clientId.ToString())
                 }),

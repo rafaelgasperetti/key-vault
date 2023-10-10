@@ -58,12 +58,12 @@ namespace key_vault.Services
             };
         }
 
-        public async Task<SecretResponse> Get(int? accountId, string name, string? version)
+        public async Task<SecretResponse> Get(string? accountName, string name, string? version)
         {
-            await AccountService.Get(accountId);
+            var account = await AccountService.GetByName(accountName) ?? throw new InvalidDataException(string.Format(Strings.Service_AccountNotFound, name, accountName));
 
             using var cmd = Database.CreateComand(string.IsNullOrEmpty(version) ? Strings.SecretService_Get : Strings.SecretService_GetVersion);
-            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), accountId));
+            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), account.AccountId));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), name));
 
             if (!string.IsNullOrEmpty(version))
@@ -74,7 +74,7 @@ namespace key_vault.Services
             using var reader = await cmd.ExecuteReaderAsync();
             if (!reader.Read())
             {
-                throw new InvalidDataException(string.Format(Strings.Service_SecretNotFound, name, accountId));
+                throw new InvalidDataException(string.Format(Strings.Service_SecretNotFound, name, accountName));
             }
 
             string value = reader.IsDBNull(5) ? null : reader.GetString(5);
@@ -99,18 +99,15 @@ namespace key_vault.Services
             return GenerateSecretResponse(secretKey);
         }
 
-        public async Task<SecretResponse> Create(int? accountId, string name, SecretRequest request)
+        public async Task<SecretResponse> Create(string? accountName, string name, SecretRequest request)
         {
             try
             {
-                if (accountId == null || await AccountService.Get(accountId.Value) == null)
-                {
-                    throw new InvalidDataException(string.Format(Strings.Service_AccountNotFound, accountId));
-                }
+                var account = (string.IsNullOrEmpty(accountName)  ? null : await AccountService.GetByName(accountName)) ?? throw new InvalidDataException(string.Format(Strings.Service_AccountNotFound, accountName));
 
                 SecretKey secretKey = new()
                 {
-                    AccountId = accountId.Value,
+                    AccountId = account.AccountId.Value,
                     Name = name,
                     Version = Guid.NewGuid(),
                     Value = request.value
@@ -130,7 +127,7 @@ namespace key_vault.Services
 
                 await cmd.ExecuteNonQueryAsync();
 
-                return await Get(secretKey.AccountId, secretKey.Name, null);
+                return await Get(accountName, secretKey.Name, null);
             }
             catch
             {
@@ -138,13 +135,14 @@ namespace key_vault.Services
             }
         }
 
-        public async Task<SecretResponse> Delete(int? accountId, string name)
+        public async Task<SecretResponse> Delete(string? accountName, string name)
         {
-            await AccountService.Get(accountId);
-            var dbSecret = await Get(accountId, name, null);
+            var account = (string.IsNullOrEmpty(accountName) ? null : await AccountService.GetByName(accountName)) ?? throw new InvalidDataException(string.Format(Strings.Service_AccountNotFound, accountName));
+
+            var dbSecret = await Get(accountName, name, null);
 
             using var cmd = Database.CreateComand(Strings.SecretService_Delete);
-            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), accountId));
+            cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.AccountId), account.AccountId.Value));
             cmd.Parameters.Add(Database.GetParameter(nameof(SecretKey.Name), name));
 
             await cmd.ExecuteNonQueryAsync();

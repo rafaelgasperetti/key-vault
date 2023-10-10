@@ -16,8 +16,8 @@ namespace key_vault_test.Tests
 
             await Assert.ThrowsAsync<InvalidDataException>(() => service.Create(null, null, null));
 
-            int accountId = Helper.RandomInt(1, 1000);
-            await Assert.ThrowsAsync<InvalidDataException>(() => service.Create(accountId, null, null));
+            var accountName = Helper.RandomString();
+            await Assert.ThrowsAsync<InvalidDataException>(() => service.Create(accountName, null, null));
         }
 
         [Fact]
@@ -35,13 +35,13 @@ namespace key_vault_test.Tests
                 Name = accountName
             });
 
-            var secret = await secretService.Create(account.AccountId, secretName, new SecretRequest()
+            var secret = await secretService.Create(account.Name, secretName, new SecretRequest()
             {
                 name = secretName,
                 value = accountValue
             });
 
-            var actualSecret = await secretService.Get(account.AccountId, secretName, null);
+            var actualSecret = await secretService.Get(account.Name, secretName, null);
             Assert.Equal(secret, actualSecret);
         }
 
@@ -52,8 +52,8 @@ namespace key_vault_test.Tests
 
             await Assert.ThrowsAsync<InvalidDataException>(() => service.Get(null, null, null));
 
-            int accountId = Helper.RandomInt(1, 1000);
-            await Assert.ThrowsAsync<InvalidDataException>(() => service.Get(accountId, null, null));
+            var accountName = Helper.RandomString();
+            await Assert.ThrowsAsync<InvalidDataException>(() => service.Get(accountName, null, null));
         }
 
         [Fact]
@@ -63,8 +63,8 @@ namespace key_vault_test.Tests
 
             await Assert.ThrowsAsync<InvalidDataException>(() => service.Delete(null, null));
 
-            int accountId = Helper.RandomInt(1, 1000);
-            await Assert.ThrowsAsync<InvalidDataException>(() => service.Delete(accountId, null));
+            var accountName = Helper.RandomString();
+            await Assert.ThrowsAsync<InvalidDataException>(() => service.Delete(accountName, null));
         }
 
         [Fact]
@@ -82,12 +82,12 @@ namespace key_vault_test.Tests
                 Name = accountName
             });
 
-            var secret = await secretService.Create(account.AccountId, secretName, new SecretRequest()
+            var secret = await secretService.Create(account.Name, secretName, new SecretRequest()
             {
                 value = secretValue
             });
 
-            await secretService.Delete(account.AccountId, secretName);
+            await secretService.Delete(account.Name, secretName);
 
             var db = GetService<IDatabase>();
             using var cmd = db.CreateComand(Strings.SecretTest_DeletedSecret);

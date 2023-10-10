@@ -17,22 +17,22 @@ namespace key_vault.Controllers
         [HttpGet("secrets/{name}/{version?}")]
         public async Task<SecretResponse> Get(string name, string? version)
         {
-            int? accountId = GetAccountId();
-            return await Service.Get(accountId, name, version);
+            string? accountName = GetAccountName();
+            return await Service.Get(accountName, name, version);
         }
 
         [HttpPut("secrets/{name}")]
         public async Task<SecretResponse> Create(string name, [FromBody] SecretRequest request)
         {
-            int? accountId = GetAccountId();
-            return await Service.Create(accountId, name, request);
+            string? accountName = GetAccountName();
+            return await Service.Create(accountName, name, request);
         }
 
         [HttpDelete("secrets/{name}")]
         public async Task<SecretResponse> Delete(string name)
         {
-            int? accountId = GetAccountId();
-            return await Service.Delete(accountId.Value, name);
+            string? accountName = GetAccountName();
+            return await Service.Delete(accountName, name);
         }
     }
 }

@@ -80,8 +80,6 @@ namespace key_vault.Services
             account.ClientId = Guid.NewGuid();
             account.ClientSecret = validSecret ? account.ClientSecret : Guid.NewGuid().ToString();
 
-            await Database.BeginTransaction();
-
             using var cmd = Database.CreateComand(Strings.AccountService_Create);
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.Name), account.Name));
             cmd.Parameters.Add(Database.GetParameter(nameof(Account.TenantId), account.TenantId));
@@ -93,7 +91,7 @@ namespace key_vault.Services
             
             if (!validSecret)
             {
-                string clientSecret = Encryption.GenerateToken(id, account.TenantId.Value, account.ClientId.Value);
+                string clientSecret = Encryption.GenerateToken(id, account.Name, account.TenantId.Value, account.ClientId.Value);
 
                 cmd.CommandText = Strings.AccountService_UpdateClientSecret;
                 cmd.Parameters.Clear();
@@ -101,8 +99,6 @@ namespace key_vault.Services
                 cmd.Parameters.Add(Database.GetParameter(nameof(Account.AccountId), id));
                 await cmd.ExecuteNonQueryAsync();
             }
-
-            await Database.Commit();
 
             account = await Get(id);
             return account;
