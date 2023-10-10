@@ -16,7 +16,7 @@ services:
     depends_on:
       - key-vault-pipe-test.db
     environment:
-      APIEnvironment__Environment: ProdApp
+      APIEnvironment__Environment: LocalApp
       APIEnvironment__DatabaseHost: key-vault-pipe-test.db
       APIEnvironment__DatabasePort: 3306
       APIEnvironment__DatabaseUser: ${MYSQL_USER}

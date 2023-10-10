@@ -21,7 +21,7 @@ namespace key_vault.Helpers
                 p.StartInfo.FileName = program;
                 p.StartInfo.Arguments = arguments;
 
-                if (string.IsNullOrEmpty(directory))
+                if (!string.IsNullOrEmpty(directory))
                 {
                     p.StartInfo.WorkingDirectory = directory;
                 }
@@ -58,7 +58,7 @@ namespace key_vault.Helpers
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("It was not possible to run {0} {1} at {2}", program, arguments, directory ?? "<CURRENT_CMD_DIRECTORY>"), ex);
+                throw new Exception(string.Format("It was not possible to run {0}.", program), ex);
             }
         }
     }
