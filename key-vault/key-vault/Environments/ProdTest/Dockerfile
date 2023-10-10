@@ -14,7 +14,7 @@ RUN dotnet publish /app/src/key-vault/key-vault/key-vault.csproj --configuration
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl default-mysql-client
 HEALTHCHECK --interval=3s --timeout=1s --retries=3 CMD curl -f -k https://localhost/health --fail
 COPY --from=build-env /app/publish .
 ENTRYPOINT ["dotnet", "key-vault.dll"]

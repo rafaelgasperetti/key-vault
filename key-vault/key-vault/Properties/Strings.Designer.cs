@@ -209,6 +209,15 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Waiting for MySql to be healthy {0}/{1}... Message: {2}.
+        /// </summary>
+        internal static string MySqlWaitingMessage {
+            get {
+                return ResourceManager.GetString("MySqlWaitingMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;NULL&gt;.
         /// </summary>
         internal static string NullRepresentation {

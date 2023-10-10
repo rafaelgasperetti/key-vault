@@ -7,6 +7,7 @@ using key_vault.Services.Interfaces;
 using key_vault.Services;
 using System.Reflection;
 using key_vault.Helpers;
+using key_vault.Properties;
 
 namespace key_vault.Initializer
 {
@@ -76,7 +77,7 @@ namespace key_vault.Initializer
                 }
 
                 Migrated = true;
-                Thread.Sleep(5000);
+                CheckAndWaitDatabaseOnline(env);
 
                 using var db = new MySqlDb(env, false);
                 using var migrator = new Migrator(db);
@@ -85,6 +86,52 @@ namespace key_vault.Initializer
             finally
             {
                 Semaphore.Release();
+            }
+        }
+
+        private static void CheckAndWaitDatabaseOnline(APIEnvironment env)
+        {
+            if (env.Environment == APIEnvironment.EnvironmentName.ProdApp)
+            {
+                return;
+            }
+
+            var checkProgram = "mysqladmin";
+            var checkCommand = $"ping -h {env.DatabaseHost} -P {env.DatabasePort} -u {env.DatabaseUser} -p{env.DatabasePassword}";
+
+            bool success = false;
+            int currentTryCount = 0;
+            int maxTries = 5;
+            string lastErrorMessage;
+
+            while (!success && currentTryCount < maxTries)
+            {
+                try
+                {
+                    var result = CmdHelper.Execute(checkProgram, checkCommand);
+                    success = result.Success && result.Message?.ToLower() == "mysqld is alive";
+                    Console.Write(result.Message);
+
+                    if (success)
+                    {
+                        lastErrorMessage = null;
+                    }
+                    else
+                    {
+                        lastErrorMessage = result.Message;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lastErrorMessage = ex.Message + (string.IsNullOrEmpty(ex.InnerException?.Message) ? string.Empty : (Environment.NewLine + ex.InnerException?.Message));
+                }
+
+                if (!string.IsNullOrEmpty(lastErrorMessage))
+                {
+                    currentTryCount++;
+                    Console.WriteLine(string.Format(Strings.MySqlWaitingMessage, currentTryCount, maxTries, lastErrorMessage));
+                    Thread.Sleep(2000);
+                }
             }
         }
     }
