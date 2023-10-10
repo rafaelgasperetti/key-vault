@@ -91,7 +91,8 @@ namespace key_vault.Initializer
 
                 if (!string.IsNullOrEmpty(env.Account) && !string.IsNullOrEmpty(env.AccountToken) && encryption.IsTokenValid(env.AccountToken))
                 {
-                    IAccountService service = new AccountService(db, encryption);
+                    using var serviceDb = new MySqlDb(env);
+                    IAccountService service = new AccountService(serviceDb, encryption);
 
                     if (service.GetByName(env.Account).Result == null)
                     {
