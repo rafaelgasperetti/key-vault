@@ -143,7 +143,11 @@ namespace key_vault.Initializer
             bool success = false;
             int currentTryCount = 0;
             int maxTries = 5;
+            int retryInvervalSeconds = 3;
             string lastErrorMessage;
+
+            Console.WriteLine("Checking mysql status...");
+            Thread.Sleep(retryInvervalSeconds * 1000);
 
             while (!success && currentTryCount < maxTries)
             {
@@ -171,7 +175,7 @@ namespace key_vault.Initializer
                 {
                     currentTryCount++;
                     Console.WriteLine(string.Format(Strings.MySqlWaitingMessage, env.DatabaseHost, env.DatabasePort, currentTryCount, maxTries, lastErrorMessage));
-                    Thread.Sleep(2000);
+                    Thread.Sleep(retryInvervalSeconds * 1000);
                 }
             }
         }
