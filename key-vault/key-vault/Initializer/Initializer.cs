@@ -31,8 +31,24 @@ namespace key_vault.Initializer
             var jwtIssuer = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.JWTIssuer)}"];
             var jwtAudience = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.JWTAudience)}"];
             var keyVaultAPIUrl = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.KeyVaultAPIUrl)}"];
-            var account = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Account)}"];
-            var accountToken = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.AccountToken)}"];
+            List<AccountEnvironment> accounts = new();
+
+            string account = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Accounts)}:{0}:{nameof(AccountEnvironment.Account)}"];
+            string token = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Accounts)}:{0}:{nameof(AccountEnvironment.Token)}"];
+            int idx = 0;
+
+            while (!string.IsNullOrEmpty(account) && !string.IsNullOrEmpty(token))
+            {
+                accounts.Add(new AccountEnvironment()
+                {
+                    Account = account,
+                    Token = token
+                });
+
+                idx++;
+                account = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Accounts)}:{idx}:{nameof(AccountEnvironment.Account)}"];
+                token = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Accounts)}:{idx}:{nameof(AccountEnvironment.Token)}"];
+            }
             
             var version = assembly.GetName().Version;
 
@@ -51,8 +67,7 @@ namespace key_vault.Initializer
                 JWTAudience = jwtAudience,
                 KeyVaultAPIUrl = new Uri(keyVaultAPIUrl),
                 Version = version,
-                Account = account,
-                AccountToken = accountToken
+                Accounts = accounts
             };
         }
 
@@ -89,20 +104,23 @@ namespace key_vault.Initializer
                 using var migrator = new Migrator(db);
                 migrator.Migrate();
 
-                if (!string.IsNullOrEmpty(env.Account) && !string.IsNullOrEmpty(env.AccountToken) && encryption.IsTokenValid(env.AccountToken))
+                foreach(var account in env.Accounts)
                 {
-                    using var serviceDb = new MySqlDb(env);
-                    IAccountService service = new AccountService(serviceDb, encryption);
-
-                    if (service.GetByName(env.Account).Result == null)
+                    if (!string.IsNullOrEmpty(account.Account) && !string.IsNullOrEmpty(account.Token) && encryption.IsTokenValid(account.Token))
                     {
-                        service.Create(new Account()
-                        {
-                            Name = env.Account,
-                            ClientSecret = env.AccountToken
-                        }).Wait();
+                        using var serviceDb = new MySqlDb(env);
+                        IAccountService service = new AccountService(serviceDb, encryption);
 
-                        Console.WriteLine(string.Format("Created account \"{0}\"", env.Account));
+                        if (service.GetByName(account.Account).Result == null)
+                        {
+                            service.Create(new Account()
+                            {
+                                Name = account.Account,
+                                ClientSecret = account.Token
+                            }).Wait();
+
+                            Console.WriteLine(string.Format("Created account \"{0}\"", account.Account));
+                        }
                     }
                 }
             }

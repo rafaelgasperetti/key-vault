@@ -21,7 +21,6 @@
         public string JWTAudience { get; set; }
         public Uri KeyVaultAPIUrl { get; set; }
         public Version Version { get; set; }
-        public string Account { get; set; }
-        public string AccountToken { get; set; }
+        public List<AccountEnvironment> Accounts { get; set; } = new();
     }
 }
