@@ -91,7 +91,7 @@ namespace key_vault.Initializer
 
                 if (!string.IsNullOrEmpty(env.Account) && !string.IsNullOrEmpty(env.AccountToken) && encryption.IsTokenValid(env.AccountToken))
                 {
-                    AccountService service = new(db, encryption);
+                    IAccountService service = new AccountService(db, encryption);
 
                     if (service.GetByName(env.Account).Result == null)
                     {

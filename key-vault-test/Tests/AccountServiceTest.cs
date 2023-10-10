@@ -38,6 +38,23 @@ namespace key_vault_test.Tests
         }
 
         [Fact]
+        public async Task TestGetAccountByNameSuccess()
+        {
+            var service = GetService<IAccountService>();
+
+            string accountName = Helper.RandomString();
+
+            Account account = await service.Create(new Account()
+            {
+                Name = accountName
+            });
+            Assert.Equal(accountName, account.Name);
+
+            Account actualAccount = await service.GetByName(account.Name);
+            Assert.Equal(account, actualAccount);
+        }
+
+        [Fact]
         public async Task TestDeleteAccountSuccess()
         {
             var service = GetService<IAccountService>();
