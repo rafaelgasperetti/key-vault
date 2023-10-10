@@ -110,6 +110,15 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM Account WHERE Name = @Name AND DeletedAt IS NULL.
+        /// </summary>
+        internal static string AccountService_GetByName {
+            get {
+                return ResourceManager.GetString("AccountService_GetByName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE Account SET ClientSecret = @ClientSecret WHERE AccountId = @AccountId.
         /// </summary>
         internal static string AccountService_UpdateClientSecret {

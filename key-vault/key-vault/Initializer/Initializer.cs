@@ -31,6 +31,8 @@ namespace key_vault.Initializer
             var jwtIssuer = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.JWTIssuer)}"];
             var jwtAudience = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.JWTAudience)}"];
             var keyVaultAPIUrl = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.KeyVaultAPIUrl)}"];
+            var account = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Account)}"];
+            var accountToken = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.AccountToken)}"];
             
             var version = assembly.GetName().Version;
 
@@ -48,24 +50,28 @@ namespace key_vault.Initializer
                 JWTIssuer = jwtIssuer,
                 JWTAudience = jwtAudience,
                 KeyVaultAPIUrl = new Uri(keyVaultAPIUrl),
-                Version = version
+                Version = version,
+                Account = account,
+                AccountToken = accountToken
             };
         }
 
         public static void Initialize(IServiceCollection services, APIEnvironment env)
         {
-            Migrate(env);
+            IEncryption encryption = new Encryption(env);
 
             services.AddSingletonIfNotExists(env);
+            services.AddSingletonIfNotExists(encryption);
             services.AddScopedIfNotExists<IDatabase, MySqlDb>();
-            services.AddScopedIfNotExists<IEncryption, Encryption>();
             services.AddScopedIfNotExists<IAccountService, AccountService>();
             services.AddScopedIfNotExists<ISecretService, SecretService>();
 
             services.AddHttpContextAccessor();
+
+            Migrate(env, encryption);
         }
 
-        private static void Migrate(APIEnvironment env)
+        private static void Migrate(APIEnvironment env, IEncryption encryption)
         {
             Semaphore.Wait();
 
@@ -82,6 +88,22 @@ namespace key_vault.Initializer
                 using var db = new MySqlDb(env, false);
                 using var migrator = new Migrator(db);
                 migrator.Migrate();
+
+                if (!string.IsNullOrEmpty(env.Account) && !string.IsNullOrEmpty(env.AccountToken) && encryption.IsTokenValid(env.AccountToken))
+                {
+                    AccountService service = new(db, encryption);
+
+                    if (service.GetByName(env.Account).Result == null)
+                    {
+                        service.Create(new Account()
+                        {
+                            Name = env.Account,
+                            ClientSecret = env.AccountToken
+                        }).Wait();
+
+                        Console.WriteLine(string.Format("Created account \"{0}\"", env.Account));
+                    }
+                }
             }
             finally
             {

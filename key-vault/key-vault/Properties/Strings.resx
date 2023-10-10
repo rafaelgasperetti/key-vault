@@ -142,6 +142,9 @@ VALUES
   <data name="AccountService_Get" xml:space="preserve">
     <value>SELECT * FROM Account WHERE AccountId = @AccountId AND DeletedAt IS NULL</value>
   </data>
+  <data name="AccountService_GetByName" xml:space="preserve">
+    <value>SELECT * FROM Account WHERE Name = @Name AND DeletedAt IS NULL</value>
+  </data>
   <data name="AccountService_UpdateClientSecret" xml:space="preserve">
     <value>UPDATE Account SET ClientSecret = @ClientSecret WHERE AccountId = @AccountId</value>
   </data>

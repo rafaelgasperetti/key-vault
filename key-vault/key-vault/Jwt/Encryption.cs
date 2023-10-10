@@ -37,6 +37,32 @@ namespace key_vault.Initializer.Jwt
             return tokenHandler.WriteToken(token);
         }
 
+        public bool IsTokenValid(string token)
+        {
+            string tokenSecret = Environment.Secret;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecret));
+            var issuer = Environment.JWTIssuer;
+
+            var validationParameters = new TokenValidationParameters()
+            {
+                ValidIssuer = issuer,
+                ValidAudience = Environment.JWTAudience,
+                IssuerSigningKey = key
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken securityToken);
+
+                return securityToken != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private byte[] DeriveKeyFromPassword(string password)
         {
             var emptySalt = Array.Empty<byte>();
