@@ -110,7 +110,7 @@ namespace key_vault.Initializer
                 {
                     var result = CmdHelper.Execute(checkProgram, checkCommand);
                     success = result.Success && result.Message?.ToLower() == "mysqld is alive";
-                    Console.Write(result.Message);
+                    Console.WriteLine(result.Message);
 
                     if (success)
                     {
@@ -129,7 +129,7 @@ namespace key_vault.Initializer
                 if (!string.IsNullOrEmpty(lastErrorMessage))
                 {
                     currentTryCount++;
-                    Console.WriteLine(string.Format(Strings.MySqlWaitingMessage, currentTryCount, maxTries, lastErrorMessage));
+                    Console.WriteLine(string.Format(Strings.MySqlWaitingMessage, env.DatabaseHost, env.DatabasePort, currentTryCount, maxTries, lastErrorMessage));
                     Thread.Sleep(2000);
                 }
             }

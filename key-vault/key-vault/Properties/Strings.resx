@@ -167,7 +167,7 @@ VALUES
     <value>Properties/Scripts/DatabaseScript.sql</value>
   </data>
   <data name="MySqlWaitingMessage" xml:space="preserve">
-    <value>Waiting for MySql to be healthy {0}/{1}... Message: {2}</value>
+    <value>Waiting for MySql ({0}:{1}) to be healthy {2}/{3}... Message: {4}</value>
   </data>
   <data name="MySql_DatabaseNameString" xml:space="preserve">
     <value>Database={0}</value>

@@ -209,7 +209,7 @@ namespace key_vault.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Waiting for MySql to be healthy {0}/{1}... Message: {2}.
+        ///   Looks up a localized string similar to Waiting for MySql ({0}:{1}) to be healthy {2}/{3}... Message: {4}.
         /// </summary>
         internal static string MySqlWaitingMessage {
             get {
