@@ -143,7 +143,7 @@ namespace key_vault.Initializer
             bool success = false;
             int currentTryCount = 0;
             int maxTries = 5;
-            int retryInvervalSeconds = 3;
+            int retryInvervalSeconds = 5;
             string lastErrorMessage;
 
             Console.WriteLine("Checking mysql status...");
