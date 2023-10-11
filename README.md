@@ -1,2 +1,27 @@
 # key-vault
-Possible to create, delete and get keys
+Possible to create, delete and get keys. Each key belongs to a account, and accounts can be configured in startup or by calling accounts endpoint.
+
+```
+APIEnvironment__Accounts__<idx_started_by_zero>__Account: <name>
+APIEnvironment__Accounts__<idx_started_by_zero>__Token: <token>
+```
+
+Endpoints:
+
+```
+/accounts (post, get, delete)
+/secrets (put, get, delete)
+```
+
+Post Payloads:
+
+```
+/accounts
+{
+    "Name": "<name>
+}
+/secrets (put, get, delete)
+{
+    "value": "<value>"
+}
+```
