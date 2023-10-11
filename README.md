@@ -13,13 +13,16 @@ Endpoints:
 /secrets (put, get, delete)
 ```
 
-Post Payloads:
-
+Accounts POST Payload:
 ```
 /accounts
 {
     "Name": "<name>
 }
+```
+
+Secrets PUT Payload:
+```
 /secrets (put, get, delete)
 {
     "value": "<value>"
