@@ -22,8 +22,6 @@ services:
       APIEnvironment__Accounts__1__Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiIzIiwiTmFtZSI6InVzZXItdmF1bHQiLCJUZW5hbnRJZCI6ImI2OWZlMmMyLWZkOGQtNDFlYy04NzM4LTBkYTYxYmU3MWI1NiIsIkNsaWVudElkIjoiYmExYTA1ZDgtZTUxNi00N2JlLWI5YTktYzUzMDI3NTlkYWI2IiwibmJmIjoxNjk2OTYwNDc4LCJleHAiOjE2OTY5NjQwNzgsImlhdCI6MTY5Njk2MDQ3OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTczMDQiLCJhdWQiOiJsb2NhbGhvc3Q6NTczMDQifQ.R88CGkoAWVcJtZ6va96oFJAaUl78Ri45X8q36V1ZZQk
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443
-      ASPNETCORE_Kestrel__Certificates__Default__Password: key-vault
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /app/src/Environments/Local/key-vault.pfx
     #secrets:
     #  - secret_file
     volumes:
