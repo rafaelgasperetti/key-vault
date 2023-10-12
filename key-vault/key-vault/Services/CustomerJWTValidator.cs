@@ -20,10 +20,8 @@ namespace key_vault.Services
 
         public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
         {
-            validatedToken = null;
-
             var handler = new JwtSecurityTokenHandler();
-            var principal = handler.ValidateToken(securityToken, validationParameters, out SecurityToken _);
+            var principal = handler.ValidateToken(securityToken, validationParameters, out validatedToken);
 
             return principal;
         }
