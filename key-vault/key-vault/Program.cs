@@ -49,6 +49,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.RequireAuthenticatedSignIn = env.ValidateIssuerSigningKey;
 })
 .AddJwtBearer(o =>
 {
@@ -56,9 +57,10 @@ builder.Services.AddAuthentication(options =>
     o.SaveToken = false;
     o.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateActor = env.ValidateIssuerSigningKey,
         ValidateIssuerSigningKey = env.ValidateIssuerSigningKey,//It should be only false because this is an emulator, otherwise must be true
-        ValidateIssuer = true,
-        ValidateAudience = true,
+        ValidateIssuer = env.ValidateIssuerSigningKey,
+        ValidateAudience = env.ValidateIssuerSigningKey,
         ValidateLifetime = false,
         ClockSkew = TimeSpan.Zero,
         ValidIssuer = env.JWTIssuer,
