@@ -45,7 +45,7 @@ builder.Services.AddApiVersioning(v =>
 });
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-var tokenValidationParameters = env.ValidateIssuerSigningKey ? new TokenValidationParameters//It should be only false because this is an emulator, otherwise must be true
+var tokenValidationParameters = new TokenValidationParameters//It should be only false because this is an emulator, otherwise must be true
 {
     ValidateIssuerSigningKey = true,
     ValidateIssuer = true,
@@ -55,18 +55,9 @@ var tokenValidationParameters = env.ValidateIssuerSigningKey ? new TokenValidati
     ValidIssuer = env.JWTIssuer,
     ValidAudience = env.JWTAudience,
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(env.Secret))
-} : new TokenValidationParameters
-{
-    ValidateActor = false,
-    ValidateIssuerSigningKey = false,
-    ValidateIssuer = false,
-    ValidateAudience = false,
-    ValidateLifetime = false,
-    ClockSkew = TimeSpan.Zero,
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(env.Secret))
 };
 
-    builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -77,6 +68,12 @@ var tokenValidationParameters = env.ValidateIssuerSigningKey ? new TokenValidati
     o.RequireHttpsMetadata = false;
     o.SaveToken = false;
     o.TokenValidationParameters = tokenValidationParameters;
+
+    if (!env.ValidateIssuerSigningKey)
+    {
+        o.SecurityTokenValidators.Clear();
+        o.SecurityTokenValidators.Add(new CustomJWTValidator());
+    }
 });
 builder.Services.AddAuthorization();
 builder.Services.AddResponseCompression();
