@@ -31,6 +31,7 @@ namespace key_vault.Initializer
             var jwtIssuer = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.JWTIssuer)}"];
             var jwtAudience = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.JWTAudience)}"];
             var keyVaultAPIUrl = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.KeyVaultAPIUrl)}"];
+            var validateIssuerSigningKey = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.ValidateIssuerSigningKey)}"];
             List<AccountEnvironment> accounts = new();
 
             string account = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Accounts)}:{0}:{nameof(AccountEnvironment.Account)}"];
@@ -66,6 +67,7 @@ namespace key_vault.Initializer
                 JWTIssuer = jwtIssuer,
                 JWTAudience = jwtAudience,
                 KeyVaultAPIUrl = new Uri(keyVaultAPIUrl),
+                ValidateIssuerSigningKey = bool.Parse(validateIssuerSigningKey),
                 Version = version,
                 Accounts = accounts
             };

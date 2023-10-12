@@ -20,6 +20,7 @@
         public string JWTIssuer { get; set; }
         public string JWTAudience { get; set; }
         public Uri KeyVaultAPIUrl { get; set; }
+        public bool ValidateIssuerSigningKey { get; set; }
         public Version Version { get; set; }
         public List<AccountEnvironment> Accounts { get; set; } = new();
     }

@@ -56,7 +56,7 @@ builder.Services.AddAuthentication(options =>
     o.SaveToken = false;
     o.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuerSigningKey = true,
+        ValidateIssuerSigningKey = env.ValidateIssuerSigningKey,//It should be only false because this is an emulator, otherwise must be true
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = false,
