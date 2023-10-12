@@ -45,7 +45,27 @@ builder.Services.AddApiVersioning(v =>
 });
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-builder.Services.AddAuthentication(options =>
+var tokenValidationParameters = env.ValidateIssuerSigningKey ? new TokenValidationParameters//It should be only false because this is an emulator, otherwise must be true
+{
+    ValidateIssuerSigningKey = true,
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateLifetime = false,//Should be true unless it's used like an API key
+    ClockSkew = TimeSpan.Zero,
+    ValidIssuer = env.JWTIssuer,
+    ValidAudience = env.JWTAudience,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(env.Secret))
+} : new TokenValidationParameters
+{
+    ValidateActor = false,
+    ValidateIssuerSigningKey = false,
+    ValidateIssuer = false,
+    ValidateAudience = false,
+    ValidateLifetime = false,
+    ClockSkew = TimeSpan.Zero
+};
+
+    builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -55,18 +75,7 @@ builder.Services.AddAuthentication(options =>
 {
     o.RequireHttpsMetadata = false;
     o.SaveToken = false;
-    o.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateActor = env.ValidateIssuerSigningKey,
-        ValidateIssuerSigningKey = env.ValidateIssuerSigningKey,//It should be only false because this is an emulator, otherwise must be true
-        ValidateIssuer = env.ValidateIssuerSigningKey,
-        ValidateAudience = env.ValidateIssuerSigningKey,
-        ValidateLifetime = false,
-        ClockSkew = TimeSpan.Zero,
-        ValidIssuer = env.JWTIssuer,
-        ValidAudience = env.JWTAudience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(env.Secret))
-    };
+    o.TokenValidationParameters = tokenValidationParameters;
 });
 builder.Services.AddAuthorization();
 builder.Services.AddResponseCompression();
