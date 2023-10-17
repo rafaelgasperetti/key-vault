@@ -40,17 +40,7 @@ namespace key_vault.Initializer.Jwt
 
         public bool IsTokenValid(string token)
         {
-            string tokenSecret = Environment.Secret;
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecret));
-            var issuer = Environment.JWTIssuer;
-
-            var validationParameters = new TokenValidationParameters()
-            {
-                ValidIssuer = issuer,
-                ValidAudience = Environment.JWTAudience,
-                IssuerSigningKey = key
-            };
-
+            var validationParameters = GetTokenValidationParameters(Environment);
             var tokenHandler = new JwtSecurityTokenHandler();
             try
             {
@@ -62,6 +52,21 @@ namespace key_vault.Initializer.Jwt
             {
                 return false;
             }
+        }
+
+        public static TokenValidationParameters GetTokenValidationParameters(APIEnvironment env)
+        {
+            return new TokenValidationParameters//It should be only false because this is an emulator, otherwise must be true
+            {
+                ValidateIssuerSigningKey = env.ValidateIssuerSigningKey,
+                ValidateIssuer = env.ValidateIssuerSigningKey,
+                ValidateAudience = env.ValidateIssuerSigningKey,
+                ValidateLifetime = false,//Should be true unless it's used like an API key
+                ClockSkew = TimeSpan.Zero,
+                ValidIssuer = env.JWTIssuer,
+                ValidAudience = env.JWTAudience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(env.Secret))
+            };
         }
 
         private byte[] DeriveKeyFromPassword(string password)

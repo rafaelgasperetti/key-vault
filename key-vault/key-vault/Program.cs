@@ -10,8 +10,6 @@ using key_vault.Services;
 using key_vault.Initializer.Jwt.Interfaces;
 using key_vault.Initializer.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,18 +43,6 @@ builder.Services.AddApiVersioning(v =>
 });
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-var tokenValidationParameters = new TokenValidationParameters//It should be only false because this is an emulator, otherwise must be true
-{
-    ValidateIssuerSigningKey = true,
-    ValidateIssuer = true,
-    ValidateAudience = true,
-    ValidateLifetime = false,//Should be true unless it's used like an API key
-    ClockSkew = TimeSpan.Zero,
-    ValidIssuer = env.JWTIssuer,
-    ValidAudience = env.JWTAudience,
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(env.Secret))
-};
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,13 +53,7 @@ builder.Services.AddAuthentication(options =>
 {
     o.RequireHttpsMetadata = false;
     o.SaveToken = false;
-    o.TokenValidationParameters = tokenValidationParameters;
-
-    if (!env.ValidateIssuerSigningKey)
-    {
-        o.SecurityTokenValidators.Clear();
-        o.SecurityTokenValidators.Add(new CustomJWTValidator());
-    }
+    o.TokenValidationParameters = Encryption.GetTokenValidationParameters(env);
 });
 builder.Services.AddAuthorization();
 builder.Services.AddResponseCompression();
