@@ -66,8 +66,8 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Update README version
       run: |
-          PATTERN="# key-vault (0(\.[0-9]+)*)"
-          REPLACEMENT="# key-vaul ${{ env.VERSION }}"
+          PATTERN="# key-vault (\w)*(\.[0-9]+)*(-*)*"
+          REPLACEMENT="# key-vault ${{ env.VERSION }}"
           sed -E -i "s/$PATTERN/$REPLACEMENT/g" README.md
           git config --global user.name ${{ github.event.pusher.name }}
           git config --global user.email ${{ github.event.pusher.email }}
