@@ -25,8 +25,9 @@ jobs:
         path: ${{github.workspace}}
     - name: Set package version as an environment variable
       run: |
-        echo "VERSION=$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" key-vault/key-vault/key-vault.csproj)" >> $GITHUB_ENV
-        echo "The project version is: $version"
+        version=$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" key-vault/key-vault/key-vault.csproj)
+        echo "Building version: $version"
+        echo "VERSION=$version" >> $GITHUB_ENV
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
