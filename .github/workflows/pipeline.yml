@@ -64,6 +64,16 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Update README version
+      run: |
+          PATTERN="# key-vault (0(\.[0-9]+)*)"
+          REPLACEMENT="# key-vaul ${{ env.VERSION }}"
+          sed -E -i "s/$PATTERN/$REPLACEMENT/g" README.md
+          git config --global user.name ${{ github.event.pusher.name }}
+          git config --global user.email ${{ github.event.pusher.email }}
+          git add README.md
+          git commit -m "Updating README to version ${{ env.VERSION }}"
+          git push
     - name: Tag GitHub Container Docker Image
       run: |
           docker tag key-vault:latest docker.pkg.github.com/${{ github.repository }}/key-vault:latest
@@ -80,6 +90,10 @@ jobs:
       run: |
           docker push ${{ github.repository_owner }}/key-vault:latest
           docker push ${{ github.repository_owner }}/key-vault:${{ env.VERSION }}
+    - name: Docker change repository description
+      run: |
+          DESCRIPTION=$(cat README.md)
+          docker run -e DOCKERHUB_DESCRIPTION="$DESCRIPTION" ${{ github.repository_owner }}/key-vault:latest
     - name: Tear Down Docker Compose
       run: |
           docker-compose -f key-vault-test/Environments/ProdTest/docker-compose.yml down
