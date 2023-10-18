@@ -72,8 +72,12 @@ jobs:
           git config --global user.name ${{ github.event.pusher.name }}
           git config --global user.email ${{ github.event.pusher.email }}
           git add README.md
-          git commit -m "Updating README to version ${{ env.VERSION }}"
-          git push
+          if git status --porcelain | grep -E '^\s?[MA]'; then
+            git commit -m "Updating README to version ${{ env.VERSION }}"
+            git push
+          else
+            echo "Version did not change"
+          fi
     - name: Tag GitHub Container Docker Image
       run: |
           docker tag key-vault:latest docker.pkg.github.com/${{ github.repository }}/key-vault:latest
