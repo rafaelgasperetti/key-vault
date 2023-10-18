@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v3
       with:
         path: ${{github.workspace}}
-    - name: Set package version as an environment variable
+    - name: Auto set package version from project
       run: |
         version=$(grep -oP '<Version>\K[^<]+' key-vault/key-vault/key-vault.csproj)
         echo "Building version: $version"
@@ -65,13 +65,21 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Tag GitHub Container Docker Image
-      run: docker tag key-vault:latest docker.pkg.github.com/${{ github.repository }}/key-vault:latest
+      run: |
+          docker tag key-vault:latest docker.pkg.github.com/${{ github.repository }}/key-vault:latest
+          docker tag key-vault:latest docker.pkg.github.com/${{ github.repository }}/key-vault:${{ env.VERSION }}
     - name: Push GitHub Container Docker Image
-      run: docker push docker.pkg.github.com/${{ github.repository }}/key-vault:latest
+      run: |
+          docker push docker.pkg.github.com/${{ github.repository }}/key-vault:latest
+          docker push docker.pkg.github.com/${{ github.repository }}/key-vault:${{ env.VERSION }}
     - name: Tag Docker Image
-      run: docker tag key-vault:latest ${{ github.repository_owner }}/key-vault:latest
+      run: |
+          docker tag key-vault:latest ${{ github.repository_owner }}/key-vault:latest
+          docker tag key-vault:latest ${{ github.repository_owner }}/key-vault:${{ env.VERSION }}
     - name: Push Docker Image
-      run: docker push ${{ github.repository_owner }}/key-vault:latest
+      run: |
+          docker push ${{ github.repository_owner }}/key-vault:latest
+          docker push ${{ github.repository_owner }}/key-vault:${{ env.VERSION }}
     - name: Tear Down Docker Compose
       run: |
           docker-compose -f key-vault-test/Environments/ProdTest/docker-compose.yml down

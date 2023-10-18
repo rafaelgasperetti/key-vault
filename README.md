@@ -1,4 +1,4 @@
-# key-vault
+# key-vault 7.4
 Possible to create, delete and get keys. Each key belongs to a account, and accounts can be configured in startup or by calling accounts endpoint.
 
 ```
