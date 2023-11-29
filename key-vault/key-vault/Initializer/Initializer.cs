@@ -165,7 +165,7 @@ namespace key_vault.Initializer
 
                     if (success)
                     {
-                        lastErrorMessage = null;
+                        lastErrorMessage = null; ;
                     }
                     else
                     {
