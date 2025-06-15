@@ -1,7 +1,6 @@
 using key_vault.Models;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc;
 using key_vault.Database.Interfaces;
 using key_vault.Database;
 using key_vault.Initializer;
@@ -11,6 +10,7 @@ using key_vault.Initializer.Jwt.Interfaces;
 using key_vault.Initializer.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Asp.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +24,7 @@ builder.Services.AddScoped<IEncryption, Encryption>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ISecretService, SecretService>();
 
-builder.Services.AddHealthChecks().AddCheck(nameof(HealthCheck), new HealthCheck(env), HealthStatus.Unhealthy, new string[] { nameof(HealthCheck) });
+builder.Services.AddHealthChecks().AddCheck(nameof(HealthCheck), new HealthCheck(env), HealthStatus.Unhealthy, [nameof(HealthCheck)]);
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {

@@ -1,5 +1,3 @@
-version: '3.3'
-
 services:
   local-test.key-vault:
     image: ${DOCKER_REGISTRY-}keyvault

@@ -1,11 +1,14 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-/key-vault/.vs
-/key-vault/bin
-/key-vault/key-vault/obj
-/key-vault/key-vault/bin/Debug/net7.0
-/key-vault/obj
-/key-vault-test/obj
-/key-vault-test/bin/Debug/net7.0
-/key-vault/TestResults
+.vs
+bin
+obj
+*/.vs
+*/bin
+*/obj
+*/TestResults
+*/.vs/*
+*/bin/*
+*/obj/*
+*/TestResults/*

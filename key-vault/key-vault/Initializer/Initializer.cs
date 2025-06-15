@@ -15,7 +15,6 @@ namespace key_vault.Initializer
     {
         private static bool Migrated = false;
         private static readonly SemaphoreSlim Semaphore = new(1);
-        private const int MYSQL_WAIT_SECONDS = 15;
 
         public static APIEnvironment GetAPIEnvironment(IConfiguration configuration)
         {
@@ -32,7 +31,7 @@ namespace key_vault.Initializer
             var jwtAudience = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.JWTAudience)}"];
             var keyVaultAPIUrl = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.KeyVaultAPIUrl)}"];
             var validateIssuerSigningKey = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.ValidateIssuerSigningKey)}"];
-            List<AccountEnvironment> accounts = new();
+            List<AccountEnvironment> accounts = [];
 
             string account = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Accounts)}:{0}:{nameof(AccountEnvironment.Account)}"];
             string token = configuration[$"{nameof(APIEnvironment)}:{nameof(APIEnvironment.Accounts)}:{0}:{nameof(AccountEnvironment.Token)}"];
@@ -116,7 +115,7 @@ namespace key_vault.Initializer
         private static void FillInitialData(APIEnvironment env, IEncryption encryption)
         {
             using var serviceDb = new MySqlDb(env);
-            IAccountService service = new AccountService(serviceDb, encryption);
+            AccountService service = new (serviceDb, encryption);
 
             foreach (var account in env.Accounts)
             {
@@ -149,11 +148,11 @@ namespace key_vault.Initializer
             bool success = false;
             int currentTryCount = 0;
             int maxTries = 5;
-            int retryInvervalSeconds = 5;
+            int retryIntervalSeconds = 5;
             string lastErrorMessage;
 
             Console.WriteLine("Checking mysql status...");
-            Thread.Sleep(retryInvervalSeconds * 1000);
+            Thread.Sleep(retryIntervalSeconds * 1000);
 
             while (!success && currentTryCount < maxTries)
             {
@@ -181,7 +180,7 @@ namespace key_vault.Initializer
                 {
                     currentTryCount++;
                     Console.WriteLine(string.Format(Strings.MySqlWaitingMessage, env.DatabaseHost, env.DatabasePort, currentTryCount, maxTries, lastErrorMessage));
-                    Thread.Sleep(retryInvervalSeconds * 1000);
+                    Thread.Sleep(retryIntervalSeconds * 1000);
                 }
             }
         }

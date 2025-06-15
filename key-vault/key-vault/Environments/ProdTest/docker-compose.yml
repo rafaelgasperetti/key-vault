@@ -1,5 +1,3 @@
-version: '3.3'
-
 services:
   key-vault-pipe-test.key-vault:
     image: ${DOCKER_REGISTRY-}key-vault
